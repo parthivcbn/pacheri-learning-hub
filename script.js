@@ -23,12 +23,6 @@ const tutorQuestionInput = document.getElementById('tutorQuestionInput');
 const tutorAskBtn = document.getElementById('tutorAskBtn');
 const tutorReply = document.getElementById('tutorReply');
 const tutorGame = document.getElementById('tutorGame');
-  // Image generation elements
-const imagePromptInput = document.getElementById('imagePromptInput');
-const imageApiKeyInput = document.getElementById('imageApiKeyInput');
-const imageGenerateBtn = document.getElementById('imageGenerateBtn');
-const imageStatus = document.getElementById('imageStatus');
-const imagePreview = document.getElementById('imagePreview');
 
   // Diagnostics: log missing elements
     const elems = {
@@ -56,6 +50,8 @@ const imagePreview = document.getElementById('imagePreview');
       tutorGame
     };
   Object.entries(elems).forEach(([k,v])=>{ if (!v) console.warn(`[init] Missing element: ${k}`); });
+
+  const hasQuizUI = !!(gradeSelect && subjectSelect && totalInput && qIndexEl && qCountEl && questionText && choicesEl && answerEl);
 
   const hasQuizUI = !!(gradeSelect && subjectSelect && totalInput && qIndexEl && qCountEl && questionText && choicesEl && answerEl);
 
