@@ -475,28 +475,52 @@ function runTutorSession(){
   if (!question) {
     tutorReply.textContent = 'Please type a question so I can teach you.';
     tutorGame.innerHTML = '';
+    tutorQuestionInput.focus();
     return;
   }
 
-  const reply = TutorLogic.getTutorResponse(question);
-  tutorReply.innerHTML = `<strong>${reply.topic}</strong><br>${reply.explanation}<br><br><em>Example:</em> ${reply.example}`;
-
+  // UI: show loading and prevent duplicate requests
+  const askBtn = tutorAskBtn;
+  if (askBtn) { askBtn.disabled = true; askBtn.textContent = 'Thinking...'; }
+  tutorReply.innerHTML = '<em>Thinking...</em>';
   tutorGame.innerHTML = '';
-  const game = document.createElement('div');
-  game.innerHTML = `<div class="feedback">${reply.game.prompt}</div>`;
-  reply.game.options.forEach((option, index) => {
-    const button = document.createElement('button');
-    button.textContent = option;
-    button.addEventListener('click', () => {
-      const isCorrect = index === reply.game.correctIndex;
-      tutorGame.querySelector('.feedback').textContent = isCorrect ? reply.game.feedback : 'Try again — the tutor will help you learn.';
-      tutorGame.querySelectorAll('button').forEach((btn) => {
-        btn.disabled = true;
-      });
-    });
-    game.appendChild(button);
-  });
-  tutorGame.appendChild(game);
+
+  // simulate async response to keep UI responsive (TutorLogic is synchronous)
+  setTimeout(() => {
+    try {
+      const reply = TutorLogic.getTutorResponse(question);
+      tutorReply.innerHTML = `<strong>${reply.topic}</strong><br>${reply.explanation}<br><br><em>Example:</em> ${reply.example}`;
+
+      tutorGame.innerHTML = '';
+      if (reply.game && reply.game.options && reply.game.options.length) {
+        const game = document.createElement('div');
+        game.innerHTML = `<div class="feedback">${reply.game.prompt}</div>`;
+        reply.game.options.forEach((opt, optIndex) => {
+          const button = document.createElement('button');
+          button.textContent = opt;
+          button.addEventListener('click', () => {
+            const isCorrect = optIndex === reply.game.correctIndex;
+            const fb = game.querySelector('.feedback');
+            if (fb) fb.textContent = isCorrect ? reply.game.feedback : 'Try again — the tutor will help you learn.';
+            game.querySelectorAll('button').forEach((btn) => btn.disabled = true);
+            if (isCorrect) {
+              // small UX: clear input and focus for next question
+              tutorQuestionInput.value = '';
+              tutorQuestionInput.focus();
+            }
+          });
+          game.appendChild(button);
+        });
+        tutorGame.appendChild(game);
+      }
+    } catch (err) {
+      tutorReply.textContent = 'Sorry, the tutor failed to generate a response.';
+      tutorGame.innerHTML = '';
+      console.error('Tutor error', err);
+    } finally {
+      if (askBtn) { askBtn.disabled = false; askBtn.textContent = 'Teach Me'; }
+    }
+  }, 200);
 }
 
 // Initialize
