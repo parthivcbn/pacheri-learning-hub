@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Maths Teacher — Grade 7 — Arithmetic Expressions</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    main{max-width:900px;margin:20px auto}
+    h1{font-size:24px;margin:0 0 8px}
+    section{margin-top:16px}
+    .example{background:rgba(0,0,0,0.02);padding:12px;border-radius:10px;border:1px solid rgba(11,18,32,0.03)}
+    .practice{margin-top:12px}
+    .controls-row{display:flex;gap:8px;align-items:center;margin-top:10px}
+    
+    .choice.focused{
+      border-color:rgba(0, 122, 255, 0.6);
+      outline:2px solid rgba(0, 122, 255, 0.4);
+      background:linear-gradient(90deg,rgba(0, 122, 255, 0.08),transparent);
+      transform:scale(1.02);
+    }
+
+    .kb-math-hint{
+      position:fixed;
+      bottom:20px;
+      left:20px;
+      background:rgba(255,255,255,0.9);
+      border:1px solid rgba(11,18,32,0.15);
+      border-radius:10px;
+      padding:12px 16px;
+      font-size:11px;
+      color:#6b7280;
+      z-index:20;
+      backdrop-filter:blur(10px);
+      line-height:1.6;
+    }
+  </style>
+</head>
+<body class="no-global-scroll">
+  <div class="app">
+    <header>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1>Maths Teacher — Grade 7</h1>
+          <div class="subtitle">Chapter: Arithmetic Expressions (CBSE)</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="card">
+      <section>
+        <h2>What is an Arithmetic Expression?</h2>
+        <p>An arithmetic expression is a combination of numbers, variables and arithmetic operators (+, −, ×, ÷) that represents a value. In algebra, we often use letters (like <em>x</em>, <em>y</em>) to represent numbers.</p>
+      </section>
+
+      <section>
+        <h3>Key Concepts</h3>
+        <ul>
+          <li><strong>Term:</strong> A single number or variable, or numbers and variables multiplied together (e.g., <em>5</em>, <em>x</em>, <em>3xy</em>).</li>
+          <li><strong>Coefficient:</strong> The numerical factor of a term (in <em>3x</em>, coefficient = 3).</li>
+          <li><strong>Constant:</strong> A term with no variable (e.g., 7).</li>
+          <li><strong>Like terms:</strong> Terms that have the same variable parts (e.g., <em>4x</em> and <em>−2x</em>).</li>
+          <li><strong>Simplify:</strong> Combine like terms and perform arithmetic to write the expression in simplest form.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>Examples</h3>
+        <div class="example">
+          <strong>Example 1:</strong> Simplify 3x + 5x − 2
+          <div>Solution: Combine like terms 3x + 5x = 8x → result: <strong>8x − 2</strong></div>
+        </div>
+        <div class="example" style="margin-top:8px">
+          <strong>Example 2:</strong> Evaluate 2(3x − 4) when x = 5
+          <div>Solution: 2(3·5 − 4) = 2(15 − 4) = 2·11 = <strong>22</strong></div>
+        </div>
+      </section>
+
+      <section class="practice">
+        <h3>Practice — Multiple Choice</h3>
+        <div id="questionArea">
+          <div id="qText" class="question"></div>
+          <div id="qChoices" class="choices"></div>
+          <div id="qExplanation" class="answer" style="display:none"></div>
+        </div>
+
+        <div class="controls-row">
+          <button id="showAnswer">Show Answer</button>
+          <button id="nextQ" class="secondary">Next Question</button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted)"><span>Score:</span><span id="score">0</span></div>
+          <div style="margin-left:12px;color:var(--muted)"><span id="qIndex">1</span>/<span id="qTotal">1</span></div>
+        </div>
+      </section>
+
+      <section style="margin-top:18px;color:var(--muted);font-size:13px">
+        Tip: Try to identify like terms first, then combine coefficients. Use brackets and order of operations when evaluating.
+      </section>
+    </main>
+  </div>
+
+  <div class="kb-math-hint">
+    <div>⬆️ ⬇️: Navigate Choices</div>
+    <div>1-4 or A-D: Select • ⬅️ ➡️ Previous/Next</div>
+  </div>
+
+  <script>
+    const questions = [
+      {q: 'Which of the following is an algebraic expression?', choices: ['5 + 7', '3x + 4', '\u221A25', '7 ÷ 1'], a:1, exp: 'An algebraic expression contains variables; 3x + 4 has variable x.'},
+      {q: 'Simplify: 4x + 7x − 3x', choices: ['8x', '4x', '7x', '10x'], a:0, exp:'4x + 7x − 3x = (4+7−3)x = 8x.'},
+      {q: 'Evaluate 5(2x + 3) when x = 2', choices: ['25', '35', '40', '30'], a:1, exp:'Inside: 2·2+3=7; 5·7=35.'},
+      {q: 'Which are like terms?', choices: ['3x and 3y', '5 and 7', '4xy and 6xy', '2x and 2xy'], a:2, exp:'Like terms have identical variable parts: 4xy & 6xy.'},
+      {q: 'Simplify: 2(a + 3) + 4a', choices: ['6a + 6', '6a + 3', '6a + 4', '2a + 3'], a:0, exp:'2a+6+4a = 6a+6.'},
+      {q: 'Identify the coefficient in 7xy', choices: ['7', 'x', 'y', 'xy'], a:0, exp:'Coefficient is the numerical factor 7.'}
+    ];
+
+    let idx = 0;
+    var score = 0;
+    const qTotalEl = document.getElementById('qTotal');
+    const qIndexEl = document.getElementById('qIndex');
+    qTotalEl.textContent = questions.length;
+
+    function render(i){
+      const Q = questions[i];
+      document.getElementById('qText').textContent = Q.q;
+      const choices = document.getElementById('qChoices');
+      choices.innerHTML = '';
+      Q.choices.forEach((c,j)=>{
+        const btn = document.createElement('button');
+        btn.className = 'choice';
+        btn.textContent = String.fromCharCode(65+j) + '. ' + c;
+        btn.onclick = ()=>{ revealAnswer(j); };
+        choices.appendChild(btn);
+      });
+      document.getElementById('qExplanation').style.display='none';
+      qIndexEl.textContent = i+1;
+    }
+
+    function revealAnswer(choice){
+      const Q = questions[idx];
+      const explanation = document.getElementById('qExplanation');
+      const correct = Q.a;
+      if (choice === correct) {
+        score += 10;
+        document.getElementById('score').textContent = score;
+      }
+      const choices = document.querySelectorAll('#qChoices .choice');
+      choices.forEach((el,i)=>{ el.classList.remove('correct','incorrect'); if(i===correct) el.classList.add('correct'); if(i===choice && i!==correct) el.classList.add('incorrect'); });
+      explanation.style.display = 'block';
+      explanation.innerHTML = '<strong>Answer: </strong>' + String.fromCharCode(65+correct) + '. ' + Q.choices[correct] + '<br><small>' + Q.exp + '</small>';
+    }
+
+    document.getElementById('showAnswer').addEventListener('click', ()=> revealAnswer(questions[idx].a) );
+    document.getElementById('nextQ').addEventListener('click', ()=>{ idx = (idx+1) % questions.length; render(idx); });
+
+    render(idx);
+
+    // Keyboard navigation
+    let focusedChoiceIndex = -1;
+
+    function updateChoiceFocus() {
+      const choices = document.querySelectorAll('#qChoices .choice');
+      choices.forEach(c => c.classList.remove('focused'));
+      if (focusedChoiceIndex >= 0 && focusedChoiceIndex < choices.length) {
+        choices[focusedChoiceIndex].classList.add('focused');
+        choices[focusedChoiceIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const choices = document.querySelectorAll('#qChoices .choice');
+      const key = e.key.toUpperCase();
+
+      // Number/Letter keys to select answer
+      if ((e.key >= '1' && e.key <= '4') || (key >= 'A' && key <= 'D')) {
+        e.preventDefault();
+        let idx = -1;
+        if (e.key >= '1' && e.key <= '4') {
+          idx = parseInt(e.key) - 1;
+        } else {
+          idx = key.charCodeAt(0) - 65;
+        }
+        if (idx < choices.length) {
+          choices[idx].click();
+        }
+        return;
+      }
+
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (focusedChoiceIndex > 0) {
+            focusedChoiceIndex--;
+          } else if (focusedChoiceIndex === -1 && choices.length > 0) {
+            focusedChoiceIndex = choices.length - 1;
+          }
+          updateChoiceFocus();
+          break;
+
+        case 'ArrowDown':
+          e.preventDefault();
+          if (focusedChoiceIndex < choices.length - 1) {
+            focusedChoiceIndex++;
+          } else if (focusedChoiceIndex === -1 && choices.length > 0) {
+            focusedChoiceIndex = 0;
+          }
+          updateChoiceFocus();
+          break;
+
+        case 'ArrowLeft':
+          e.preventDefault();
+          idx = (idx - 1 + questions.length) % questions.length;
+          render(idx);
+          focusedChoiceIndex = -1;
+          break;
+
+        case 'ArrowRight':
+          e.preventDefault();
+          idx = (idx + 1) % questions.length;
+          render(idx);
+          focusedChoiceIndex = -1;
+          break;
+
+        case 'Enter':
+          e.preventDefault();
+          if (focusedChoiceIndex >= 0 && choices[focusedChoiceIndex]) {
+            choices[focusedChoiceIndex].click();
+          }
+          break;
+      }
+    });
+
+    // Reset focus when new question loads
+    const origRender = render;
+    render = function(i) {
+      origRender(i);
+      focusedChoiceIndex = -1;
+    };
+  </script>
+  <script src="nav-controls.js"></script>
+</body>
+</html>

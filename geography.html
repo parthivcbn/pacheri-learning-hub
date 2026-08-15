@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Geography Quest - Learning Adventure</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #7e22ce 50%, #ec4899 75%, #f59e0b 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 60px rgba(59, 130, 246, 0.4);
+      backdrop-filter: blur(20px);
+      max-width: 700px;
+      width: 100%;
+      border: 2px solid rgba(100, 200, 255, 0.3);
+    }
+
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    h1 {
+      font-size: 32px;
+      background: linear-gradient(135deg, #00f2fe, #4facfe, #f093fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .level-select {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .level-btn {
+      padding: 8px 16px;
+      background: rgba(100, 200, 255, 0.1);
+      color: #00f2fe;
+      border: 2px solid rgba(100, 200, 255, 0.3);
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .level-btn:hover,
+    .level-btn.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-color: #667eea;
+      color: white;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+      background: rgba(10, 5, 20, 0.6);
+      padding: 15px;
+      border-radius: 15px;
+      border: 1px solid rgba(100, 200, 255, 0.2);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-label {
+      color: #a0aec0;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .question-box {
+      background: rgba(30, 41, 59, 0.6);
+      border: 2px solid rgba(100, 200, 255, 0.2);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .question-text {
+      font-size: 24px;
+      color: #e6f3ff;
+      font-weight: bold;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .option-btn {
+      padding: 15px;
+      background: linear-gradient(135deg, rgba(100, 200, 255, 0.1), rgba(147, 112, 219, 0.1));
+      color: #e6f3ff;
+      border: 2px solid rgba(100, 200, 255, 0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .option-btn:hover {
+      background: linear-gradient(135deg, rgba(100, 200, 255, 0.2), rgba(147, 112, 219, 0.2));
+      border-color: rgba(100, 200, 255, 0.6);
+      transform: scale(1.02);
+    }
+
+    .option-btn.correct {
+      background: linear-gradient(135deg, #11e08d, #50d6a8);
+      border-color: #11e08d;
+      color: white;
+      box-shadow: 0 0 20px rgba(17, 224, 141, 0.5);
+    }
+
+    .option-btn.wrong {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+      border-color: #ff6b6b;
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    }
+
+    .powerups {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .powerup-btn {
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+    }
+
+    .powerup-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(240, 147, 251, 0.5);
+    }
+
+    .powerup-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .leaderboard {
+      background: rgba(10, 5, 20, 0.6);
+      border: 1px solid rgba(100, 200, 255, 0.2);
+      border-radius: 15px;
+      padding: 15px;
+      margin-bottom: 20px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .leaderboard-title {
+      color: #00f2fe;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      color: #a0aec0;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(100, 200, 255, 0.1);
+      font-size: 14px;
+    }
+
+    .leaderboard-item.top {
+      color: #f59e0b;
+      font-weight: bold;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button.btn-main {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-play:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-reset {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+    }
+
+    .btn-reset:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(240, 147, 251, 0.6);
+    }
+
+    .result-message {
+      background: rgba(100, 200, 255, 0.1);
+      border: 2px solid rgba(100, 200, 255, 0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      color: #e6f3ff;
+      font-weight: bold;
+      text-align: center;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .result-message.show {
+      display: flex;
+    }
+
+    .result-message.hide {
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(100, 200, 255, 0.1);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(100, 200, 255, 0.2);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00f2fe, #4facfe);
+      transition: width 0.3s ease;
+    }
+
+    .kb-geo-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(100, 200, 255, 0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 11px;
+      color: #a0aec0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      line-height: 1.6;
+    }
+
+    .option-btn.focused {
+      border-color: rgba(0, 212, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .options {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .game-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body class="no-global-scroll">
+  <div class="container">
+    <div class="game-header">
+      <h1>� Space Geography Quest</h1>
+      <div style="color: #a0aec0; font-size: 14px;" id="gradeInfo"></div>
+    </div>
+
+    <div class="level-select">
+      <button class="level-btn active" onclick="setGrade('4')">Grade 4</button>
+      <button class="level-btn" onclick="setGrade('7')">Grade 7</button>
+      <button class="level-btn" onclick="setGrade('space')">Space</button>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-label">Score</div>
+        <div class="stat-value" id="score">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Streak</div>
+        <div class="stat-value" id="streak">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Time</div>
+        <div class="stat-value" id="timer">0s</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Question</div>
+        <div class="stat-value" id="questionCount">0/20</div>
+      </div>
+    </div>
+
+    <div class="leaderboard" id="leaderboard" style="display:none;"></div>
+
+    <div class="result-message hide" id="resultMessage"></div>
+
+    <div class="powerups" id="powerupsContainer"></div>
+
+    <div class="question-box" id="questionBox">
+      <div class="question-text" id="question">Click "Start Game" to begin!</div>
+      <div class="options" id="options"></div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-play" onclick="startGame()" id="startBtn">Start Game</button>
+      <button class="btn-reset" onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="kb-geo-hint">
+    <div>⬆️ ⬇️: Navigate Options</div>
+    <div>↵ Enter: Select • 4/7 Switch Grade</div>
+  </div>
+
+  <script>
+    const geographyQuestions = {
+      4: [
+        { q: "Which country has the Eiffel Tower?", opts: ["Spain", "France", "Italy", "Germany"], a: 1, exp: "The Eiffel Tower is in Paris, France." },
+        { q: "What is the largest ocean on Earth?", opts: ["Atlantic", "Arctic", "Indian", "Pacific"], a: 3, exp: "The Pacific Ocean is the largest ocean." },
+        { q: "Which continent is known for the Sahara Desert?", opts: ["Europe", "Africa", "Asia", "Australia"], a: 1, exp: "The Sahara Desert is in Africa." },
+        { q: "What is the capital city of Kenya?", opts: ["Nairobi", "Kampala", "Dar es Salaam", "Addis Ababa"], a: 0, exp: "Nairobi is the capital of Kenya." },
+        { q: "Which country is famous for the Great Wall?", opts: ["India", "China", "Japan", "Thailand"], a: 1, exp: "The Great Wall is in China." },
+        { q: "What do we call the imaginary line around the middle of Earth?", opts: ["Prime Meridian", "Equator", "Tropic of Cancer", "Arctic Circle"], a: 1, exp: "The Equator is the middle line around Earth." },
+        { q: "Which sea is between Europe and Africa?", opts: ["Black Sea", "Baltic Sea", "Mediterranean Sea", "Red Sea"], a: 2, exp: "The Mediterranean Sea lies between Europe and Africa." },
+        { q: "What is the capital of Saudi Arabia?", opts: ["Dubai", "Riyadh", "Doha", "Muscat"], a: 1, exp: "Riyadh is the capital of Saudi Arabia." },
+        { q: "Which animal is a symbol of Australia?", opts: ["Panda", "Kangaroo", "Tiger", "Wolf"], a: 1, exp: "The kangaroo is strongly associated with Australia." },
+        { q: "What is the capital of Nigeria?", opts: ["Lagos", "Abuja", "Accra", "Cairo"], a: 1, exp: "Abuja is the capital of Nigeria." },
+        { q: "Which is the longest river in Africa?", opts: ["Nile", "Amazon", "Yangtze", "Mississippi"], a: 0, exp: "The Nile is the longest river in Africa." },
+        { q: "Which country is shaped like a boot?", opts: ["Greece", "Portugal", "Italy", "Spain"], a: 2, exp: "Italy is shaped like a boot on maps." },
+        { q: "What is the capital of Peru?", opts: ["Lima", "Bogotá", "Quito", "Santiago"], a: 0, exp: "Lima is the capital of Peru." },
+        { q: "Which ocean lies near the coast of California?", opts: ["Atlantic", "Indian", "Pacific", "Southern"], a: 2, exp: "California borders the Pacific Ocean." },
+        { q: "What is the capital of Egypt?", opts: ["Cairo", "Alexandria", "Luxor", "Giza"], a: 0, exp: "Cairo is the capital of Egypt." },
+        { q: "Which continent is the coldest?", opts: ["Asia", "Europe", "Antarctica", "South America"], a: 2, exp: "Antarctica is the coldest continent." },
+        { q: "What is the capital of Spain?", opts: ["Barcelona", "Madrid", "Seville", "Valencia"], a: 1, exp: "Madrid is the capital of Spain." },
+        { q: "Which mountain is the highest in the world?", opts: ["K2", "Mount Kosciuszko", "Mount Everest", "Mont Blanc"], a: 2, exp: "Mount Everest is the highest mountain above sea level." },
+        { q: "What is the capital of Turkey?", opts: ["Ankara", "Istanbul", "Izmir", "Bursa"], a: 0, exp: "Ankara is the capital of Turkey." },
+        { q: "Which country has the Amazon Rainforest?", opts: ["Brazil", "Canada", "Russia", "Mexico"], a: 0, exp: "Brazil contains most of the Amazon Rainforest." },
+        { q: "What is the capital of South Korea?", opts: ["Busan", "Daegu", "Seoul", "Incheon"], a: 2, exp: "Seoul is the capital of South Korea." },
+        { q: "Which is the smallest continent?", opts: ["Australia", "Europe", "Africa", "Antarctica"], a: 0, exp: "Australia is the smallest continent." },
+        { q: "What is the capital of Norway?", opts: ["Oslo", "Stockholm", "Copenhagen", "Helsinki"], a: 0, exp: "Oslo is the capital of Norway." }
+      ],
+      7: [
+        { q: "What is the name of the line at 0° longitude?", opts: ["Equator", "Prime Meridian", "Tropic of Capricorn", "Arctic Circle"], a: 1, exp: "The Prime Meridian is at 0° longitude." },
+        { q: "Which country has the city of Cape Town?", opts: ["Botswana", "South Africa", "Namibia", "Zimbabwe"], a: 1, exp: "Cape Town is in South Africa." },
+        { q: "What is the largest desert in the world?", opts: ["Gobi", "Kalahari", "Sahara", "Antarctic"], a: 2, exp: "The Sahara is the largest hot desert." },
+        { q: "Which river forms part of the border between the United States and Mexico?", opts: ["Mississippi", "Colorado", "Rio Grande", "Hudson"], a: 2, exp: "The Rio Grande forms part of the border between the two countries." },
+        { q: "What is the capital of Bangladesh?", opts: ["Dhaka", "Colombo", "Kathmandu", "Kuala Lumpur"], a: 0, exp: "Dhaka is the capital of Bangladesh." },
+        { q: "Which country is home to the Andes Mountains?", opts: ["India", "China", "Chile", "Egypt"], a: 2, exp: "The Andes run through Chile and other South American countries." },
+        { q: "Which sea is known for being the saltiest?", opts: ["Dead Sea", "Baltic Sea", "Black Sea", "Arabian Sea"], a: 0, exp: "The Dead Sea is the saltiest sea or lake." },
+        { q: "What is the capital of Vietnam?", opts: ["Bangkok", "Hanoi", "Jakarta", "Manila"], a: 1, exp: "Hanoi is the capital of Vietnam." },
+        { q: "Which country contains most of the Congo Basin rainforest?", opts: ["Democratic Republic of the Congo", "Kenya", "Sudan", "Tanzania"], a: 0, exp: "The DRC contains a major part of the Congo Basin rainforest." },
+        { q: "What is the largest island in the world?", opts: ["Madagascar", "Greenland", "Borneo", "New Guinea"], a: 1, exp: "Greenland is the largest island." },
+        { q: "Which country is known as the Land of the Rising Sun?", opts: ["China", "Japan", "South Korea", "Thailand"], a: 1, exp: "Japan is called the Land of the Rising Sun." },
+        { q: "What is the capital of Argentina?", opts: ["Buenos Aires", "Córdoba", "Rosario", "Mendoza"], a: 0, exp: "Buenos Aires is the capital of Argentina." },
+        { q: "Which ocean borders the west coast of South America?", opts: ["Atlantic", "Indian", "Pacific", "Arctic"], a: 2, exp: "The Pacific Ocean borders the west coast of South America." },
+        { q: "What is the capital of Kazakhstan?", opts: ["Astana", "Tashkent", "Bishkek", "Almaty"], a: 0, exp: "Astana is the capital of Kazakhstan." },
+        { q: "Which mountain range contains Mount Everest?", opts: ["Rockies", "Alps", "Andes", "Himalayas"], a: 3, exp: "Mount Everest is in the Himalayas." },
+        { q: "What is the capital of Morocco?", opts: ["Casablanca", "Rabat", "Marrakech", "Tangier"], a: 1, exp: "Rabat is the capital of Morocco." },
+        { q: "Which country is surrounded by the Mediterranean Sea, the Atlantic Ocean, and the Sahara?", opts: ["Mauritania", "Libya", "Algeria", "Tunisia"], a: 0, exp: "Mauritania lies beside the Atlantic and Sahara." },
+        { q: "What is the capital of Nepal?", opts: ["Kathmandu", "Lhasa", "Dhaka", "Kabul"], a: 0, exp: "Kathmandu is the capital of Nepal." },
+        { q: "Which desert is the coldest in the world?", opts: ["Sahara", "Gobi", "Kalahari", "Antarctic"], a: 3, exp: "The Antarctic Desert is the coldest desert." },
+        { q: "What is the capital of Sweden?", opts: ["Oslo", "Stockholm", "Copenhagen", "Helsinki"], a: 1, exp: "Stockholm is the capital of Sweden." },
+        { q: "Which country contains the city of Istanbul?", opts: ["Greece", "Turkey", "Romania", "Bulgaria"], a: 1, exp: "Istanbul is in Turkey." },
+        { q: "What is the capital of Zambia?", opts: ["Lusaka", "Harare", "Lilongwe", "Gaborone"], a: 0, exp: "Lusaka is the capital of Zambia." }
+      ]
+    };
+
+    const sharedQuestionPool = [...geographyQuestions[4], ...geographyQuestions[7]];
+    geographyQuestions[4] = sharedQuestionPool;
+    geographyQuestions[7] = sharedQuestionPool;
+    geographyQuestions.space = sharedQuestionPool;
+
+    const TOTAL_QUESTIONS = 20;
+    let currentGrade = '4';
+    let currentQuestions = [...geographyQuestions['4']];
+    let currentIndex = 0;
+    var score = 0;
+    let streak = 0;
+    let gameStarted = false;
+    let timeElapsed = 0;
+    let timerInterval = null;
+    let leaderboard = JSON.parse(localStorage.getItem('geoLeaderboard')) || [];
+    let powerUpsUsed = { hint: false, timeBonus: false };
+    let questionsAsked = 0;
+
+    function setGrade(grade) {
+      currentGrade = grade;
+      document.querySelectorAll('.level-btn').forEach(btn => btn.classList.remove('active'));
+      const selectedButton = event.currentTarget || document.querySelector(`.level-btn[onclick*="setGrade('${grade}')"]`);
+      if (selectedButton) selectedButton.classList.add('active');
+      currentQuestions = [...(geographyQuestions[grade] || sharedQuestionPool)];
+      document.getElementById('gradeInfo').textContent = grade === 'space' ? 'Space' : `Grade ${grade}`;
+      resetGame();
+    }
+
+    function startGame() {
+      if (!gameStarted) {
+        gameStarted = true;
+        currentIndex = 0;
+        score = 0;
+        streak = 0;
+        questionsAsked = 0;
+        timeElapsed = 0;
+        powerUpsUsed = { hint: false, timeBonus: false };
+        currentQuestions = JSON.parse(JSON.stringify(geographyQuestions[currentGrade]));
+        shuffleArray(currentQuestions);
+        
+        document.getElementById('startBtn').textContent = 'Next';
+        timerInterval = setInterval(() => {
+          timeElapsed++;
+          document.getElementById('timer').textContent = timeElapsed + 's';
+        }, 1000);
+        
+        showQuestion();
+        updatePowerups();
+      } else if (questionsAsked < TOTAL_QUESTIONS) {
+        currentIndex++;
+        questionsAsked++;
+        showQuestion();
+      } else {
+        endGame();
+      }
+    }
+
+    function showQuestion() {
+      if (questionsAsked >= TOTAL_QUESTIONS) {
+        endGame();
+        return;
+      }
+
+      if (currentIndex >= currentQuestions.length) {
+        currentIndex = currentQuestions.length - 1;
+      }
+
+      const q = currentQuestions[currentIndex];
+      document.getElementById('question').textContent = q.q;
+      
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      
+      q.opts.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(idx, q.a);
+        optionsDiv.appendChild(btn);
+      });
+
+      updateProgress();
+    }
+
+    function checkAnswer(chosen, correct) {
+      const optionBtns = document.querySelectorAll('.option-btn');
+      optionBtns.forEach(btn => btn.disabled = true);
+      
+      optionBtns[correct].classList.add('correct');
+      
+      if (chosen !== correct) {
+        optionBtns[chosen].classList.add('wrong');
+        streak = 0;
+        showResult('❌ Wrong! Try again next time.', false);
+      } else {
+        score += 10 * (streak + 1);
+        streak++;
+        showResult('✅ Correct! Great job!', true);
+      }
+
+      document.getElementById('score').textContent = score;
+      document.getElementById('streak').textContent = streak;
+      updateProgress();
+    }
+
+    function showResult(message, isCorrect) {
+      const resultDiv = document.getElementById('resultMessage');
+      resultDiv.textContent = message;
+      resultDiv.classList.remove('hide');
+      resultDiv.classList.add('show');
+      
+      setTimeout(() => {
+        resultDiv.classList.add('hide');
+        resultDiv.classList.remove('show');
+      }, 1500);
+    }
+
+    function updateProgress() {
+      const progress = (questionsAsked / TOTAL_QUESTIONS) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+      document.getElementById('questionCount').textContent = questionsAsked + '/' + TOTAL_QUESTIONS;
+    }
+
+    function updatePowerups() {
+      const container = document.getElementById('powerupsContainer');
+      container.innerHTML = '';
+      
+      const hintBtn = document.createElement('button');
+      hintBtn.className = 'powerup-btn';
+      hintBtn.textContent = '💡 Hint';
+      hintBtn.disabled = powerUpsUsed.hint;
+      hintBtn.onclick = () => {
+        const q = currentQuestions[currentIndex];
+        const correct = q.opts[q.a];
+        alert('Hint: The answer is related to ' + correct.substring(0, 1).toUpperCase());
+        powerUpsUsed.hint = true;
+        hintBtn.disabled = true;
+      };
+      container.appendChild(hintBtn);
+
+      const timeBtn = document.createElement('button');
+      timeBtn.className = 'powerup-btn';
+      timeBtn.textContent = '⏱️ +30s';
+      timeBtn.disabled = powerUpsUsed.timeBonus;
+      timeBtn.onclick = () => {
+        timeElapsed -= 30;
+        if (timeElapsed < 0) timeElapsed = 0;
+        powerUpsUsed.timeBonus = true;
+        timeBtn.disabled = true;
+      };
+      container.appendChild(timeBtn);
+    }
+
+    function endGame() {
+      gameStarted = false;
+      clearInterval(timerInterval);
+      
+      const entry = { score, time: timeElapsed, grade: currentGrade, date: new Date().toLocaleDateString() };
+      leaderboard.push(entry);
+      leaderboard.sort((a, b) => b.score - a.score);
+      leaderboard = leaderboard.slice(0, 10);
+      localStorage.setItem('geoLeaderboard', JSON.stringify(leaderboard));
+      
+      showLeaderboard();
+      document.getElementById('startBtn').textContent = 'Play Again';
+      alert(`Game Over! Final Score: ${score} points in ${timeElapsed} seconds!`);
+    }
+
+    function showLeaderboard() {
+      const leaderboardDiv = document.getElementById('leaderboard');
+      leaderboardDiv.innerHTML = '<div class="leaderboard-title">🏆 Top Scores</div>';
+      leaderboard.forEach((entry, idx) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item' + (idx === 0 ? ' top' : '');
+        item.textContent = `${idx + 1}. ${entry.score} pts (${entry.time}s) - Grade ${entry.grade}`;
+        leaderboardDiv.appendChild(item);
+      });
+      leaderboardDiv.style.display = 'block';
+    }
+
+    function resetGame() {
+      gameStarted = false;
+      currentIndex = 0;
+      score = 0;
+      streak = 0;
+      questionsAsked = 0;
+      timeElapsed = 0;
+      clearInterval(timerInterval);
+      powerUpsUsed = { hint: false, timeBonus: false };
+      
+      document.getElementById('score').textContent = '0';
+      document.getElementById('streak').textContent = '0';
+      document.getElementById('timer').textContent = '0s';
+      document.getElementById('questionCount').textContent = '0/20';
+      document.getElementById('progressFill').style.width = '0%';
+      document.getElementById('startBtn').textContent = 'Start Game';
+      document.getElementById('question').textContent = 'Click "Start Game" to begin!';
+      document.getElementById('options').innerHTML = '';
+      document.getElementById('leaderboard').style.display = 'none';
+    }
+
+    function resetAll() {
+      resetGame();
+      leaderboard = [];
+      localStorage.removeItem('geoLeaderboard');
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    document.getElementById('gradeInfo').textContent = 'Grade 4';
+    showLeaderboard();
+
+    // Keyboard navigation
+    let focusedOptionIndex = -1;
+
+    function updateOptionFocus() {
+      document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('focused'));
+      const buttons = document.querySelectorAll('.option-btn');
+      if (buttons[focusedOptionIndex]) {
+        buttons[focusedOptionIndex].classList.add('focused');
+        buttons[focusedOptionIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const buttons = document.querySelectorAll('.option-btn');
+
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (focusedOptionIndex > 0) {
+            focusedOptionIndex--;
+            updateOptionFocus();
+          } else if (focusedOptionIndex === -1 && buttons.length > 0) {
+            focusedOptionIndex = buttons.length - 1;
+            updateOptionFocus();
+          }
+          break;
+
+        case 'ArrowDown':
+          e.preventDefault();
+          if (focusedOptionIndex < buttons.length - 1) {
+            focusedOptionIndex++;
+            updateOptionFocus();
+          } else if (focusedOptionIndex === -1 && buttons.length > 0) {
+            focusedOptionIndex = 0;
+            updateOptionFocus();
+          }
+          break;
+
+        case 'Enter':
+          e.preventDefault();
+          if (focusedOptionIndex >= 0 && buttons[focusedOptionIndex]) {
+            buttons[focusedOptionIndex].click();
+            focusedOptionIndex = -1;
+          }
+          break;
+
+        case '4':
+          e.preventDefault();
+          if (currentGrade !== '4') {
+            setGrade('4');
+          }
+          break;
+
+        case '7':
+          e.preventDefault();
+          if (currentGrade !== '7') {
+            setGrade('7');
+          }
+          break;
+
+        case '3':
+          e.preventDefault();
+          if (currentGrade !== 'space') {
+            setGrade('space');
+          }
+          break;
+      }
+    });
+
+    // Reset focus when new question loads
+    const origShowQuestion = showQuestion;
+    showQuestion = function() {
+      origShowQuestion.call(this);
+      focusedOptionIndex = -1;
+    };
+  </script>
+  <script src="nav-controls.js"></script>
+</body>
+</html>

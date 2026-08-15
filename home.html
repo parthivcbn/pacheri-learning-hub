@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Learning Hub — Quiz & Lessons</title>
+  <style>
+    :root{
+      --bg: #0a0e27;
+      --card-bg: rgba(15, 23, 42, 0.7);
+      --muted: #93c5fd;
+      --accent: #00d4ff;
+      --text: #e6f3ff;
+    }
+
+    html, body {
+      height: auto;
+      margin: 0;
+      overflow: auto;
+      scrollbar-width: auto;
+      -ms-overflow-style: auto;
+    }
+
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      min-height:100vh;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 25%, #0d1b4f 50%, #1a0f3e 75%, #0a0e27 100%);
+      color:var(--text);
+      padding:10px 12px;
+      position: relative;
+    }
+
+    /* keep default webkit scrollbar behavior so mouse scroll works */
+
+    /* Starfield background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 60px 70px, #eee, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 50px 50px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 10px, #ddd, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: 0.85;
+      animation: twinkleSky 8s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes twinkleSky {
+      0%, 100% { opacity: 0.75; }
+      50% { opacity: 1; }
+    }
+
+    /* Animated nebula clouds */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: -20%;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(ellipse at 30% 40%, rgba(150, 100, 255, 0.12), transparent 50%),
+                  radial-gradient(ellipse at 70% 60%, rgba(100, 200, 255, 0.1), transparent 45%);
+      border-radius: 50%;
+      filter: blur(100px);
+      animation: nebulaDrift 20s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes nebulaDrift {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(40px, -60px); }
+    }
+
+    .container{max-width:1100px;margin:0 auto;position:relative;z-index:10;height:auto}
+    
+    header{text-align:center;margin-bottom:18px}
+    h1{font-size:30px;margin:0 0 6px;background:linear-gradient(135deg, #00d4ff, #7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .tagline{font-size:14px;color:var(--muted)}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin-top:12px}
+
+    .card{
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius:16px;
+      padding:16px;
+      border:1px solid rgba(100, 150, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 122, 255, 0.15);
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.3s ease;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .card:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+      border-color: rgba(0, 212, 255, 0.4);
+    }
+
+    .card-icon{font-size:32px;margin-bottom:8px}
+    .card-title{font-size:16px;font-weight:600;margin-bottom:6px;color:#00d4ff}
+    .card-desc{font-size:12px;color:var(--muted);line-height:1.4;flex:1;margin-bottom:8px}
+    .card-badge{display:inline-block;background:rgba(0, 212, 255, 0.1);color:var(--accent);padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600}
+
+    .card-features{
+      font-size:11px;
+      color:var(--muted);
+      margin-top:8px;
+      padding:8px;
+      background:rgba(59, 130, 246, 0.05);
+      border-left:2px solid var(--accent);
+      border-radius:6px;
+      line-height:1.5;
+    }
+
+    .card-features strong{
+      color:var(--accent);
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .feature-item{
+      margin:4px 0;
+      padding-left:16px;
+    }
+
+    .feature-item:before{
+      content:"▸ ";
+      color:var(--accent);
+      font-weight:bold;
+      margin-left:-12px;
+    }
+
+    .btn-visit{
+      margin-top:8px;
+      padding:8px 12px;
+      background:linear-gradient(135deg, #00d4ff, #3b82f6);
+      color:#0a0e27;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      transition:all 0.3s;
+    }
+
+    .btn-visit:hover{
+      box-shadow: 0 8px 16px rgba(0, 212, 255, 0.4);
+      transform: scale(1.02);
+    }
+
+    .feature-list{margin:10px 0 0;background:rgba(0, 122, 255, 0.05);border-radius:14px;padding:12px;border:1px solid rgba(0, 212, 255, 0.15)}
+    .feature-list h3{margin:0 0 8px;color:var(--accent)}
+    .feature-list li{margin:4px 0;color:var(--muted);line-height:1.3}
+
+    .daily-panel {
+      margin-top: 18px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.12);
+    }
+
+    .daily-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .daily-eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .daily-header h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(18px, 2vw, 26px);
+    }
+
+    .daily-date {
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .daily-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .daily-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .daily-card h4 {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 15px;
+    }
+
+    .daily-card p {
+      margin: 0;
+      line-height: 1.6;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .daily-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .daily-card li {
+      padding: 8px 10px;
+      background: rgba(59, 130, 246, 0.05);
+      border-left: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .chip {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(45, 212, 191, 0.12);
+      border: 1px solid rgba(45, 212, 191, 0.25);
+      color: #9ae6b4;
+      font-weight: 600;
+    }
+
+    footer{text-align:center;margin-top:12px;color:var(--muted);font-size:12px}
+
+    /* Rocket animation */
+    .rocket {
+      position: fixed;
+      font-size: 32px;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .rocket1 {
+      animation: rocketFlyRight 14s linear infinite;
+    }
+
+    .rocket2 {
+      animation: rocketFlyLeft 16s linear infinite;
+      animation-delay: 2s;
+    }
+
+    .rocket3 {
+      animation: rocketFlyTop 15s linear infinite;
+      animation-delay: 4s;
+    }
+
+    .rocket4 {
+      animation: rocketFlyBottom 17s linear infinite;
+      animation-delay: 1s;
+    }
+
+    .rocket5 {
+      animation: rocketFlyTopRight 18s linear infinite;
+      animation-delay: 3s;
+    }
+
+    .rocket6 {
+      animation: rocketFlyTopLeft 16s linear infinite;
+      animation-delay: 5s;
+    }
+
+    .rocket7 {
+      animation: rocketFlyBottomRight 19s linear infinite;
+      animation-delay: 2.5s;
+    }
+
+    .rocket8 {
+      animation: rocketFlyBottomLeft 17s linear infinite;
+      animation-delay: 4.5s;
+    }
+
+    @keyframes rocketFlyRight {
+      0% { bottom: 15%; right: -5%; transform: rotate(-25deg); }
+      50% { bottom: 65%; right: 45%; transform: rotate(15deg); }
+      100% { bottom: 15%; right: 105%; transform: rotate(-25deg); }
+    }
+
+    @keyframes rocketFlyLeft {
+      0% { bottom: 20%; left: -5%; transform: rotate(25deg) scaleX(-1); }
+      50% { bottom: 70%; left: 45%; transform: rotate(-15deg) scaleX(-1); }
+      100% { bottom: 20%; left: 105%; transform: rotate(25deg) scaleX(-1); }
+    }
+
+    @keyframes rocketFlyTop {
+      0% { top: -5%; left: 20%; transform: rotate(90deg); }
+      50% { top: 45%; left: 50%; transform: rotate(95deg); }
+      100% { top: 105%; left: 80%; transform: rotate(90deg); }
+    }
+
+    @keyframes rocketFlyBottom {
+      0% { bottom: -5%; right: 30%; transform: rotate(-90deg); }
+      50% { bottom: 45%; right: 50%; transform: rotate(-85deg); }
+      100% { bottom: 105%; right: 70%; transform: rotate(-90deg); }
+    }
+
+    @keyframes rocketFlyTopRight {
+      0% { top: -5%; right: -5%; transform: rotate(-45deg); }
+      50% { top: 40%; right: 35%; transform: rotate(-30deg); }
+      100% { top: 105%; right: 105%; transform: rotate(-45deg); }
+    }
+
+    @keyframes rocketFlyTopLeft {
+      0% { top: -5%; left: -5%; transform: rotate(45deg) scaleX(-1); }
+      50% { top: 40%; left: 35%; transform: rotate(30deg) scaleX(-1); }
+      100% { top: 105%; left: 105%; transform: rotate(45deg) scaleX(-1); }
+    }
+
+    @keyframes rocketFlyBottomRight {
+      0% { bottom: -5%; right: -5%; transform: rotate(45deg); }
+      50% { bottom: 40%; right: 35%; transform: rotate(30deg); }
+      100% { bottom: 105%; right: 105%; transform: rotate(45deg); }
+    }
+
+    @keyframes rocketFlyBottomLeft {
+      0% { bottom: -5%; left: -5%; transform: rotate(-45deg) scaleX(-1); }
+      50% { bottom: 40%; left: 35%; transform: rotate(-30deg) scaleX(-1); }
+      100% { bottom: 105%; left: 105%; transform: rotate(-45deg) scaleX(-1); }
+    }
+
+    /* Arrow key navigation */
+    .card.selected {
+      border-color: rgba(0, 212, 255, 0.8);
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.5), inset 0 0 20px rgba(0, 212, 255, 0.1);
+      transform: scale(1.02);
+    }
+
+    .nav-hint {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 11px;
+      color: var(--muted);
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      line-height: 1.6;
+    }
+
+    .movement-bar {
+      position: fixed;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 200px;
+      background: rgba(0, 212, 255, 0.15);
+      border-radius: 4px;
+      border: 1.5px solid rgba(0, 212, 255, 0.5);
+      z-index: 15;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.3);
+    }
+
+    .movement-bar-fill {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #00d4ff, #3b82f6);
+      border-radius: 4px;
+      transition: top 0.3s ease;
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.3);
+    }
+
+    @media(max-width:640px){
+      h1{font-size:22px}
+      .grid{grid-template-columns:1fr}
+      header{margin-bottom:10px}
+      .nav-hint{font-size:11px;padding:10px 12px;bottom:10px;right:10px}
+      .movement-bar{display:none}
+    }
+  </style>
+</head>
+<body class="no-global-scroll">
+  <div class="rocket rocket1">🚀</div>
+  <div class="rocket rocket2">🚀</div>
+  <div class="rocket rocket3">🚀</div>
+  <div class="rocket rocket4">🚀</div>
+  <div class="rocket rocket5">🚀</div>
+  <div class="rocket rocket6">🚀</div>
+  <div class="rocket rocket7">🚀</div>
+  <div class="rocket rocket8">🚀</div>
+  <div class="container">
+    <header>
+      <h1>🎓 Learning Hub</h1>
+      <p class="tagline">Interactive Quizzes, Lessons & Space Exploration</p>
+    </header>
+
+    <div class="grid">
+      <!-- Quiz Card -->
+      <a href="index.html" class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Quiz Master</div>
+        <div class="card-desc">Adaptive quizzes for Grade 4 & 7 in Math & Science. Choose your grade, subject, science theme (Astronomy, Biology, Chemistry, Physics). Features auto-advance, shuffle, and random modes.</div>
+        <span class="card-badge">6 Themes • Auto-advance • Shuffle & Random</span>
+        <div class="card-features">
+          <strong>Keyboard Controls:</strong>
+          <div class="feature-item">1-4 or A-D: Select answer</div>
+          <div class="feature-item">⬆️ ⬇️: Navigate choices</div>
+          <div class="feature-item">⬅️ ➡️: Previous/Next question</div>
+          <div class="feature-item">↵ Enter: Confirm selection</div>
+        </div>
+        <button class="btn-visit">Open Quiz</button>
+      </a>
+
+      <!-- Maths Teacher Card -->
+      <a href="teacher_grade7_arithmetic.html" class="card">
+        <div class="card-icon">📐</div>
+        <div class="card-title">Maths Teacher</div>
+        <div class="card-desc">Grade 7 CBSE — Arithmetic Expressions. Learn concepts, see examples, practice MCQs.</div>
+        <span class="card-badge">Lesson • 6 MCQs</span>
+        <div class="card-features">
+          <strong>Features:</strong>
+          <div class="feature-item">Interactive lesson with key concepts</div>
+          <div class="feature-item">6 worked examples explained</div>
+          <div class="feature-item">Practice multiple-choice questions</div>
+          <div class="feature-item">Show answer & detailed explanations</div>
+        </div>
+        <button class="btn-visit">Study Now</button>
+      </a>
+
+      <!-- Space Explorer Card -->
+      <a href="space.html" class="card">
+        <div class="card-icon">🌌</div>
+        <div class="card-title">Space Explorer</div>
+        <div class="card-desc">Explore galaxies, nebulas, stars, solar system & planets with animated background & rockets.</div>
+        <span class="card-badge">Interactive • 8 Questions</span>
+        <div class="card-features">
+          <strong>Keyboard Navigation:</strong>
+          <div class="feature-item">⬆️ ⬇️ ⬅️ ➡️: Navigate sections</div>
+          <div class="feature-item">Home: Jump to top</div>
+          <div class="feature-item">End: Jump to last section</div>
+          <div class="feature-item">5 Sections: Planets, Stars, Moons, Asteroids, Exoplanets</div>
+        </div>
+        <button class="btn-visit">Explore Space</button>
+      </a>
+
+      <!-- Cosmic Puzzle Card -->
+      <a href="puzzle.html" class="card">
+        <div class="card-icon">🎮</div>
+        <div class="card-title">Cosmic Puzzle</div>
+        <div class="card-desc">Fun memory matching game with space-themed emojis. 3 difficulty levels - Easy, Medium & Hard!</div>
+        <span class="card-badge">Game • 5 Themes • 5 Difficulties</span>
+        <div class="card-features">
+          <strong>5 Game Themes:</strong>
+          <div class="feature-item">🌌 Cosmic Puzzle • 🦁 Animal Match</div>
+          <div class="feature-item">🌿 Nature Quest • 🍕 Food Frenzy</div>
+          <div class="feature-item">⚽ Sports Mix • All with 5 difficulty levels</div>
+        </div>
+        <button class="btn-visit">Play Game</button>
+      </a>
+
+      <!-- Earth Geography Card -->
+      <a href="geography.html" class="card">
+        <div class="card-icon">🌍</div>
+        <div class="card-title">Earth Geography</div>
+        <div class="card-desc">Interactive geography learning game with 20 questions, power-ups, time tracking, and leaderboard for both Grade 4 & 7!</div>
+        <span class="card-badge">Adventure • Grades 4 & 7</span>
+        <div class="card-features">
+          <strong>Features:</strong>
+          <div class="feature-item">20 challenging geography questions</div>
+          <div class="feature-item">Power-ups to help you succeed</div>
+          <div class="feature-item">Time tracking & leaderboard</div>
+          <div class="feature-item">Grades 4 & 7 difficulty levels</div>
+        </div>
+        <button class="btn-visit">Start Quest</button>
+      </a>
+
+      <!-- AI Tutor Card -->
+      <a href="tutor.html" class="card">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">AI Tutor</div>
+        <div class="card-desc">Ask a question and get a simple explanation plus a mini learning game. Great for math, science, and general school topics.</div>
+        <span class="card-badge">Learn • Explain • Game</span>
+        <div class="card-features">
+          <strong>Features:</strong>
+          <div class="feature-item">Simple explanations for school questions</div>
+          <div class="feature-item">Mini quiz-game after each lesson</div>
+          <div class="feature-item">Works as a separate study page</div>
+        </div>
+        <button class="btn-visit">Open Tutor</button>
+      </a>
+
+      <!-- Observable Universe Map -->
+      <a href="universe.html" class="card">
+        <div class="card-icon">🌌</div>
+        <div class="card-title">Observable Universe Map</div>
+        <div class="card-desc">Interactive visualization of the observable universe showing galaxies, nebulae, stars, and cosmic structures. Learn about scale and cosmic distances!</div>
+        <span class="card-badge">Exploration • Interactive SVG</span>
+        <div class="card-features">
+          <strong>Visualize:</strong>
+          <div class="feature-item">Observable universe structure</div>
+          <div class="feature-item">Distance rings to 13.8B light-years</div>
+          <div class="feature-item">Major galaxies & cosmic structures</div>
+          <div class="feature-item">Educational cosmic facts & info</div>
+        </div>
+        <button class="btn-visit">Explore Universe</button>
+      </a>
+
+      <!-- English Mastery Card -->
+      <a href="english.html" class="card">
+        <div class="card-icon">📚</div>
+        <div class="card-title">English Mastery</div>
+        <div class="card-desc">Master grammar, vocabulary, and writing skills for Grades 4 & 7. Learn parts of speech, sentence structure, tenses, and practice with interactive quizzes.</div>
+        <span class="card-badge">Grammar • Vocabulary • Grades 4 & 7</span>
+        <div class="card-features">
+          <strong>Learn & Practice:</strong>
+          <div class="feature-item">Parts of Speech (Nouns, Verbs, Adjectives)</div>
+          <div class="feature-item">Sentence Structure & Grammar Rules</div>
+          <div class="feature-item">Verb Tenses & Subject-Verb Agreement</div>
+          <div class="feature-item">Vocabulary Building & Synonyms/Antonyms</div>
+        </div>
+        <button class="btn-visit">Study English</button>
+      </a>
+
+      <!-- English Learning Guide Card -->
+      <a href="english-guide.html" class="card">
+        <div class="card-icon">📖</div>
+        <div class="card-title">English Learning Guide</div>
+        <div class="card-desc">Complete interactive guide teaching EVERYTHING in English! Learn all topics with clear explanations, examples, then practice with targeted quizzes.</div>
+        <span class="card-badge">Complete Guide • Lessons + Quiz</span>
+        <div class="card-features">
+          <strong>Learn All Topics:</strong>
+          <div class="feature-item">Parts of Speech & Subject-Verb Agreement</div>
+          <div class="feature-item">Verb Tenses, Punctuation & Literary Devices</div>
+          <div class="feature-item">Sentence Structure, Reading & Vocabulary</div>
+          <div class="feature-item">Writing Skills & Common Errors</div>
+        </div>
+        <button class="btn-visit">Full Guide + Practice</button>
+      </a>
+    </div>
+
+    <div class="feature-list">
+      <h3>✨ Key Features</h3>
+      <ul>
+        <li>🚀 <strong>Space Theme:</strong> Animated rockets (8 directions!), nebulas, galaxies & twinkling stars throughout the app</li>
+        <li>🎓 <strong>Grade Selection:</strong> Customized quizzes for Grade 4 & Grade 7 students</li>
+        <li>📚 <strong>Multi-Subject:</strong> Math & Science with 4 science themes - Astronomy, Biology, Chemistry & Physics</li>
+        <li>⚡ <strong>Auto-Advance:</strong> Set intervals for automatic question progression with customizable timing</li>
+        <li>🔀 <strong>Quiz Modes:</strong> Shuffle questions or jump to random questions on demand</li>
+        <li>🎨 <strong>Apple Design:</strong> Clean, modern glass-card UI with smooth animations</li>
+        <li>🧠 <strong>Multiple Choice:</strong> Interactive quiz with instant answer reveal & explanations</li>
+        <li>🌟 <strong>Smart Generation:</strong> Supports unlimited questions via deterministic generation</li>
+        <li>📖 <strong>Lessons:</strong> Structured lesson content with worked examples in Maths Teacher</li>
+      </ul>
+    </div>
+
+    <section class="daily-panel" aria-live="polite">
+      <div class="daily-header">
+        <div>
+          <div class="daily-eyebrow">Daily Update</div>
+          <h3>🌍 Today’s Learning & Special Days</h3>
+        </div>
+        <div class="daily-date" id="todayDate">Loading date...</div>
+      </div>
+
+      <div class="daily-grid">
+        <div class="daily-card">
+          <h4>📘 Daily Learning Fact</h4>
+          <p id="dailyFactText">Loading today’s fact...</p>
+          <span class="chip" id="dailyFactTag">General</span>
+        </div>
+
+        <div class="daily-card">
+          <h4>🕉️ Hindu Special Days</h4>
+          <ul id="hinduDayList"></ul>
+        </div>
+
+        <div class="daily-card">
+          <h4>🕌 Other Religious Special Days</h4>
+          <ul id="religionDayList"></ul>
+        </div>
+
+        <div class="daily-card">
+          <h4>🇮🇳 Country Special Days</h4>
+          <ul id="countryDayList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Learning Hub. Created for students learning Math & Science.</p>
+    </footer>
+  </div>
+
+  <div class="nav-hint">
+    <div>⬆️ ⬇️ ⬅️ ➡️ Navigate Cards</div>
+    <div>↵ Enter: Open • Home/End: Top/Bottom</div>
+  </div>
+
+  <div class="movement-bar">
+    <div class="movement-bar-fill"></div>
+  </div>
+
+  <script>
+    const dailyFactList = [
+      { tag: 'Science', text: 'The Moon is moving away from Earth by about 3.8 centimeters each year.' },
+      { tag: 'Math', text: 'A circle has 360 degrees, and a full turn around a point is one complete rotation.' },
+      { tag: 'World', text: 'Earth is the only known planet with liquid water on its surface in large amounts.' },
+      { tag: 'Nature', text: 'Plants use sunlight to make food through photosynthesis, which is essential for life.' },
+      { tag: 'History', text: 'Many important calendars were created to track seasons, farming, and festivals.' },
+      { tag: 'Culture', text: 'Different faiths and countries celebrate special days to share values, gratitude, and community.' },
+      { tag: 'Space', text: 'The Sun is a star, and it provides light and heat that support life on Earth.' },
+      { tag: 'Geography', text: 'Seven continents and many countries together form the rich diversity of our planet.' }
+    ];
+
+    const religiousSpecialDays = [
+      { name: 'Diwali', month: 10, day: 20, group: 'Hinduism', note: 'Festival of lights; celebration of hope, light, and togetherness.' },
+      { name: 'Holi', month: 3, day: 25, group: 'Hinduism', note: 'Festival of colors and happiness.' },
+      { name: 'Ganesh Chaturthi', month: 8, day: 30, group: 'Hinduism', note: 'Celebration of Lord Ganesha, wisdom, and new beginnings.' },
+      { name: 'Raksha Bandhan', month: 8, day: 19, group: 'Hinduism', note: 'A festival honoring sibling love and protection.' },
+      { name: 'Navratri', month: 9, day: 22, group: 'Hinduism', note: 'Nine nights of worship, prayer, and devotion.' },
+      { name: 'Christmas', month: 12, day: 25, group: 'Christianity', note: 'Celebration of the birth of Jesus Christ.' },
+      { name: 'Easter Sunday', month: 4, day: 20, group: 'Christianity', note: 'Celebrates resurrection and new life in Christian tradition.' },
+      { name: 'Good Friday', month: 4, day: 18, group: 'Christianity', note: 'A solemn day remembering the crucifixion of Jesus.' },
+      { name: 'Eid al-Fitr', month: 3, day: 31, group: 'Islam', note: 'Festival marking the end of Ramadan fasting.' },
+      { name: 'Eid al-Adha', month: 5, day: 31, group: 'Islam', note: 'Festival of sacrifice and charity.' },
+      { name: 'Ramadan Starts', month: 2, day: 12, group: 'Islam', note: 'A holy month of fasting, reflection, and kindness.' },
+      { name: 'Vesak', month: 5, day: 5, group: 'Buddhism', note: 'Celebrates the birth, enlightenment, and passing of Buddha.' },
+      { name: 'Buddha Purnima', month: 4, day: 23, group: 'Buddhism', note: 'A sacred day honoring the Buddha.' },
+      { name: 'Guru Nanak Jayanti', month: 11, day: 15, group: 'Sikhism', note: 'Birthday of Guru Nanak Dev Ji, the founder of Sikhism.' },
+      { name: 'Vaisakhi', month: 4, day: 13, group: 'Sikhism', note: 'A harvest festival and spiritual celebration for Sikhs.' },
+      { name: 'Earth Day', month: 4, day: 22, group: 'Global', note: 'A day to care for the environment and nature.' },
+      { name: 'World Environment Day', month: 6, day: 5, group: 'Global', note: 'Focused on protecting the environment worldwide.' }
+    ];
+
+    const countrySpecialDays = [
+      { name: 'India Independence Day', country: 'India', month: 8, day: 15, note: 'India celebrates freedom and national pride.' },
+      { name: 'Australia Day', country: 'Australia', month: 1, day: 26, note: 'A national day of celebration and community.' },
+      { name: 'Canada Day', country: 'Canada', month: 7, day: 1, note: 'National day celebrating Canadian heritage.' },
+      { name: 'United States Independence Day', country: 'United States', month: 7, day: 4, note: 'Celebrates the nation’s independence.' },
+      { name: 'France Bastille Day', country: 'France', month: 7, day: 14, note: 'Commemorates the French Revolution and national unity.' },
+      { name: 'Brazil Independence Day', country: 'Brazil', month: 9, day: 7, note: 'Celebrates Brazil’s declaration of independence.' },
+      { name: 'Japan Foundation Day', country: 'Japan', month: 2, day: 11, note: 'Marks the foundation of Japan as a nation.' },
+      { name: 'South Africa Freedom Day', country: 'South Africa', month: 4, day: 27, note: 'Honors the first democratic elections in 1994.' },
+      { name: 'Nepal Democracy Day', country: 'Nepal', month: 2, day: 19, note: 'Celebrates democracy and national progress.' },
+      { name: 'United Kingdom Christmas Day', country: 'United Kingdom', month: 12, day: 25, note: 'A national holiday marked with celebration and family traditions.' }
+    ];
+
+    function getMatchesForDate(events, date) {
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const matches = events.filter(event => event.month === month && event.day === day);
+      return matches.length ? matches : [{ name: 'No major event today', note: 'Check back tomorrow for more special days.' }];
+    }
+
+    function renderDailyContent() {
+      const today = new Date();
+      const formattedDate = today.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+
+      document.getElementById('todayDate').textContent = formattedDate;
+
+      const factIndex = today.getDate() % dailyFactList.length;
+      const fact = dailyFactList[factIndex];
+      document.getElementById('dailyFactText').textContent = fact.text;
+      document.getElementById('dailyFactTag').textContent = fact.tag;
+
+      const hinduMatches = getMatchesForDate(religiousSpecialDays.filter(event => event.group === 'Hinduism'), today);
+      const religionMatches = getMatchesForDate(religiousSpecialDays.filter(event => event.group !== 'Hinduism' && event.group !== 'Global'), today);
+      const countryMatches = getMatchesForDate(countrySpecialDays, today);
+
+      renderList('hinduDayList', hinduMatches, 'Hinduism');
+      renderList('religionDayList', religionMatches, 'Other faiths');
+      renderList('countryDayList', countryMatches, 'Countries');
+    }
+
+    function renderList(id, matches, fallbackLabel) {
+      const list = document.getElementById(id);
+      if (!list) return;
+
+      list.innerHTML = '';
+
+      matches.forEach(match => {
+        const item = document.createElement('li');
+        const label = match.country ? match.country : match.group || fallbackLabel;
+        item.textContent = `${match.name}${match.country ? ' — ' + match.country : ''}: ${match.note}`;
+        list.appendChild(item);
+      });
+    }
+
+    const cards = document.querySelectorAll('.grid .card');
+    let selectedIndex = 0;
+    const gridColumns = 3;
+
+    function updateSelection() {
+      cards.forEach((card, index) => {
+        card.classList.remove('selected');
+      });
+      if (cards[selectedIndex]) {
+        cards[selectedIndex].classList.add('selected');
+        cards[selectedIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        const barFill = document.querySelector('.movement-bar-fill');
+        const percentage = (selectedIndex / (cards.length - 1)) * 100;
+        const barHeight = 200;
+        const fillHeight = barHeight / cards.length;
+        barFill.style.top = (percentage / 100) * (barHeight - fillHeight) + 'px';
+        barFill.style.height = fillHeight + 'px';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      console.log('Key pressed:', e.key, 'selectedIndex before:', selectedIndex);
+
+      const cols = Math.ceil(cards.length / Math.ceil(cards.length / 3));
+      const col = selectedIndex % cols;
+      const row = Math.floor(selectedIndex / cols);
+
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (row > 0) selectedIndex -= cols;
+          console.log('ArrowUp - new selectedIndex:', selectedIndex);
+          updateSelection();
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          if (row < Math.ceil(cards.length / cols) - 1) selectedIndex += cols;
+          console.log('ArrowDown - new selectedIndex:', selectedIndex);
+          updateSelection();
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          if (selectedIndex > 0) selectedIndex--;
+          console.log('ArrowLeft - new selectedIndex:', selectedIndex);
+          updateSelection();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          if (selectedIndex < cards.length - 1) selectedIndex++;
+          console.log('ArrowRight - new selectedIndex:', selectedIndex);
+          updateSelection();
+          break;
+        case 'Enter':
+          e.preventDefault();
+          if (cards[selectedIndex]) {
+            cards[selectedIndex].click();
+          }
+          break;
+        case 'Home':
+          e.preventDefault();
+          selectedIndex = 0;
+          console.log('Home - new selectedIndex:', selectedIndex);
+          updateSelection();
+          break;
+        case 'End':
+          e.preventDefault();
+          selectedIndex = cards.length - 1;
+          console.log('End - new selectedIndex:', selectedIndex);
+          updateSelection();
+          break;
+      }
+    });
+
+    renderDailyContent();
+    updateSelection();
+
+    cards.forEach((card, index) => {
+      card.addEventListener('mouseenter', () => {
+        selectedIndex = index;
+        updateSelection();
+      });
+      card.addEventListener('click', (e) => {
+        selectedIndex = index;
+        updateSelection();
+      });
+    });
+  </script>
+  <script src="nav-controls.js"></script>
+</body>
+</html>

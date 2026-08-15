@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "validate": "node validate-scoring.js"
+  },
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

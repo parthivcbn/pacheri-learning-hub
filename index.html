@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Grade Quiz — Math & Science</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Arrow key navigation */
+    .choice.focused {
+      border-color: rgba(0, 212, 255, 0.8);
+      box-shadow: 0 0 15px rgba(0, 212, 255, 0.4), inset 0 0 10px rgba(0, 212, 255, 0.1);
+      transform: scale(1.02);
+      outline: 2px solid rgba(0, 212, 255, 0.6);
+    }
+
+    .nav-controls {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(0, 212, 255, 0.35);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--muted);
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      line-height: 1.4;
+    }
+
+    @media(max-width:640px){
+      .nav-controls{font-size:11px;padding:10px 12px;bottom:10px;left:10px}
+    }
+  </style>
+</head>
+<body class="theme-space no-global-scroll">
+  <div class="app">
+    <header>
+      <h1>Grade Quiz</h1>
+      <div class="controls">
+        <label>Grade
+          <select id="gradeSelect">
+            <option value="4">4th</option>
+            <option value="7">7th</option>
+          </select>
+        </label>
+        <label>Subject
+          <select id="subjectSelect">
+            <option value="math">Math</option>
+            <option value="science">Science</option>
+          </select>
+        </label>
+        <label id="scienceThemeLabel" style="display:none">Science Theme
+          <select id="scienceThemeSelect">
+            <option value="astronomy">Astronomy</option>
+            <option value="biology">Biology</option>
+            <option value="chemistry">Chemistry</option>
+            <option value="physics">Physics</option>
+          </select>
+        </label>
+        <label>Total Questions
+          <input id="totalInput" type="number" value="10" min="1" max="50">
+        </label>
+        <label>Theme
+          <select id="themeSelect">
+            <option value="default">Default</option>
+            <option value="space">Space</option>
+          </select>
+        </label>
+      </div> 
+      <div class="subtitle" id="themeNote">Explore space rockets, galaxies, stars, and the cosmos.</div>
+      <a class="page-link" href="tutor.html">Open AI Tutor</a>
+    </header>
+
+    <main>
+      <div class="quiz-header">
+        <div>Question <span id="qIndex">1</span>/<span id="qCount">1</span></div>
+        <div class="auto-controls">
+          <label>Auto-advance
+            <input type="checkbox" id="autoToggle">
+          </label>
+          <label>Interval (sec)
+            <input id="intervalInput" type="number" value="8" min="3" max="60">
+          </label>
+        </div>
+      </div>
+
+      <section id="questionCard" class="card">
+        <div id="questionText" class="question">Loading...</div>
+        <div id="choices" class="choices"></div>
+        <div class="actions">
+          <button id="prevBtn">Prev</button>
+          <button id="showAnswerBtn">Show Answer</button>
+          <button id="nextBtn">Next</button>
+        </div>
+        <div id="answer" class="answer" aria-hidden="true"></div>
+      </section>
+
+      <footer>
+        <button id="shuffleBtn">Shuffle Questions</button>
+        <button id="randomBtn">Random Question</button>
+      </footer>
+    </main>
+  </div>
+
+  <div class="nav-controls">
+    <div>⬆️ ⬇️ Navigate Answers</div>
+    <div>⬅️ ➡️ Previous/Next Q</div>
+    <div>1️⃣ 2️⃣ 3️⃣ 4️⃣ Select Answer</div>
+    <div>A-D or ↵ Confirm</div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.height = '100%';
+    document.body.style.height = '100%';
+    document.documentElement.style.maxHeight = '100vh';
+    document.body.style.maxHeight = '100vh';
+
+    let focusedChoiceIndex = -1;
+    const choices = () => document.querySelectorAll('.choices .choice');
+
+    function updateChoiceFocus() {
+      choices().forEach((choice, index) => {
+        choice.classList.remove('focused');
+        if (index === focusedChoiceIndex) {
+          choice.classList.add('focused');
+          choice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const choiceElements = choices();
+      const key = e.key.toUpperCase();
+      
+      // Number keys (1-4) or Letter keys (A-D) to select answer
+      if ((e.key >= '1' && e.key <= '4') || (key >= 'A' && key <= 'D')) {
+        e.preventDefault();
+        let index = -1;
+        
+        if (e.key >= '1' && e.key <= '4') {
+          index = parseInt(e.key) - 1;
+        } else {
+          index = key.charCodeAt(0) - 65; // A=0, B=1, C=2, D=3
+        }
+        
+        if (index < choiceElements.length) {
+          choiceElements[index].click();
+        }
+        return;
+      }
+
+      // Arrow keys for navigation
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          if (focusedChoiceIndex > 0) {
+            focusedChoiceIndex--;
+            updateChoiceFocus();
+          }
+          break;
+
+        case 'ArrowDown':
+          e.preventDefault();
+          if (focusedChoiceIndex < choiceElements.length - 1) {
+            focusedChoiceIndex++;
+            updateChoiceFocus();
+          } else if (focusedChoiceIndex === -1 && choiceElements.length > 0) {
+            focusedChoiceIndex = 0;
+            updateChoiceFocus();
+          }
+          break;
+
+        case 'ArrowLeft':
+          e.preventDefault();
+          document.getElementById('prevBtn')?.click();
+          focusedChoiceIndex = -1;
+          break;
+
+        case 'ArrowRight':
+          e.preventDefault();
+          document.getElementById('nextBtn')?.click();
+          focusedChoiceIndex = -1;
+          break;
+
+        case 'Enter':
+          e.preventDefault();
+          if (focusedChoiceIndex >= 0 && choiceElements[focusedChoiceIndex]) {
+            choiceElements[focusedChoiceIndex].click();
+          }
+          break;
+      }
+    });
+
+    // Reset focus when choices change
+    const observer = new MutationObserver(() => {
+      focusedChoiceIndex = -1;
+      updateChoiceFocus();
+    });
+
+    const choicesContainer = document.getElementById('choices');
+    if (choicesContainer) {
+      observer.observe(choicesContainer, { childList: true });
+    }
+
+    // Theme selector: apply visual themes like 'space'
+    const themeSelect = document.getElementById('themeSelect');
+    function applyTheme() {
+      document.body.classList.remove('theme-space');
+      if (themeSelect && themeSelect.value === 'space') {
+        document.body.classList.add('theme-space');
+      }
+    }
+    if (themeSelect) {
+      themeSelect.addEventListener('change', applyTheme);
+    }
+  </script>
+  <script src="nav-controls.js"></script>
+</body>
+</html>

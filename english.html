@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>English Mastery — Complete Learning</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    main{max-width:900px;margin:20px auto}
+    h1{font-size:24px;margin:0 0 8px}
+    section{margin-top:16px}
+    .example{background:rgba(0,0,0,0.02);padding:12px;border-radius:10px;border:1px solid rgba(11,18,32,0.03)}
+    .practice{margin-top:12px}
+    .controls-row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+    
+    .choice.focused{
+      border-color:rgba(0, 122, 255, 0.6);
+      outline:2px solid rgba(0, 122, 255, 0.4);
+      background:linear-gradient(90deg,rgba(0, 122, 255, 0.08),transparent);
+      transform:scale(1.02);
+    }
+
+    .kb-english-hint{
+      position:fixed;
+      bottom:20px;
+      left:20px;
+      background:rgba(255,255,255,0.9);
+      border:1px solid rgba(11,18,32,0.15);
+      border-radius:10px;
+      padding:12px 16px;
+      font-size:11px;
+      color:#6b7280;
+      z-index:20;
+      backdrop-filter:blur(10px);
+      line-height:1.6;
+    }
+
+    .word-card {
+      display: inline-block;
+      background: rgba(0, 212, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin: 4px 4px 4px 0;
+      border-left: 3px solid #00d4ff;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body class="no-global-scroll">
+  <div class="app">
+    <header>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h1>📚 English Mastery — Complete Learning</h1>
+          <div class="subtitle">Everything in English: Grammar, Vocabulary, Literature, Writing & More</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="card">
+      <section>
+        <h2>Master All of English</h2>
+        <p>This comprehensive English course covers everything you need to know: grammar rules, parts of speech, vocabulary building, literary devices, punctuation, sentence structure, reading comprehension, and writing skills. With over 100 questions spanning both Grade 4 and Grade 7, you'll learn the complete English curriculum.</p>
+      </section>
+
+      <section>
+        <h3>Complete Learning Topics</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-top:8px">
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>🔤 Parts of Speech</strong><br/>Nouns, Verbs, Adjectives, Adverbs, Pronouns, Prepositions, Conjunctions, Articles, Interjections
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>✏️ Grammar Rules</strong><br/>Subject-Verb Agreement, All Verb Tenses, Pluralization, Capitalization, Sentence Types
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>🎯 Punctuation</strong><br/>Periods, Commas, Apostrophes, Quotation Marks, Colons, Semicolons, Exclamation Marks
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>📖 Vocabulary</strong><br/>Synonyms, Antonyms, Homonyms, Word Meanings, Context Clues, Advanced Words
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>🎭 Literary Devices</strong><br/>Metaphors, Similes, Personification, Alliteration, Hyperbole, Irony, Onomatopoeia
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>📚 Reading Skills</strong><br/>Comprehension, Theme, Point of View, Inference, Foreshadowing, Bias, Tone, Mood
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>✍️ Writing</strong><br/>Sentence Structure, Paragraphs, Essays, Thesis Statements, Introductions, Conclusions
+          </div>
+          <div style="background:rgba(0,212,255,0.05);padding:12px;border-radius:8px;border-left:3px solid #00d4ff;font-size:12px">
+            <strong>🚫 Common Errors</strong><br/>Subject-Verb Disagreement, Misplaced Modifiers, Its/It's, Their/There/They're, Affect/Effect
+          </div>
+        </div>
+      </section>
+
+      <section class="practice">
+        <h3>Practice — 100+ Questions</h3>
+        <div id="questionArea">
+          <div id="qText" class="question"></div>
+          <div id="qChoices" class="choices"></div>
+          <div id="qExplanation" class="answer" style="display:none"></div>
+        </div>
+
+        <div class="controls-row">
+          <button id="showAnswer">Show Answer</button>
+          <button id="nextQ" class="secondary">Next Question</button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--muted)"><span>Score:</span><span id="score">0</span></div>
+          <div style="margin-left:12px;color:var(--muted)"><span id="qIndex">1</span>/<span id="qTotal">1</span></div>
+        </div>
+      </section>
+
+      <section style="margin-top:18px;color:var(--muted);font-size:13px">
+        💡 Tip: Master each topic systematically. Use the explanations to understand why answers are correct. Practice regularly!
+      </section>
+    </main>
+  </div>
+
+  <div class="kb-english-hint">
+    <div>⬆️ ⬇️ Navigate choices • 1-4 or A-D: Select answer</div>
+    <div>↵ Enter: Confirm • N: Next • S: Show Answer</div>
+  </div>
+
+  <script>
+    // 100+ COMPREHENSIVE ENGLISH QUESTIONS — EVERYTHING
+    const englishQuestions = [
+      // ===== PARTS OF SPEECH (20 questions) =====
+      { g: 4, t: 'Parts of Speech', q: 'Identify the **noun**:', c: ['cat', 'sat', 'the', 'on'], a: 0, e: 'Nouns are people, places, things, or ideas.' },
+      { g: 4, t: 'Parts of Speech', q: 'What is the **verb**?', c: ['She', 'writes', 'beautiful', 'poems'], a: 1, e: 'Verbs show action or state of being.' },
+      { g: 4, t: 'Parts of Speech', q: 'Choose the **adjective**:', c: ['loudly', 'cute', 'barked', 'quickly'], a: 1, e: 'Adjectives describe nouns.' },
+      { g: 4, t: 'Parts of Speech', q: 'Which is a **preposition**?', c: ['quickly', 'under', 'happy', 'run'], a: 1, e: 'Prepositions show position/direction.' },
+      { g: 4, t: 'Parts of Speech', q: 'Identify the **pronoun**:', c: ['John', 'I', 'went', 'park'], a: 1, e: 'Pronouns replace nouns (I, you, he, she, it, we, they).' },
+      { g: 4, t: 'Parts of Speech', q: 'What is **adverb** in "ran quickly"?', c: ['ran', 'quickly', 'the', 'so'], a: 1, e: 'Adverbs modify verbs, showing how/when/where.' },
+      { g: 4, t: 'Parts of Speech', q: 'Which is a **conjunction**?', c: ['jumping', 'and', 'beautiful', 'there'], a: 1, e: 'Conjunctions connect words/ideas (and, but, or).' },
+      { g: 4, t: 'Parts of Speech', q: 'Identify the **article**:', c: ['dog', 'a', 'cat', 'ran'], a: 1, e: 'Articles: "a", "an", "the" come before nouns.' },
+      { g: 7, t: 'Parts of Speech', q: 'What is an **interjection**?', c: ['Modifies nouns', 'Expresses emotion (Oh!, Wow!)', 'Connects clauses', 'Replaces noun'], a: 1, e: 'Interjections show emotion or surprise.' },
+      { g: 7, t: 'Parts of Speech', q: 'Name all **nouns** in: "Teacher gave homework."', c: ['teacher, homework', 'gave, homework', 'the, to', 'all words'], a: 0, e: 'Only teacher and homework are nouns.' },
+
+      // ===== GRAMMAR & AGREEMENT (20 questions) =====
+      { g: 4, t: 'Grammar', q: '**Subject-verb agreement**:', c: ['dogs runs', 'dog run', 'dogs run', 'dog are'], a: 2, e: 'Plural subject needs plural verb.' },
+      { g: 4, t: 'Grammar', q: 'Correct: "She _____ daily."', c: ['go', 'goes', 'going', 'gone'], a: 1, e: '3rd person singular adds -s.' },
+      { g: 4, t: 'Grammar', q: '"Either of books _____ there."', c: ['are', 'is', 'be', 'were'], a: 1, e: '"Either" is singular.' },
+      { g: 4, t: 'Grammar', q: 'Which is correct **plural**?', c: ['childs', 'childes', 'children', 'child'], a: 2, e: '"Children" is irregular plural.' },
+      { g: 4, t: 'Grammar', q: 'Plural of "box":', c: ['boxs', 'boxs\'', 'boxes', 'boxe'], a: 2, e: 'Words ending in -x add -es.' },
+      { g: 7, t: 'Grammar', q: 'Fix: "Neither students were ready."', c: ['Change "were" to "was"', 'Change "students"', 'No error', 'Change "ready"'], a: 0, e: '"Neither" is singular.' },
+      { g: 7, t: 'Grammar', q: '**Compound sentence**:', c: ['Because he studied, he passed.', 'Book was good, so I read it.', 'Student who worked succeeded.', 'Dog is sleeping.'], a: 1, e: 'Two independent clauses + coordinator.' },
+      { g: 7, t: 'Grammar', q: '**Complex sentence**:', c: ['She ran and jumped.', 'While raining, we stayed.', 'I like pizza or pasta.', 'Dog sleeps.'], a: 1, e: 'Independent + dependent clause.' },
+      { g: 7, t: 'Grammar', q: 'Correct: "If he _____ left..."', c: ['left', 'had left', 'leaves', 'will leave'], a: 1, e: 'Past perfect for conditional.' },
+      { g: 7, t: 'Grammar', q: 'What is **subject-verb agreement**?', c: ['Matching tense', 'Subject/verb match in number', 'Same word twice', 'Punctuation'], a: 1, e: 'Singular subject + singular verb; plural + plural.' },
+
+      // ===== VERB TENSES (15 questions) =====
+      { g: 4, t: 'Verb Tenses', q: '**Past tense**:', c: ['She go', 'She goes', 'She went', 'She going'], a: 2, e: '"Went" is simple past.' },
+      { g: 4, t: 'Verb Tenses', q: '**Future tense**:', c: ['I walk', 'I walked', 'I will walk', 'I am walking'], a: 2, e: '"Will" + verb = future.' },
+      { g: 4, t: 'Verb Tenses', q: '**Present continuous**:', c: ['Past action', 'Action happening now (is/are + -ing)', 'Future', 'Regular habit'], a: 1, e: '"She is reading now."' },
+      { g: 7, t: 'Verb Tenses', q: '**Past perfect**:', c: ['Distant past', 'Action before another past action (had + verb)', 'Happening now', 'Future'], a: 1, e: '"She had studied before exam."' },
+      { g: 7, t: 'Verb Tenses', q: '**Present perfect**:', c: ['She walked yesterday', 'She has walked', 'She is walking', 'She will walk'], a: 1, e: 'have/has + past participle.' },
+      { g: 7, t: 'Verb Tenses', q: '**Progressive tenses** show:', c: ['Completed action', 'Action in progress', 'Habitual action', 'Future plan'], a: 1, e: 'Using -ing form of verb.' },
+      { g: 7, t: 'Verb Tenses', q: 'Correct: "He _____ worked here for 5 years."', c: ['is', 'has', 'will', 'does'], a: 1, e: 'Present perfect for duration.' },
+      { g: 7, t: 'Verb Tenses', q: 'What tense is "will be going"?', c: ['Simple future', 'Past perfect', 'Future progressive', 'Present'], a: 2, e: 'Will + be + -ing.' },
+
+      // ===== PUNCTUATION (20 questions) =====
+      { g: 4, t: 'Punctuation', q: 'Use of **comma**:', c: ['End of sentences', 'Lists, pauses, info', 'Never', 'After names only'], a: 1, e: 'Commas separate items/ideas.' },
+      { g: 4, t: 'Punctuation', q: '**Question mark** ends:', c: ['Statements', 'Questions', 'Commands', 'Exclamations'], a: 1, e: 'Questions end with ?' },
+      { g: 4, t: 'Punctuation', q: 'Use **apostrophe** for:', c: ['Plurals', 'Possessives/contractions', 'Lists', 'Titles'], a: 1, e: '"John\'s" (possessive), "don\'t" (contraction).' },
+      { g: 4, t: 'Punctuation', q: '**Dialogue** punctuation:', c: ['She asked are you coming', 'She asked, "Are you coming?"', 'She asked "Are you coming', 'She asked: are you coming'], a: 1, e: 'Comma + quotes + capital letter.' },
+      { g: 7, t: 'Punctuation', q: '**Semicolon** connects:', c: ['Lists', 'Independent clauses (no and/but)', 'Clauses with "and"', 'Phrases'], a: 1, e: '"Tired; she slept."' },
+      { g: 7, t: 'Punctuation', q: '**Colon** introduces:', c: ['Lists, explanations, quotes'], a: 0, e: '"She packed: book, pen, paper."' },
+      { g: 7, t: 'Punctuation', q: '**Exclamation mark** shows:', c: ['Questions', 'Strong emotion/emphasis', 'Lists', 'Contrasts'], a: 1, e: 'Shows intensity: "Watch out!"' },
+      { g: 4, t: 'Punctuation', q: 'Correct **capitalization**:', c: ['i like monday', 'I like Monday', 'I Like Monday', 'i Like monday'], a: 1, e: 'Start of sentence + proper nouns.' },
+      { g: 7, t: 'Punctuation', q: 'Its vs. It\'s:', c: ['Its (it is)', 'It\'s (it is)', 'Same word', 'Both wrong'], a: 1, e: '"It\'s = it is; its = possessive."' },
+      { g: 7, t: 'Punctuation', q: 'Use of **dash** in:**', c: ['Never used', 'Emphasis or interruption', 'Lists only', 'Quotes'], a: 1, e: 'Shows sudden break or emphasis.' },
+
+      // ===== VOCABULARY (25 questions) =====
+      { g: 4, t: 'Vocabulary', q: '**Synonym** for "happy":', c: ['sad', 'joyful', 'angry', 'tired'], a: 1, e: 'Synonyms have similar meanings.' },
+      { g: 4, t: 'Vocabulary', q: '**Antonym** of "big":', c: ['large', 'huge', 'small', 'tall'], a: 2, e: 'Antonyms are opposites.' },
+      { g: 4, t: 'Vocabulary', q: 'Opposite of "cold":', c: ['cool', 'freezing', 'hot', 'warm'], a: 2, e: '"Hot" is direct opposite.' },
+      { g: 7, t: 'Vocabulary', q: '"Meticulous" means:', c: ['lazy', 'very careful/precise', 'old', 'scientific'], a: 1, e: 'Careful attention to detail.' },
+      { g: 7, t: 'Vocabulary', q: 'Synonym for "stubborn":', c: ['flexible', 'obstinate', 'quiet', 'kind'], a: 1, e: '"Obstinate" = refusing change.' },
+      { g: 7, t: 'Vocabulary', q: '"Cryptic" means:', c: ['beautiful', 'mysterious/unclear', 'large', 'boring'], a: 1, e: 'Mysterious, hard to understand.' },
+      { g: 7, t: 'Vocabulary', q: '**Antonyms**: ancient ↔ ?', c: ['old', 'modern', 'historical', 'ancient'], a: 1, e: '"Ancient" (old) ↔ "modern" (new).' },
+      { g: 7, t: 'Vocabulary', q: '"Pragmatic" means:', c: ['theoretical', 'practical/realistic', 'emotional', 'mysterious'], a: 1, e: 'Focused on practical results.' },
+      { g: 7, t: 'Vocabulary', q: '**Homonyms** (sound same):', c: ['happy/sad', 'to/two/too', 'cat/dog', 'run/walk'], a: 1, e: 'Different meanings, same sound.' },
+      { g: 7, t: 'Vocabulary', q: 'What is an **idiom**?', c: ['Foreign word', 'Figurative phrase != literal meaning', 'New word', 'Old word'], a: 1, e: '"Break the ice" = ease tension.' },
+      { g: 7, t: 'Vocabulary', q: '"Advocate" (verb) means:', c: ['oppose', 'support/recommend', 'follow', 'create'], a: 1, e: 'Actively promote or support.' },
+      { g: 7, t: 'Vocabulary', q: '"Benevolent" means:', c: ['angry', 'kind/generous', 'confused', 'proud'], a: 1, e: 'Showing kindness.' },
+      { g: 7, t: 'Vocabulary', q: '"Ambiguous" means:', c: ['clear', 'multiple meanings/unclear', 'simple', 'complex'], a: 1, e: 'Open to interpretation.' },
+      { g: 7, t: 'Vocabulary', q: 'What are **context clues**?', c: ['Punctuation', 'Text info explaining words', 'Definitions only', 'Parts of speech'], a: 1, e: 'Info near word helping understand meaning.' },
+      { g: 7, t: 'Vocabulary', q: '"Ephemeral" means:', c: ['permanent', 'lasting/short time', 'bright', 'dark'], a: 1, e: 'Lasting only a short time.' },
+
+      // ===== LITERARY DEVICES (20 questions) =====
+      { g: 4, t: 'Literary Devices', q: '**Alliteration** is:', c: ['Repeated vowels', 'Repeated beginning sounds', 'Comparing', 'Human traits'], a: 1, e: '"Silly Sally sings" (S repeats).' },
+      { g: 7, t: 'Literary Devices', q: '**Metaphor**:', c: ['smile like sunshine', 'smile is sunshine', 'smile shines', 'bright smile'], a: 1, e: 'Direct comparison without "like/as".' },
+      { g: 7, t: 'Literary Devices', q: '**Personification** is:', c: ['Comparison', 'Human traits to non-humans', 'Repeated sounds', 'Exaggeration'], a: 1, e: '"Wind whispered" (wind can\'t whisper).' },
+      { g: 7, t: 'Literary Devices', q: '**Simile** example:', c: ['Stars are diamonds', 'Eyes as blue as ocean', 'City is jungle', 'Wind whispered'], a: 1, e: 'Comparison with "like/as".' },
+      { g: 7, t: 'Literary Devices', q: '**Hyperbole** is:', c: ['Comparison', 'Extreme exaggeration', 'Human traits', 'Sound imitation'], a: 1, e: '"Told a million times!" = hyperbole.' },
+      { g: 7, t: 'Literary Devices', q: '**Irony** means:', c: ['Repetition', 'Opposite of what you mean', 'Comparison', 'Description'], a: 1, e: 'Saying opposite for effect.' },
+      { g: 7, t: 'Literary Devices', q: '**Onomatopoeia**:', c: ['Comparison', 'Words imitating sounds (buzz, hiss)', 'Human traits', 'Exaggeration'], a: 1, e: 'Sound words.' },
+      { g: 7, t: 'Literary Devices', q: '**Oxymoron**:', c: ['Metaphor', 'Opposite words together ("deafening silence")', 'Simile', 'Exaggeration'], a: 1, e: 'Contradictory words combined.' },
+      { g: 7, t: 'Literary Devices', q: '**Assonance**:', c: ['Consonant repeat', 'Vowel sounds repeat', 'Word repeat', 'Pattern repeat'], a: 1, e: 'Repeated vowel sounds.' },
+      { g: 7, t: 'Literary Devices', q: '**Allusion** is:', c: ['Exaggeration', 'Indirect reference to another work', 'Sound imitation', 'Comparison'], a: 1, e: 'Reference to book, movie, history, etc.' },
+
+      // ===== SENTENCE STRUCTURE (15 questions) =====
+      { g: 4, t: 'Sentence Structure', q: '**Simple sentence**:', c: ['Two clauses', 'Independent + dependent', 'One subject/verb', 'Three+ clauses'], a: 2, e: 'One independent clause.' },
+      { g: 4, t: 'Sentence Structure', q: '**Complete sentence** has:', c: ['Any words', 'Subject + verb + complete thought', 'Just noun', 'Just verb'], a: 1, e: 'Must express complete idea.' },
+      { g: 7, t: 'Sentence Structure', q: '**Compound sentence**:', c: ['Raining, stayed inside', 'Book was good, so I read it', 'Tall building stood', 'Girl ran home'], a: 1, e: 'Two independent + coordinator.' },
+      { g: 7, t: 'Sentence Structure', q: '**Complex sentence**:', c: ['Ran and jumped', 'While raining, stayed inside', 'Like pizza or pasta', 'Dog sleeps'], a: 1, e: 'Independent + dependent clause.' },
+      { g: 7, t: 'Sentence Structure', q: '**Subordinate clause**:', c: ['Stands alone', 'Cannot stand alone; needs main clause', 'Connects sentences', 'A phrase'], a: 1, e: 'Dependent; needs main clause.' },
+      { g: 7, t: 'Sentence Structure', q: '**Independent clause**:', c: ['Cannot stand alone', 'Can stand alone as sentence', 'Needs subordination', 'Just a phrase'], a: 1, e: 'Complete thought, stands alone.' },
+      { g: 7, t: 'Sentence Structure', q: 'What is a **clause**?', c: ['Phrase', 'Group of words with subject + verb', 'Just a word', 'Punctuation'], a: 1, e: 'Clause = subject + verb (independent or dependent).' },
+      { g: 7, t: 'Sentence Structure', q: '**Misplaced modifier**:', c: ['Teacher gave books morning', 'Wearing shirt, student walked', 'Singing, windows broke', 'Tall building stood'], a: 2, e: 'Modifier should clearly modify right noun.' },
+
+      // ===== READING COMPREHENSION (20 questions) =====
+      { g: 4, t: 'Reading Skills', q: '**Context clues** help:', c: ['Punctuation', 'Understand word meanings', 'Parts of speech', 'Sentence structure'], a: 1, e: 'Surrounding info explains words.' },
+      { g: 4, t: 'Reading Skills', q: '**Summary** should:', c: ['Include every detail', 'Be longer', 'Main ideas only (shorter)', 'Change meaning'], a: 2, e: 'Brief version of main points.' },
+      { g: 7, t: 'Reading', q: '**Theme** is:', c: ['Setting', 'Main message/lesson', 'Events', 'Dialogue'], a: 1, e: 'Underlying moral of story.' },
+      { g: 7, t: 'Reading', q: '**Characterization** is:', c: ['Plot', 'Methods revealing character', 'Setting', 'Conflict'], a: 1, e: 'Physical traits, actions, thoughts.' },
+      { g: 7, t: 'Reading', q: '**Point of view**:', c: ['Setting', 'When story happens', 'Who tells story (1st/2nd/3rd)', 'Character opinion'], a: 2, e: 'Perspective of narrator.' },
+      { g: 7, t: 'Reading', q: '**Conflict** is:', c: ['Setting', 'Goal', 'Problem/struggle', 'Time period'], a: 2, e: 'Main problem driving plot.' },
+      { g: 7, t: 'Reading', q: '**Mood** is:', c: ['Character emotion', 'Emotional atmosphere author creates', 'Author opinion', 'Setting'], a: 1, e: 'Feeling created by words/tone.' },
+      { g: 7, t: 'Reading', q: '**Inference** means:', c: ['Read aloud', 'Use clues to understand unstated info', 'Write summary', 'Identify punctuation'], a: 1, e: '"Reading between the lines".' },
+      { g: 7, t: 'Reading', q: '**Foreshadowing**:', c: ['Flashback', 'Hint of future events', 'Character intro', 'Detailed description'], a: 1, e: 'Clues hinting at later events.' },
+      { g: 7, t: 'Reading', q: '**Bias** in writing:', c: ['Factual', 'Prejudiced viewpoint', 'Neutral', 'Objective'], a: 1, e: 'Author prejudice shown in words.' },
+      { g: 7, t: 'Reading', q: '**Author\'s tone**:', c: ['Character personality', 'Historical period', 'Author\'s attitude (formal, sarcastic)', 'Book length'], a: 2, e: 'Attitude shown through word choice.' },
+      { g: 7, t: 'Reading', q: 'What is **plot**?', c: ['Characters', 'Sequence of events', 'Setting', 'Dialogue'], a: 1, e: 'Story events in order.' },
+
+      // ===== WRITING SKILLS (15 questions) =====
+      { g: 4, t: 'Writing', q: '**Dialogue** is:', c: ['Events', 'Words spoken by characters', 'Author thoughts', 'Descriptions'], a: 1, e: 'Character speech in quotes.' },
+      { g: 4, t: 'Writing', q: 'Good **sentence**:', c: ['Very long', 'Subject + verb (complete)', 'Fragments', 'No punctuation'], a: 1, e: 'Complete with subject/verb.' },
+      { g: 7, t: 'Writing', q: '**Introduction** should:', c: ['Summarize all', 'Hook reader, give context, state topic', 'Include all details', 'Repeat sources'], a: 1, e: 'Engage and introduce main idea.' },
+      { g: 7, t: 'Writing', q: '**Thesis** is:', c: ['Summary', 'Question', 'Main argument of essay', 'Facts list'], a: 2, e: 'Central claim/point.' },
+      { g: 7, t: 'Writing', q: 'Good **paragraph**:', c: ['Long sentences', 'Topic + details + conclusion', 'Adjectives', 'No punctuation'], a: 1, e: 'Main idea with support.' },
+      { g: 7, t: 'Writing', q: '**Conclusion** does:', c: ['Introduce new', 'Restate thesis, summarize', 'Add evidence', 'Disagree'], a: 1, e: 'Ties up essay, lasting impression.' },
+      { g: 7, t: 'Writing', q: 'What is **essay structure**?', c: ['Random', 'Intro, body, conclusion', 'Just body', 'No intro needed'], a: 1, e: 'Introduction, development, conclusion.' },
+      { g: 7, t: 'Writing', q: '**Topic sentence** in paragraph:', c: ['Last sentence', 'First sentence stating main idea', 'Hidden', 'Unnecessary'], a: 1, e: 'States what paragraph discusses.' },
+
+      // ===== COMMON ERRORS (15 questions) =====
+      { g: 4, t: 'Errors', q: 'Which has **error**?', c: ['She run', 'They are playing', 'He goes daily', 'We like ice cream'], a: 0, e: '"She runs" (singular needs -s).' },
+      { g: 7, t: 'Errors', q: 'Fix: "Its important."', c: ['"It\'s" (it is)', 'Correct', 'No error', 'Change "important"'], a: 0, e: 'Its = possessive; It\'s = it is.' },
+      { g: 7, t: 'Errors', q: 'Correct **they\'re/their/there**:', c: ['Over there (location)', 'They\'re house', 'It\'s there car', 'Ball is they\'re'], a: 0, e: 'There = location; they\'re = they are; their = possessive.' },
+      { g: 7, t: 'Errors', q: '**Misplaced modifier**:', c: ['Morning teacher taught.', 'Wearing shirt, walked.', 'Singing, windows broke.', 'Tall building.'], a: 2, e: 'Should modify correct noun.' },
+      { g: 7, t: 'Errors', q: '**Affect vs. Effect**:', c: ['Weather will effect mood', 'Weather will affect mood', 'Both correct', 'Neither'], a: 1, e: 'Affect (verb) = influence; Effect (noun) = result.' },
+      { g: 7, t: 'Errors', q: 'Correct **your/you\'re**:', c: ['Your going', 'You\'re going', 'Both correct', 'Neither'], a: 1, e: 'You\'re = you are; your = possessive.' },
+      { g: 7, t: 'Errors', q: '**Run-on sentence**:', c: ['Too short', 'Two sentences without proper joining', 'Fragment', 'Correct'], a: 1, e: 'Need period, semicolon, or coordinator.' },
+      { g: 7, t: 'Errors', q: '**Fragment** error:', c: ['Complete sentence', 'Incomplete sentence/thought', 'Too long', 'Correct'], a: 1, e: 'Missing subject or verb.' },
+      { g: 7, t: 'Errors', q: 'Correct: "Everyone brought **their** lunch."', c: ['No error; everyone = plural', 'Change to "his" (everyone = singular)', 'Change "brought"', 'Add comma'], a: 1, e: 'Everyone/each/neither are singular → "his/her".' },
+      { g: 7, t: 'Errors', q: '**Double negative** error:', c: ['"She didn\'t go nowhere" (wrong)', '"She went nowhere" (correct)', 'Two negatives = correct', 'Double negatives OK'], a: 0, e: 'Avoid double negatives.' }
+    ];
+
+    // Shorter names for efficiency
+    let q = 0, score = 0, qs = [];
+    function init() {
+      qs = englishQuestions.map(x => ({grade: x.g, topic: x.t, q: x.q, choices: x.c, correct: x.a, explain: x.e})).sort(() => Math.random() - 0.5);
+      document.getElementById('qTotal').textContent = qs.length;
+      load();
+      keys();
+      buttons();
+    }
+    function load() {
+      const quest = qs[q];
+      const qt = document.getElementById('qText');
+      const qc = document.getElementById('qChoices');
+      const qe = document.getElementById('qExplanation');
+      qt.innerHTML = quest.q;
+      qt.setAttribute('role', 'region');
+      qt.setAttribute('aria-label', 'Question');
+      qc.innerHTML = '';
+      quest.choices.forEach((ch, i) => {
+        const b = document.createElement('div');
+        b.className = 'choice';
+        b.textContent = Array.isArray(ch) ? ch.join(' / ') : ch;
+        b.setAttribute('data-index', i);
+        b.setAttribute('role', 'button');
+        b.setAttribute('tabindex', '0');
+        b.onclick = () => sel(i);
+        b.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sel(i); } };
+        qc.appendChild(b);
+      });
+      qe.innerHTML = '';
+      qe.style.display = 'none';
+      document.getElementById('qIndex').textContent = q + 1;
+      document.getElementById('score').textContent = score;
+      const cs = document.querySelectorAll('.choice');
+      if (cs[0]) cs[0].focus();
+    }
+    let sel_idx = null;
+    function sel(i) {
+      sel_idx = i;
+      const cs = document.querySelectorAll('.choice');
+      cs.forEach((c, j) => { c.classList.remove('selected'); if (j === i) c.classList.add('selected'); });
+    }
+    function show() {
+      const quest = qs[q];
+      const qe = document.getElementById('qExplanation');
+      const cs = document.querySelectorAll('.choice');
+      if (sel_idx !== null) {
+        if (sel_idx === quest.correct) {
+          score++;
+          cs[quest.correct].classList.add('correct');
+          qe.innerHTML = '✅ <strong>Correct!</strong> ' + quest.explain;
+        } else {
+          cs[sel_idx].classList.add('incorrect');
+          cs[quest.correct].classList.add('correct');
+          qe.innerHTML = '❌ <strong>Not quite.</strong> ' + quest.explain;
+        }
+      } else {
+        qe.innerHTML = '⚠️ Select an answer first.';
+      }
+      qe.setAttribute('role', 'status');
+      qe.setAttribute('aria-live', 'assertive');
+      qe.style.display = 'block';
+      document.getElementById('score').textContent = score;
+    }
+    function nxt() {
+      sel_idx = null;
+      if (q < qs.length - 1) {
+        q++;
+        load();
+      } else {
+        alert(`Complete! Score: ${score}/${qs.length}`);
+        q = 0;
+        score = 0;
+        load();
+      }
+    }
+    function keys() {
+      document.addEventListener('keydown', (e) => {
+        const cs = document.querySelectorAll('.choice');
+        const fc = document.activeElement.closest('.choice');
+        const fi = fc ? Array.from(cs).indexOf(fc) : -1;
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          cs[(fi + 1) % cs.length].focus();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          cs[(fi - 1 + cs.length) % cs.length].focus();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (fc) sel(Array.from(cs).indexOf(fc));
+        } else if (['1', '2', '3', '4', 'a', 'b', 'c', 'd'].includes(e.key.toLowerCase())) {
+          e.preventDefault();
+          let i = -1;
+          if (e.key === '1' || e.key.toLowerCase() === 'a') i = 0;
+          else if (e.key === '2' || e.key.toLowerCase() === 'b') i = 1;
+          else if (e.key === '3' || e.key.toLowerCase() === 'c') i = 2;
+          else if (e.key === '4' || e.key.toLowerCase() === 'd') i = 3;
+          if (i >= 0 && i < cs.length) sel(i);
+        } else if (e.key.toLowerCase() === 's') {
+          e.preventDefault();
+          show();
+        } else if (e.key.toLowerCase() === 'n') {
+          e.preventDefault();
+          nxt();
+        }
+      });
+    }
+    function buttons() {
+      const sa = document.getElementById('showAnswer');
+      const nq = document.getElementById('nextQ');
+      if (sa) sa.onclick = show;
+      if (nq) nq.onclick = nxt;
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

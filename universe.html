@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Observable Universe Map</title>
+  <style>
+    :root{--bg:#05072a;--fg:#dbeafe;--accent:#7dd3fc}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#05072a,#08102b);color:var(--fg);font-family:system-ui,Segoe UI,Roboto,Arial}
+    .toolbar{position:fixed;left:12px;top:12px;z-index:30;background:rgba(10,14,36,0.7);backdrop-filter:blur(6px);padding:8px;border-radius:10px;border:1px solid rgba(125,211,252,0.12)}
+    .toolbar button, .toolbar select{margin-right:6px;padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--fg)}
+    .view{width:100%;height:100vh;display:flex;align-items:center;justify-content:center}
+    svg{width:100%;height:100%;display:block}
+    .label{fill:var(--fg);font-size:12px;font-weight:600}
+    .ring{stroke:rgba(125,211,252,0.18);fill:none;stroke-width:1.25}
+    .galaxy{fill:rgba(255,255,255,0.9);opacity:0.9}
+    .legend{position:fixed;right:12px;top:12px;background:rgba(10,14,36,0.7);padding:8px;border-radius:8px;border:1px solid rgba(125,211,252,0.08);font-size:12px}
+    .help{position:fixed;left:12px;bottom:12px;background:rgba(10,14,36,0.6);padding:8px;border-radius:8px;border:1px solid rgba(125,211,252,0.06);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <button id="resetBtn">Reset view</button>
+    <label>Scale: <select id="scaleMode"><option value="log">Log</option><option value="linear">Linear</option></select></label>
+    <label>Show labels: <input id="labels" type="checkbox" checked /></label>
+  </div>
+
+  <div class="legend">
+    <div><strong>Distance rings</strong></div>
+    <div>• 1 ly • 1k ly • 100k ly • 1M ly • 1B ly • 13.8B ly</div>
+  </div>
+
+  <div class="help">Zoom: mouse wheel • Pan: drag • Click galaxy for info</div>
+
+  <div class="view">
+    <svg id="universe" viewBox="-500 -500 1000 1000" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <filter id="glow"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></feMerge></filter>
+      </defs>
+      <rect x="-10000" y="-10000" width="20000" height="20000" fill="none" />
+      <g id="rings"></g>
+      <g id="galaxies"></g>
+      <g id="labels"></g>
+    </svg>
+  </div>
+
+  <script src="universe.js"></script>
+</body>
+</html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Observable Universe Map</title>
+  <style>
+    :root{
+      --bg: #0a0e27;
+      --card-bg: rgba(15, 23, 42, 0.7);
+      --muted: #93c5fd;
+      --accent: #00d4ff;
+      --text: #e6f3ff;
+    }
+
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      min-height:100vh;
+      margin:0;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 25%, #0d1b4f 50%, #1a0f3e 75%, #0a0e27 100%);
+      color:var(--text);
+      padding:24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Starfield background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: 
+        radial-gradient(2px 2px at 20px 30px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 60px 70px, #eee, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 50px 50px, #fff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 90px 10px, #ddd, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      opacity: 0.85;
+      animation: twinkleSky 8s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes twinkleSky {
+      0%, 100% { opacity: 0.75; }
+      50% { opacity: 1; }
+    }
+
+    .container{max-width:1200px;margin:0 auto;position:relative;z-index:10}
+    
+    header{text-align:center;margin-bottom:30px}
+    h1{font-size:32px;margin:0 0 8px;color:#00d4ff}
+    .tagline{font-size:14px;color:var(--muted)}
+
+    .universe-map{
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius:16px;
+      padding:40px;
+      border:1px solid rgba(100, 150, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 122, 255, 0.15);
+      margin-bottom:30px;
+      position: relative;
+    }
+
+    svg{
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+      gap:16px;
+      margin-top:30px;
+    }
+
+    .info-card{
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(100, 150, 255, 0.2);
+      border-radius:12px;
+      padding:16px;
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    .info-card h3{
+      margin:0 0 8px;
+      color:var(--accent);
+      font-size:16px;
+    }
+
+    .info-card p{
+      margin:0;
+      font-size:13px;
+    }
+
+    .scale-info{
+      background: rgba(0, 212, 255, 0.05);
+      border-left:3px solid var(--accent);
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:20px;
+      color:var(--muted);
+    }
+
+    .scale-info strong{
+      color:var(--accent);
+    }
+
+    footer{
+      text-align:center;
+      margin-top:40px;
+      color:var(--muted);
+      font-size:13px;
+      position:relative;
+      z-index:10;
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:20px;
+      margin-bottom:20px;
+      justify-content:center;
+    }
+
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .legend-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      display:inline-block;
+    }
+
+    .btn-back{
+      display:inline-block;
+      padding:8px 16px;
+      background:linear-gradient(135deg, #00d4ff, #3b82f6);
+      color:#0a0e27;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      text-decoration:none;
+      transition:all 0.3s;
+      margin-bottom:20px;
+    }
+
+    .btn-back:hover{
+      box-shadow: 0 8px 16px rgba(0, 212, 255, 0.4);
+      transform: scale(1.02);
+    }
+
+    @media(max-width:768px){
+      h1{font-size:24px}
+      .universe-map{padding:20px}
+    }
+  </style>
+</head>
+<body class="no-global-scroll">
+  <div class="container">
+    <a href="home.html" class="btn-back">← Back to Hub</a>
+
+    <header>
+      <h1>🌌 Observable Universe Map</h1>
+      <p class="tagline">Exploring the scale and structure of our cosmos</p>
+    </header>
+
+    <div class="scale-info">
+      <strong>Fun Fact:</strong> The observable universe has a radius of about 46.5 billion light-years! That's roughly 440 sextillion kilometers (440,000,000,000,000,000,000,000 km).
+    </div>
+    <div class="scale-info" style="margin-top:0; margin-bottom:16px;">
+      <strong>Score:</strong> <span id="score">0</span>
+    </div>
+
+    <div class="universe-map">
+      <div class="legend">
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ffff00; box-shadow: 0 0 10px #ffff00;"></span>
+          <span>Stars</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#00d4ff; box-shadow: 0 0 10px #00d4ff;"></span>
+          <span>Galaxies</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ff69b4; box-shadow: 0 0 15px #ff69b4;"></span>
+          <span>Nebulae</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot" style="background:#ff8c00;"></span>
+          <span>Superclusters</span>
+        </div>
+      </div>
+
+      <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background circles showing distance -->
+        <circle cx="400" cy="300" r="250" fill="none" stroke="rgba(100, 150, 255, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+        <circle cx="400" cy="300" r="200" fill="none" stroke="rgba(100, 150, 255, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+        <circle cx="400" cy="300" r="150" fill="none" stroke="rgba(100, 150, 255, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+        <circle cx="400" cy="300" r="100" fill="none" stroke="rgba(100, 150, 255, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+        <circle cx="400" cy="300" r="50" fill="none" stroke="rgba(100, 150, 255, 0.15)" stroke-width="2"/>
+
+        <!-- Labels for distance rings -->
+        <text x="410" y="65" fill="#93c5fd" font-size="11" font-weight="600">13.8 Billion ly</text>
+        <text x="410" y="115" fill="#93c5fd" font-size="11" font-weight="600">11 Billion ly</text>
+        <text x="410" y="165" fill="#93c5fd" font-size="11" font-weight="600">9 Billion ly</text>
+        <text x="410" y="215" fill="#93c5fd" font-size="11" font-weight="600">6 Billion ly</text>
+        <text x="410" y="265" fill="#93c5fd" font-size="11" font-weight="600">3 Billion ly</text>
+
+        <!-- Earth at center -->
+        <circle cx="400" cy="300" r="6" fill="#00ff00" opacity="0.9"/>
+        <circle cx="400" cy="300" r="8" fill="none" stroke="#00ff00" stroke-width="1" opacity="0.6"/>
+        <text x="415" y="305" fill="#00ff00" font-size="12" font-weight="600">Earth</text>
+
+        <!-- Solar System -->
+        <circle cx="420" cy="320" r="3" fill="#ffff00" opacity="0.8"/>
+        <text x="430" y="325" fill="#ffff00" font-size="11">Sun</text>
+
+        <!-- Milky Way representation -->
+        <ellipse cx="400" cy="300" rx="70" ry="50" fill="none" stroke="rgba(100, 200, 255, 0.15)" stroke-width="2"/>
+        <text x="345" y="295" fill="#7dd3fc" font-size="12" font-weight="600">Milky Way Galaxy</text>
+
+        <!-- Nearby Galaxies -->
+        <g id="andromeda">
+          <circle cx="480" cy="250" r="6" fill="#00d4ff" opacity="0.8"/>
+          <text x="485" y="255" fill="#00d4ff" font-size="10">Andromeda</text>
+        </g>
+
+        <circle cx="320" cy="280" r="4" fill="#00d4ff" opacity="0.7"/>
+        <text x="295" y="285" fill="#93c5fd" font-size="10">LMC</text>
+
+        <circle cx="330" cy="320" r="4" fill="#00d4ff" opacity="0.7"/>
+        <text x="305" y="325" fill="#93c5fd" font-size="10">SMC</text>
+
+        <!-- Distant Galaxies and Clusters -->
+        <circle cx="300" cy="200" r="5" fill="#ff69b4" opacity="0.7"/>
+        <text x="260" y="205" fill="#ff69b4" font-size="10">Triangulum</text>
+
+        <circle cx="550" cy="350" r="4" fill="#ff8c00" opacity="0.6"/>
+        <text x="555" y="355" fill="#ff8c00" font-size="10">Local Group</text>
+
+        <!-- Nebulae -->
+        <circle cx="380" cy="200" r="8" fill="none" stroke="#ff69b4" stroke-width="2" opacity="0.6"/>
+        <text x="350" y="150" fill="#ff69b4" font-size="10">Orion Nebula</text>
+
+        <circle cx="520" cy="150" r="7" fill="none" stroke="#ff69b4" stroke-width="2" opacity="0.6"/>
+        <text x="515" y="125" fill="#ff69b4" font-size="10">Crab Nebula</text>
+
+        <!-- Stars scattered around -->
+        <circle cx="450" cy="180" r="1.5" fill="#ffff00" opacity="0.8"/>
+        <circle cx="380" cy="420" r="1.5" fill="#ffff00" opacity="0.8"/>
+        <circle cx="520" cy="400" r="1.5" fill="#ffff00" opacity="0.8"/>
+        <circle cx="300" cy="380" r="1.5" fill="#ffff00" opacity="0.8"/>
+        <circle cx="600" cy="280" r="1.5" fill="#ffff00" opacity="0.8"/>
+        <circle cx="260" cy="150" r="1.5" fill="#ffff00" opacity="0.8"/>
+        <circle cx="680" cy="350" r="1.5" fill="#ffff00" opacity="0.8"/>
+
+        <!-- More distant structures -->
+        <circle cx="480" cy="420" r="3" fill="#00d4ff" opacity="0.6"/>
+        <circle cx="280" cy="500" r="3" fill="#00d4ff" opacity="0.6"/>
+        <circle cx="620" cy="450" r="3" fill="#00d4ff" opacity="0.6"/>
+
+        <!-- Great Attractor label -->
+        <text x="550" y="280" fill="rgba(255, 105, 180, 0.7)" font-size="11" font-weight="600" opacity="0.8">Great Attractor</text>
+        <path d="M 590 290 L 620 310" stroke="rgba(255, 105, 180, 0.5)" stroke-width="1" fill="none" marker-end="url(#arrowhead)"/>
+
+        <!-- Arrow marker definition -->
+        <defs>
+          <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+            <polygon points="0 0, 10 3, 0 6" fill="rgba(255, 105, 180, 0.5)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🌍 Local Group</h3>
+        <p>The cluster of galaxies containing our Milky Way, Andromeda, and Triangulum. About 80 galaxies in total, spanning 10 million light-years.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🌌 Observable Universe</h3>
+        <p>The portion of the universe we can observe from Earth. The farthest objects are about 46.5 billion light-years away due to cosmic expansion.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>⭐ Key Objects</h3>
+        <p><strong>Milky Way:</strong> Our home galaxy with 100-400 billion stars. <strong>Andromeda:</strong> Nearest large galaxy, 2.5 million light-years away.</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🚀 Scale Comparison</h3>
+        <p>If the observable universe were the size of Earth, a galaxy would be smaller than a grain of sand, and a star would be invisible to the naked eye!</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🌟 Light-Year</h3>
+        <p>Distance light travels in one year: ~9.46 trillion kilometers. Seeing distant galaxies means looking back in time - Andromeda light took 2.5 million years to reach us!</p>
+      </div>
+
+      <div class="info-card">
+        <h3>🔭 Hubble Volume</h3>
+        <p>The sphere-shaped region around Earth that we can observe. Beyond this cosmic horizon, light hasn't had time to reach us since the Big Bang.</p>
+      </div>
+    </div>
+
+    <footer>
+      <p>📚 Observable Universe Map — Educational visualization for cosmic understanding</p>
+      <p style="margin-top:8px;font-size:12px">Distances and sizes are approximate. Some objects shown may be in different directions from each other in reality.</p>
+    </footer>
+  </div>
+
+  <div style="position: fixed; bottom: 20px; left: 20px; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(100, 200, 255, 0.3); border-radius: 10px; padding: 12px 16px; font-size: 11px; color: #a0aec0; z-index: 20; backdrop-filter: blur(10px); line-height: 1.6;">
+    <div>⬆️ ⬇️: Scroll • Home/End: Top/Bottom</div>
+    <div>H: Back to Hub</div>
+  </div>
+
+  <script>
+    document.addEventListener('keydown', (e) => {
+      switch(e.key) {
+        case 'ArrowUp':
+          e.preventDefault();
+          window.scrollBy({ top: -100, behavior: 'smooth' });
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          window.scrollBy({ top: 100, behavior: 'smooth' });
+          break;
+        case 'Home':
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          break;
+        case 'End':
+          e.preventDefault();
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          break;
+        case 'H':
+        case 'h':
+          e.preventDefault();
+          window.location.href = 'home.html';
+          break;
+      }
+    });
+  </script>
+  <script src="nav-controls.js"></script>
+</body>
+</html>

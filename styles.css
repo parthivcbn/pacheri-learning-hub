@@ -1,0 +1,94 @@
+:root{
+	--bg: #f6f7fb;
+	--card-bg: rgba(255,255,255,0.7);
+	--muted: #6b7280;
+	--accent: #007aff;
+	--accent-2: #5ac8fa;
+	--text: #0b1220;
+}
+
+/* Allow normal scrolling by default so mouse wheel works */
+html, body{
+    overflow:auto;
+    scrollbar-width:auto;
+    -ms-overflow-style:auto;
+}
+
+body{
+	font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+	min-height:100vh;
+	margin:0;
+	background: linear-gradient(180deg,#f3f5f9 0%,#eef2f8 100%);
+	color:var(--text);
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	padding:16px;
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar{display:none;}
+
+.app{width:min(900px, 96vw);max-height:calc(100vh - 32px);overflow:hidden;}
+/* make app scrollable when content exceeds viewport */
+.app{overflow:auto}
+
+/* Space visual theme */
+.theme-space {
+	--bg: #05072a;
+	--card-bg: rgba(10,14,36,0.7);
+	--muted: #93c5fd;
+	--accent: #00d4ff;
+	--accent-2: #7dd3fc;
+	--text: #e6f3ff;
+	background: radial-gradient(ellipse at 10% 10%, rgba(125,211,252,0.04), transparent 10%), linear-gradient(180deg,#05072a 0%, #06102a 100%);
+	color:var(--text);
+}
+
+.theme-space body::before { }
+
+.theme-space .card{background:var(--card-bg);border:1px solid rgba(125,211,252,0.06);box-shadow:0 10px 30px rgba(0,212,255,0.04)}
+.theme-space .page-link{background:rgba(0,212,255,0.06);color:var(--accent)}
+.theme-space .choice{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);color:var(--text)}
+.theme-space .nav-controls{background:rgba(10,14,36,0.9);border-color:rgba(0,212,255,0.12);color:var(--muted)}
+header{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.page-link{display:inline-block;width:max-content;padding:8px 12px;border-radius:999px;background:rgba(0,122,255,0.1);color:var(--accent);text-decoration:none;font-weight:600}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.controls label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+select,input{padding:8px 10px;border-radius:10px;border:1px solid rgba(11,18,32,0.06);background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(250,251,253,0.9));color:var(--text);box-shadow:0 1px 0 rgba(255,255,255,0.6) inset}
+
+.subtitle{font-size:14px;color:var(--muted);margin-top:2px}
+
+.card{background:var(--card-bg);backdrop-filter: blur(8px);-webkit-backdrop-filter: blur(8px);padding:16px;border-radius:16px;box-shadow:0 10px 30px rgba(16,24,40,0.06);border:1px solid rgba(11,18,32,0.03)}
+.question{font-size:18px;margin-bottom:10px;font-weight:600;color:var(--text)}
+.answer{margin-top:10px;padding:8px 10px;background:transparent;border-radius:10px;border:1px solid rgba(11,18,32,0.04);color:var(--muted)}
+
+.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button{padding:8px 12px;border-radius:12px;border:none;background:linear-gradient(180deg,var(--accent),#0060d6);color:white;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(0,96,214,0.08)}
+button.secondary{background:transparent;color:var(--accent);border:1px solid rgba(0,96,214,0.08);box-shadow:none}
+
+footer{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+
+.tutor-card{margin-top:12px}
+.tutor-card h2{margin:0 0 4px;font-size:20px}
+.tutor-intro{margin:0 0 10px;color:var(--muted)}
+.tutor-input-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tutor-input-row input{flex:1;min-width:220px}
+.tutor-reply{background:rgba(0,122,255,0.08);border:1px solid rgba(0,122,255,0.12);padding:10px;border-radius:12px;line-height:1.4;color:var(--text)}
+.tutor-game{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.tutor-game button{width:100%;justify-content:flex-start;text-align:left}
+.tutor-game .feedback{font-size:14px;color:var(--muted)}
+
+/* choices */
+.choices{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.choice{background:white;border:1px solid rgba(11,18,32,0.06);color:var(--text);padding:10px;border-radius:12px;text-align:left;cursor:pointer;font-weight:500}
+.choice.correct{outline:3px solid rgba(0,122,255,0.12);background:linear-gradient(90deg,rgba(0,122,255,0.05),transparent)}
+.choice.incorrect{outline:3px solid rgba(255,59,48,0.08);background:linear-gradient(90deg,rgba(255,59,48,0.03),transparent)}
+.choice.dim{opacity:0.6}
+
+@media (max-width:640px){
+	.app{padding:12px}
+	.card{padding:14px}
+	.controls{gap:6px}
+	.choices{gap:6px}
+}
+

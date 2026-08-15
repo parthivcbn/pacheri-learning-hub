@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>English Learning Guide — Learn ALL of English</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    main { max-width: 1000px; margin: 20px auto; }
+    h1 { font-size: 24px; margin: 0 0 8px; }
+    .subtitle { color: var(--muted); margin-bottom: 16px; }
+    
+    .mode-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      padding: 8px 16px;
+      background: rgba(0, 122, 255, 0.1);
+      border: 1px solid rgba(0, 122, 255, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #007aff;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: #007aff;
+      color: white;
+      border-color: #007aff;
+    }
+    .mode-btn:hover:not(.active) {
+      background: rgba(0, 122, 255, 0.2);
+    }
+
+    .topics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .topic-card {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid #00d4ff;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .topic-card:hover {
+      background: rgba(0, 212, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    .topic-card.active {
+      background: rgba(0, 212, 255, 0.15);
+      border-left-color: #0099cc;
+    }
+
+    .lesson-content {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(11, 18, 32, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .lesson-content.active {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lesson-content h2 {
+      font-size: 20px;
+      margin: 0 0 12px;
+      color: #00d4ff;
+    }
+
+    .definition {
+      background: rgba(0, 212, 255, 0.08);
+      border-left: 3px solid #00d4ff;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .example-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(11, 18, 32, 0.1);
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      font-size: 13px;
+      font-family: 'Courier New', monospace;
+      line-height: 1.5;
+    }
+
+    .key-points {
+      background: rgba(76, 175, 80, 0.08);
+      border-left: 3px solid #4caf50;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .key-points strong { color: #4caf50; }
+
+    .practice-btn {
+      background: linear-gradient(135deg, #007aff, #0099cc);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 12px;
+      transition: transform 0.2s;
+    }
+    .practice-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .quiz-section {
+      display: none;
+    }
+    .quiz-section.active {
+      display: block;
+    }
+
+    .question-area {
+      background: rgba(0, 212, 255, 0.05);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .question-text {
+      font-weight: 600;
+      color: #00d4ff;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .choices {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .choice {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      user-select: none;
+    }
+    .choice:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.3);
+    }
+    .choice.selected {
+      background: rgba(0, 122, 255, 0.15);
+      border-color: #007aff;
+    }
+    .choice.correct {
+      background: rgba(76, 175, 80, 0.2);
+      border-color: #4caf50;
+      color: #4caf50;
+    }
+    .choice.incorrect {
+      background: rgba(244, 67, 54, 0.2);
+      border-color: #f44336;
+      color: #f44336;
+    }
+
+    .answer-feedback {
+      background: rgba(0, 212, 255, 0.08);
+      border-left: 3px solid #00d4ff;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 12px;
+      font-size: 13px;
+      display: none;
+    }
+    .answer-feedback.show {
+      display: block;
+    }
+
+    .progress-bar {
+      background: rgba(255, 255, 255, 0.08);
+      height: 6px;
+      border-radius: 3px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #007aff, #00d4ff);
+      transition: width 0.3s;
+    }
+
+    .kb-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(11, 18, 32, 0.15);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 11px;
+      color: #6b7280;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body class="no-global-scroll">
+  <div class="app">
+    <header>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <h1>📖 English Learning Guide</h1>
+          <div class="subtitle">Learn ALL of English with clear explanations, examples & practice</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="card">
+      <!-- MODE TOGGLE -->
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeLearn">📚 Learn Topics</button>
+        <button class="mode-btn" id="modeQuiz">🎯 Practice Quiz</button>
+      </div>
+
+      <!-- LEARN MODE -->
+      <div id="learnMode">
+        <div class="topics-grid" id="topicsGrid"></div>
+        
+        <!-- Lessons Container -->
+        <div id="lessonsContainer"></div>
+      </div>
+
+      <!-- QUIZ MODE -->
+      <div id="quizMode" class="quiz-section">
+        <h2>Practice All Topics</h2>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px; color: var(--muted); font-size: 13px;">
+          <span id="qIndex">1</span>/<span id="qTotal">1</span> | Score: <span id="score" style="font-weight: bold; color: #00d4ff;">0</span>
+        </div>
+
+        <div class="question-area">
+          <div class="question-text" id="qText"></div>
+          <div class="choices" id="qChoices"></div>
+          <div class="answer-feedback" id="qFeedback"></div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+          <button id="submitAnswer" class="secondary">Show Answer</button>
+          <button id="nextQuestion" class="secondary">Next Question</button>
+        </div>
+      </div>
+
+      <section style="margin-top: 20px; color: var(--muted); font-size: 13px;">
+        💡 <strong>Tip:</strong> Start by learning each topic with clear explanations and examples, then test yourself with the quiz!
+      </section>
+    </main>
+  </div>
+
+  <div class="kb-hint">
+    Learn Mode: Click topics | Quiz Mode: Arrow keys to navigate, 1-4/A-D to select, Enter/S for answer, N for next
+  </div>
+
+  <script>
+    const lessons = [
+      {
+        id: 'parts-of-speech',
+        title: '🔤 Parts of Speech',
+        emoji: '🔤',
+        content: `
+          <h2>Parts of Speech: The Building Blocks</h2>
+          <div class="definition">
+            <strong>Parts of speech</strong> are the categories of words based on their role and function in sentences. Every English word belongs to at least one part of speech.
+          </div>
+
+          <h3>1. Nouns</h3>
+          <div class="definition">Words that name people, places, things, or ideas.</div>
+          <div class="example-box">
+            🧑 People: teacher, John, doctor<br/>
+            🏠 Places: school, park, library<br/>
+            🎾 Things: book, chair, ball<br/>
+            💡 Ideas: happiness, courage, freedom
+          </div>
+
+          <h3>2. Verbs</h3>
+          <div class="definition">Words that show action or state of being.</div>
+          <div class="example-box">
+            Action: run, jump, write, eat, sing<br/>
+            State of being: is, are, am, was, were
+          </div>
+
+          <h3>3. Adjectives</h3>
+          <div class="definition">Words that describe or modify nouns.</div>
+          <div class="example-box">
+            The <strong>beautiful</strong> flower<br/>
+            A <strong>tall</strong> building<br/>
+            <strong>Happy</strong> children
+          </div>
+
+          <h3>4. Adverbs</h3>
+          <div class="definition">Words that modify verbs, adjectives, or other adverbs—usually describing how, when, or where.</div>
+          <div class="example-box">
+            She ran <strong>quickly</strong> (how)<br/>
+            He arrived <strong>yesterday</strong> (when)<br/>
+            The store is <strong>nearby</strong> (where)
+          </div>
+
+          <h3>5. Pronouns</h3>
+          <div class="definition">Words that replace nouns.</div>
+          <div class="example-box">
+            Subject: I, you, he, she, it, we, they<br/>
+            Object: me, you, him, her, it, us, them<br/>
+            Possessive: my, your, his, her, its, our, their
+          </div>
+
+          <h3>6. Prepositions</h3>
+          <div class="definition">Words showing position or relationship between nouns and other words.</div>
+          <div class="example-box">
+            in, on, under, beside, between, through, during, before, after
+          </div>
+
+          <h3>7. Conjunctions</h3>
+          <div class="definition">Words connecting words, phrases, or clauses.</div>
+          <div class="example-box">
+            Coordinating: and, but, or<br/>
+            Subordinating: because, although, while, if
+          </div>
+
+          <h3>8. Interjections</h3>
+          <div class="definition">Words expressing sudden emotion or surprise.</div>
+          <div class="example-box">
+            Oh! Wow! Ouch! Great! Help!
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Remember:</strong> One word can be multiple parts of speech depending on its use in a sentence!
+          </div>
+        `
+      },
+      {
+        id: 'subject-verb-agreement',
+        title: '✏️ Subject-Verb Agreement',
+        emoji: '✏️',
+        content: `
+          <h2>Subject-Verb Agreement</h2>
+          <div class="definition">
+            The subject and verb in a sentence must agree in <strong>number</strong> (singular or plural).
+          </div>
+
+          <h3>The Basic Rule</h3>
+          <div class="example-box">
+            ✓ <strong>Correct:</strong> The cat runs. (singular)<br/>
+            ✓ <strong>Correct:</strong> The cats run. (plural)<br/>
+            ✗ <strong>Wrong:</strong> The cat run. (doesn't agree)<br/>
+            ✗ <strong>Wrong:</strong> The cats runs. (doesn't agree)
+          </div>
+
+          <h3>Adding -s to Verbs</h3>
+          <div class="definition">
+            With <strong>he, she, it</strong> (3rd person singular), add <strong>-s</strong> to the present tense verb.
+          </div>
+          <div class="example-box">
+            He walks (not "he walk")<br/>
+            She plays (not "she play")<br/>
+            It jumps (not "it jump")<br/>
+            They walk (no -s added)
+          </div>
+
+          <h3>Special Cases</h3>
+          <div class="example-box">
+            <strong>Either...or/Neither...nor:</strong> Use singular verb<br/>
+            "Either student IS ready" (not "are")<br/>
+            <br/>
+            <strong>Plural nouns ending in -s:</strong> Use plural verb<br/>
+            "Politics ARE important" (politics is plural)
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Quick Check:</strong> Find the subject first, determine if it's singular or plural, then match the verb!
+          </div>
+        `
+      },
+      {
+        id: 'verb-tenses',
+        title: '⏰ Verb Tenses',
+        emoji: '⏰',
+        content: `
+          <h2>English Verb Tenses</h2>
+          <div class="definition">
+            Tense shows <strong>when</strong> an action happens: past, present, or future.
+          </div>
+
+          <h3>Simple Tenses (3)</h3>
+
+          <h4>1. Simple Present</h4>
+          <div class="example-box">
+            <strong>Form:</strong> Base verb (+ -s for 3rd person)<br/>
+            <strong>Use:</strong> Regular habits, facts, general truths<br/>
+            <strong>Examples:</strong> I walk. She runs. They play.
+          </div>
+
+          <h4>2. Simple Past</h4>
+          <div class="example-box">
+            <strong>Form:</strong> Verb + -ed (irregular verbs change completely)<br/>
+            <strong>Use:</strong> Completed actions in past<br/>
+            <strong>Examples:</strong> I walked. She ran. They played.
+          </div>
+
+          <h4>3. Simple Future</h4>
+          <div class="example-box">
+            <strong>Form:</strong> will + base verb<br/>
+            <strong>Use:</strong> Actions that will happen<br/>
+            <strong>Examples:</strong> I will walk. She will run. They will play.
+          </div>
+
+          <h3>Progressive Tenses (3)</h3>
+
+          <h4>1. Present Progressive</h4>
+          <div class="example-box">
+            <strong>Form:</strong> am/is/are + -ing<br/>
+            <strong>Use:</strong> Action happening NOW<br/>
+            <strong>Examples:</strong> I am walking. She is running. They are playing.
+          </div>
+
+          <h4>2. Past Progressive</h4>
+          <div class="example-box">
+            <strong>Form:</strong> was/were + -ing<br/>
+            <strong>Use:</strong> Action happening at a specific past time<br/>
+            <strong>Examples:</strong> I was walking. She was running. They were playing.
+          </div>
+
+          <h4>3. Future Progressive</h4>
+          <div class="example-box">
+            <strong>Form:</strong> will be + -ing<br/>
+            <strong>Use:</strong> Action in progress at future time<br/>
+            <strong>Examples:</strong> I will be walking. She will be running.
+          </div>
+
+          <h3>Perfect Tenses (3)</h3>
+
+          <h4>1. Present Perfect</h4>
+          <div class="example-box">
+            <strong>Form:</strong> have/has + past participle<br/>
+            <strong>Use:</strong> Action started in past, continues to now<br/>
+            <strong>Examples:</strong> I have walked. She has run.
+          </div>
+
+          <h4>2. Past Perfect</h4>
+          <div class="example-box">
+            <strong>Form:</strong> had + past participle<br/>
+            <strong>Use:</strong> Action that happened before another past action<br/>
+            <strong>Examples:</strong> I had walked. She had run.
+          </div>
+
+          <h4>3. Future Perfect</h4>
+          <div class="example-box">
+            <strong>Form:</strong> will have + past participle<br/>
+            <strong>Use:</strong> Action completed by future time<br/>
+            <strong>Examples:</strong> I will have walked. She will have run.
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Remember:</strong> 9 tenses total! Master simple, progressive, and perfect forms.
+          </div>
+        `
+      },
+      {
+        id: 'punctuation',
+        title: '🎯 Punctuation Marks',
+        emoji: '🎯',
+        content: `
+          <h2>Essential Punctuation</h2>
+
+          <h3>Period (.)</h3>
+          <div class="definition">Ends a statement or declaration.</div>
+          <div class="example-box">
+            She went to school.<br/>
+            The weather is sunny.
+          </div>
+
+          <h3>Question Mark (?)</h3>
+          <div class="definition">Ends a direct question.</div>
+          <div class="example-box">
+            Do you like ice cream?<br/>
+            Where are you going?
+          </div>
+
+          <h3>Exclamation Mark (!)</h3>
+          <div class="definition">Shows strong emotion, emphasis, or excitement.</div>
+          <div class="example-box">
+            What a beautiful day!<br/>
+            Watch out!
+          </div>
+
+          <h3>Comma (,)</h3>
+          <div class="definition">Separates items in a list, or indicates a pause in a sentence.</div>
+          <div class="example-box">
+            I like apples, oranges, and bananas.<br/>
+            Although it was raining, we played outside.
+          </div>
+
+          <h3>Apostrophe (')</h3>
+          <div class="definition">Shows possession or is used in contractions.</div>
+          <div class="example-box">
+            <strong>Possession:</strong> John's book, the cat's tail<br/>
+            <strong>Contractions:</strong> don't, can't, it's
+          </div>
+
+          <h3>Quotation Marks (" ")</h3>
+          <div class="definition">Enclose direct speech or quotes.</div>
+          <div class="example-box">
+            She said, "Hello, how are you?"<br/>
+            He asked, "What time is it?"
+          </div>
+
+          <h3>Semicolon (;)</h3>
+          <div class="definition">Connects two independent clauses instead of a period.</div>
+          <div class="example-box">
+            I like pizza; she prefers pasta.<br/>
+            The book was interesting; I couldn't put it down.
+          </div>
+
+          <h3>Colon (:)</h3>
+          <div class="definition">Introduces a list, explanation, or quote.</div>
+          <div class="example-box">
+            I need: pencil, paper, and eraser.<br/>
+            Here's the rule: always be kind.
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Important:</strong> Correct punctuation makes writing clear and easy to understand!
+          </div>
+        `
+      },
+      {
+        id: 'literary-devices',
+        title: '🎭 Literary Devices',
+        emoji: '🎭',
+        content: `
+          <h2>Master Literary Devices</h2>
+          <div class="definition">
+            Literary devices are techniques writers use to create vivid imagery, emotion, and meaning.
+          </div>
+
+          <h3>1. Metaphor</h3>
+          <div class="definition">Direct comparison between two unlike things WITHOUT using "like" or "as".</div>
+          <div class="example-box">
+            "Time is money" (not "time is like money")<br/>
+            "Life is a journey"<br/>
+            "The world is a stage"
+          </div>
+
+          <h3>2. Simile</h3>
+          <div class="definition">Comparison using "like" or "as".</div>
+          <div class="example-box">
+            "As quiet as a mouse"<br/>
+            "Eyes like stars"<br/>
+            "Brave like a lion"
+          </div>
+
+          <h3>3. Personification</h3>
+          <div class="definition">Giving human qualities to non-human objects or animals.</div>
+          <div class="example-box">
+            "The wind whispered" (wind can't whisper)<br/>
+            "The sun smiled down"<br/>
+            "The ocean sang"
+          </div>
+
+          <h3>4. Alliteration</h3>
+          <div class="definition">Repetition of beginning sounds in nearby words.</div>
+          <div class="example-box">
+            "Silly Sally sings softly"<br/>
+            "Bouncing baby bears"<br/>
+            "Peaceful, pretty petals"
+          </div>
+
+          <h3>5. Hyperbole</h3>
+          <div class="definition">Extreme exaggeration for effect or humor.</div>
+          <div class="example-box">
+            "I've told you a million times!"<br/>
+            "I'm so hungry I could eat a horse."<br/>
+            "This bag weighs a ton."
+          </div>
+
+          <h3>6. Irony</h3>
+          <div class="definition">Expressing meaning using opposite words for emphasis or humor.</div>
+          <div class="example-box">
+            A fire station burns down (situational irony)<br/>
+            "That's just perfect!" (when something goes wrong)
+          </div>
+
+          <h3>7. Onomatopoeia</h3>
+          <div class="definition">Words that imitate the sound they represent.</div>
+          <div class="example-box">
+            buzz, hiss, crash, boom, splash, pop, sizzle
+          </div>
+
+          <h3>8. Oxymoron</h3>
+          <div class="definition">Combining contradictory words for effect.</div>
+          <div class="example-box">
+            "Deafening silence"<br/>
+            "Bittersweet"<br/>
+            "Jumbo shrimp"
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Why use them?</strong> They make writing more interesting, creative, and memorable!
+          </div>
+        `
+      },
+      {
+        id: 'sentence-structure',
+        title: '🏗️ Sentence Structure',
+        emoji: '🏗️',
+        content: `
+          <h2>Types of Sentences</h2>
+
+          <h3>1. Simple Sentence</h3>
+          <div class="definition">One independent clause with one subject and one verb.</div>
+          <div class="example-box">
+            "The dog barks."<br/>
+            "She reads books."<br/>
+            "I like ice cream."
+          </div>
+
+          <h3>2. Compound Sentence</h3>
+          <div class="definition">Two independent clauses joined by a coordinator (and, but, or).</div>
+          <div class="example-box">
+            "She played outside, and he stayed inside."<br/>
+            "I wanted pizza, but she preferred pasta."<br/>
+            "Would you like coffee or tea?"
+          </div>
+
+          <h3>3. Complex Sentence</h3>
+          <div class="definition">An independent clause + one or more dependent clauses.</div>
+          <div class="example-box">
+            "While it was raining, we stayed inside."<br/>
+            "If you study hard, you will pass."<br/>
+            "Although it was late, she finished her work."
+          </div>
+
+          <h3>Parts of Sentences</h3>
+
+          <h4>Independent Clause</h4>
+          <div class="definition">A complete sentence that can stand alone.</div>
+          <div class="example-box">
+            "The cat sleeps." ← Can stand alone<br/>
+            "Because I studied" ← Cannot stand alone (dependent)
+          </div>
+
+          <h4>Dependent Clause</h4>
+          <div class="definition">Cannot stand alone; needs an independent clause.</div>
+          <div class="example-box">
+            "<strong>Although it rained</strong>, she went to school."<br/>
+            "Because <strong>he was tired</strong>, he went to bed."
+          </div>
+
+          <h3>Common Sentence Errors</h3>
+
+          <h4>Run-on Sentence</h4>
+          <div class="definition">Two independent clauses joined without proper punctuation.</div>
+          <div class="example-box">
+            ✗ Wrong: "I went to the store I bought milk."<br/>
+            ✓ Correct: "I went to the store, and I bought milk."<br/>
+            ✓ Correct: "I went to the store; I bought milk."
+          </div>
+
+          <h4>Fragment</h4>
+          <div class="definition">Incomplete sentence missing a subject or verb.</div>
+          <div class="example-box">
+            ✗ Wrong: "Running to the store."<br/>
+            ✓ Correct: "I was running to the store."<br/>
+            ✗ Wrong: "Because it was raining."<br/>
+            ✓ Correct: "Because it was raining, I stayed inside."
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Remember:</strong> Complete sentences need a subject + verb + complete thought!
+          </div>
+        `
+      },
+      {
+        id: 'reading-comprehension',
+        title: '📚 Reading Comprehension',
+        emoji: '📚',
+        content: `
+          <h2>Reading Comprehension Skills</h2>
+
+          <h3>1. Theme</h3>
+          <div class="definition">The underlying message or moral lesson of a story.</div>
+          <div class="example-box">
+            Story about friendship helping overcome challenges → Theme: "Friendship is powerful"<br/>
+            Story about honesty being important → Theme: "Honesty is the best policy"
+          </div>
+
+          <h3>2. Main Idea vs Details</h3>
+          <div class="definition">The main idea is the central point; details support it.</div>
+          <div class="example-box">
+            <strong>Main Idea:</strong> "Dogs make great pets."<br/>
+            <strong>Details:</strong> They're loyal, they play, they protect families.
+          </div>
+
+          <h3>3. Character Analysis</h3>
+          <div class="definition">Understanding character traits through actions, thoughts, and words.</div>
+          <div class="example-box">
+            Character helps others → Trait: kind<br/>
+            Character never gives up → Trait: determined<br/>
+            Character speaks without thinking → Trait: impulsive
+          </div>
+
+          <h3>4. Point of View</h3>
+          <div class="definition">The perspective from which a story is told.</div>
+          <div class="example-box">
+            <strong>1st Person:</strong> "I went to school." (character tells story)<br/>
+            <strong>3rd Person:</strong> "He went to school." (narrator tells story)<br/>
+            <strong>2nd Person:</strong> "You go to school." (rare; addresses reader)
+          </div>
+
+          <h3>5. Inference</h3>
+          <div class="definition">Reading between the lines; using clues to understand unstated information.</div>
+          <div class="example-box">
+            Text: "She looked at the empty plate and smiled."<br/>
+            Inference: The food was good; she enjoyed eating it.
+          </div>
+
+          <h3>6. Foreshadowing</h3>
+          <div class="definition">Hints or clues about what will happen later.</div>
+          <div class="example-box">
+            "Dark clouds gathered overhead." → Hint that something bad might happen
+          </div>
+
+          <h3>7. Tone & Mood</h3>
+          <div class="definition">
+            <strong>Tone:</strong> Author's attitude<br/>
+            <strong>Mood:</strong> Emotional atmosphere created for reader
+          </div>
+          <div class="example-box">
+            Dark description of a forest → Mood: scary<br/>
+            Sarcastic words → Tone: sarcastic
+          </div>
+
+          <h3>8. Context Clues</h3>
+          <div class="definition">Information in surrounding text that helps explain unknown words.</div>
+          <div class="example-box">
+            "The old, dilapidated house stood abandoned and decaying."<br/>
+            Context clues: "old, abandoned" show dilapidated = falling apart
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Active Reading Tip:</strong> Take notes, ask questions, and think about the author's purpose!
+          </div>
+        `
+      },
+      {
+        id: 'vocabulary',
+        title: '📖 Vocabulary Building',
+        emoji: '📖',
+        content: `
+          <h2>Expand Your Vocabulary</h2>
+
+          <h3>1. Synonyms</h3>
+          <div class="definition">Words with similar meanings.</div>
+          <div class="example-box">
+            happy = joyful = delighted<br/>
+            big = large = huge<br/>
+            happy = cheerful = gleeful
+          </div>
+
+          <h3>2. Antonyms</h3>
+          <div class="definition">Words with opposite meanings.</div>
+          <div class="example-box">
+            hot ↔ cold<br/>
+            big ↔ small<br/>
+            happy ↔ sad<br/>
+            ancient ↔ modern
+          </div>
+
+          <h3>3. Homophones</h3>
+          <div class="definition">Words that sound the same but have different meanings and spellings.</div>
+          <div class="example-box">
+            to / two / too<br/>
+            their / there / they're<br/>
+            your / you're<br/>
+            its / it's
+          </div>
+
+          <h3>4. Context Clues</h3>
+          <div class="definition">Using surrounding words to figure out an unknown word's meaning.</div>
+          <div class="example-box">
+            "The student's meticulous work showed great attention to detail."<br/>
+            → Meticulous = very careful and precise
+          </div>
+
+          <h3>5. Common Advanced Words</h3>
+          <div class="example-box">
+            <strong>Pragmatic:</strong> practical, focused on real results<br/>
+            <strong>Benevolent:</strong> kind, generous<br/>
+            <strong>Cryptic:</strong> mysterious, hard to understand<br/>
+            <strong>Ephemeral:</strong> lasting only a short time<br/>
+            <strong>Advocate:</strong> to support or recommend
+          </div>
+
+          <h3>6. Idioms</h3>
+          <div class="definition">Phrases with figurative meanings different from the literal words.</div>
+          <div class="example-box">
+            "Break the ice" = start conversation, ease tension<br/>
+            "Piece of cake" = very easy<br/>
+            "Rain cats and dogs" = rain heavily<br/>
+            "Spill the beans" = tell a secret
+          </div>
+
+          <h3>7. Word Roots & Prefixes</h3>
+          <div class="definition">Understanding word parts helps you figure out meanings.</div>
+          <div class="example-box">
+            <strong>un-</strong>: not (unhappy, unclear)<br/>
+            <strong>re-</strong>: again (rewrite, rebuild)<br/>
+            <strong>-tion</strong>: action/state (creation, motion)<br/>
+            <strong>-ful</strong>: full of (beautiful, wonderful)
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Vocabulary Growth:</strong> Learn roots, use context clues, read extensively!
+          </div>
+        `
+      },
+      {
+        id: 'writing-skills',
+        title: '✍️ Writing Skills',
+        emoji: '✍️',
+        content: `
+          <h2>Write Effectively</h2>
+
+          <h3>1. Complete Sentences</h3>
+          <div class="definition">Every sentence needs a subject (who/what) and verb (action/state).</div>
+          <div class="example-box">
+            ✓ "The dog runs."<br/>
+            ✗ "Running fast." (missing subject)<br/>
+            ✓ "She is happy."<br/>
+            ✗ "Happy." (missing subject and verb)
+          </div>
+
+          <h3>2. Paragraph Structure</h3>
+          <div class="definition">A paragraph should have: Topic Sentence → Supporting Details → Conclusion</div>
+          <div class="example-box">
+            <strong>Topic Sentence:</strong> "Dogs make wonderful pets."<br/>
+            <strong>Details:</strong> They are loyal, playful, and protective.<br/>
+            <strong>Conclusion:</strong> "That's why dogs are loved by many families."
+          </div>
+
+          <h3>3. Essay Structure</h3>
+          <div class="example-box">
+            <strong>Introduction:</strong> Hook + background + thesis statement<br/>
+            <strong>Body:</strong> 2-3 paragraphs with evidence/examples<br/>
+            <strong>Conclusion:</strong> Restate thesis + final thoughts
+          </div>
+
+          <h3>4. Dialogue</h3>
+          <div class="definition">Character speech written in quotes.</div>
+          <div class="example-box">
+            "Hello, how are you?" she asked.<br/>
+            He replied, "I'm doing great, thanks for asking!"
+          </div>
+
+          <h3>5. Show, Don't Tell</h3>
+          <div class="definition">Use descriptive details instead of stating emotions directly.</div>
+          <div class="example-box">
+            ✗ "She was sad."<br/>
+            ✓ "Tears streamed down her face as she stared at the empty chair."
+          </div>
+
+          <h3>6. Thesis Statement</h3>
+          <div class="definition">The main argument of your essay stated clearly.</div>
+          <div class="example-box">
+            "Social media has both positive and negative effects on teenagers."<br/>
+            "Reading is important for developing imagination and knowledge."
+          </div>
+
+          <h3>7. Supporting Evidence</h3>
+          <div class="definition">Use examples, facts, and quotes to support your ideas.</div>
+          <div class="example-box">
+            <strong>Example:</strong> "For instance, studies show..."<br/>
+            <strong>Fact:</strong> "Research proves..."<br/>
+            <strong>Quote:</strong> "According to experts..."
+          </div>
+
+          <h3>8. Editing Tips</h3>
+          <div class="key-points">
+            <strong>✓ Check:</strong> Grammar, punctuation, spelling, clarity, flow, organization!
+          </div>
+        `
+      },
+      {
+        id: 'common-errors',
+        title: '🚫 Common English Errors',
+        emoji: '🚫',
+        content: `
+          <h2>Fix Common Mistakes</h2>
+
+          <h3>1. Its vs. It's</h3>
+          <div class="example-box">
+            <strong>Its</strong> = possessive ("The cat licked its paws.")<br/>
+            <strong>It's</strong> = "it is" ("It's a beautiful day.")
+          </div>
+
+          <h3>2. Their / There / They're</h3>
+          <div class="example-box">
+            <strong>Their</strong> = possessive ("Their house is big.")<br/>
+            <strong>There</strong> = location ("I'm going there.")<br/>
+            <strong>They're</strong> = "they are" ("They're coming tomorrow.")
+          </div>
+
+          <h3>3. Your / You're</h3>
+          <div class="example-box">
+            <strong>Your</strong> = possessive ("Is this your book?")<br/>
+            <strong>You're</strong> = "you are" ("You're doing great!")
+          </div>
+
+          <h3>4. Affect / Effect</h3>
+          <div class="example-box">
+            <strong>Affect</strong> = verb, to influence ("Weather affects mood.")<br/>
+            <strong>Effect</strong> = noun, a result ("The effect was positive.")
+          </div>
+
+          <h3>5. Subject-Verb Disagreement</h3>
+          <div class="example-box">
+            ✗ "Everyone are going." (everyone is singular)<br/>
+            ✓ "Everyone is going."<br/>
+            ✗ "The dogs runs." (dogs is plural)<br/>
+            ✓ "The dogs run."
+          </div>
+
+          <h3>6. Run-on Sentences</h3>
+          <div class="example-box">
+            ✗ "I went to school I learned a lot."<br/>
+            ✓ "I went to school, and I learned a lot."<br/>
+            ✓ "I went to school; I learned a lot."
+          </div>
+
+          <h3>7. Sentence Fragments</h3>
+          <div class="example-box">
+            ✗ "Because I was late."<br/>
+            ✓ "Because I was late, I missed the beginning."<br/>
+            ✗ "Walking to school."<br/>
+            ✓ "I was walking to school."
+          </div>
+
+          <h3>8. Misplaced Modifiers</h3>
+          <div class="example-box">
+            ✗ "Wearing my new shoes, the park was beautiful."<br/>
+            ✓ "Wearing my new shoes, I enjoyed the beautiful park."
+          </div>
+
+          <h3>9. Double Negatives</h3>
+          <div class="example-box">
+            ✗ "I didn't go nowhere." (double negative)<br/>
+            ✓ "I didn't go anywhere."<br/>
+            ✓ "I went nowhere."
+          </div>
+
+          <div class="key-points">
+            <strong>✓ Proofread:</strong> Always check your work for these common mistakes!
+          </div>
+        `
+      }
+    ];
+
+    const quizQuestions = [
+      { g: 4, t: 'Parts of Speech', q: 'Identify the **noun**:', c: ['cat', 'sat', 'the', 'on'], a: 0, e: 'Nouns are people, places, things, or ideas.' },
+      { g: 4, t: 'Parts of Speech', q: 'What is the **verb**?', c: ['She', 'writes', 'beautiful', 'poems'], a: 1, e: 'Verbs show action or state of being.' },
+      { g: 4, t: 'Parts of Speech', q: 'Choose the **adjective**:', c: ['loudly', 'cute', 'barked', 'quickly'], a: 1, e: 'Adjectives describe nouns.' },
+      { g: 4, t: 'Grammar', q: '**Subject-verb agreement**:', c: ['dogs runs', 'dog run', 'dogs run', 'dog are'], a: 2, e: 'Plural subject needs plural verb.' },
+      { g: 4, t: 'Grammar', q: 'Correct: "She _____ daily."', c: ['go', 'goes', 'going', 'gone'], a: 1, e: '3rd person singular adds -s.' },
+      { g: 4, t: 'Verb Tenses', q: '**Past tense**:', c: ['She go', 'She goes', 'She went', 'She going'], a: 2, e: '"Went" is simple past.' },
+      { g: 4, t: 'Verb Tenses', q: '**Future tense**:', c: ['I walk', 'I walked', 'I will walk', 'I am walking'], a: 2, e: '"Will" + verb = future.' },
+      { g: 4, t: 'Punctuation', q: 'Use of **comma**:', c: ['End of sentences', 'Lists, pauses, info', 'Never', 'After names only'], a: 1, e: 'Commas separate items/ideas.' },
+      { g: 4, t: 'Punctuation', q: '**Question mark** ends:', c: ['Statements', 'Questions', 'Commands', 'Exclamations'], a: 1, e: 'Questions end with ?' },
+      { g: 4, t: 'Vocabulary', q: '**Synonym** for "happy":', c: ['sad', 'joyful', 'angry', 'tired'], a: 1, e: 'Synonyms have similar meanings.' },
+      { g: 7, t: 'Grammar', q: 'Fix: "Neither students were ready."', c: ['Change "were" to "was"', 'Change "students"', 'No error', 'Change "ready"'], a: 0, e: '"Neither" is singular.' },
+      { g: 7, t: 'Verb Tenses', q: '**Past perfect**:', c: ['Distant past', 'Action before another past action (had + verb)', 'Happening now', 'Future'], a: 1, e: '"She had studied before exam."' },
+      { g: 7, t: 'Verb Tenses', q: '**Present perfect**:', c: ['She walked yesterday', 'She has walked', 'She is walking', 'She will walk'], a: 1, e: 'have/has + past participle.' },
+      { g: 7, t: 'Punctuation', q: '**Semicolon** connects:', c: ['Lists', 'Independent clauses (no and/but)', 'Clauses with "and"', 'Phrases'], a: 1, e: '"Tired; she slept."' },
+      { g: 7, t: 'Vocabulary', q: '"Meticulous" means:', c: ['lazy', 'very careful/precise', 'old', 'scientific'], a: 1, e: 'Careful attention to detail.' },
+      { g: 7, t: 'Literary Devices', q: '**Metaphor**:', c: ['smile like sunshine', 'smile is sunshine', 'smile shines', 'bright smile'], a: 1, e: 'Direct comparison without "like/as".' },
+      { g: 7, t: 'Literary Devices', q: '**Personification** is:', c: ['Comparison', 'Human traits to non-humans', 'Repeated sounds', 'Exaggeration'], a: 1, e: '"Wind whispered" (wind can\'t whisper).' },
+      { g: 7, t: 'Sentence Structure', q: '**Simple sentence**:', c: ['Two clauses', 'Independent + dependent', 'One subject/verb', 'Three+ clauses'], a: 2, e: 'One independent clause.' },
+      { g: 7, t: 'Reading', q: '**Theme** is:', c: ['Setting', 'Main message/lesson', 'Events', 'Dialogue'], a: 1, e: 'Underlying moral of story.' },
+      { g: 7, t: 'Writing', q: '**Introduction** should:', c: ['Summarize all', 'Hook reader, give context, state topic', 'Include all details', 'Repeat sources'], a: 1, e: 'Engage and introduce main idea.' }
+    ];
+
+    let currentLesson = null;
+    let quizState = { q: 0, score: 0, selected: null, answered: false, questions: [] };
+
+    function renderTopics() {
+      const grid = document.getElementById('topicsGrid');
+      grid.innerHTML = lessons.map((l, i) => `
+        <div class="topic-card ${i === 0 ? 'active' : ''}" onclick="selectLesson(${i})" role="button" tabindex="0">
+          <div style="font-size: 20px; margin-bottom: 4px;">${l.emoji}</div>
+          <div>${l.title}</div>
+        </div>
+      `).join('');
+      selectLesson(0);
+    }
+
+    window.selectLesson = function(idx) {
+      currentLesson = idx;
+      document.querySelectorAll('.topic-card').forEach((c, i) => c.classList.toggle('active', i === idx));
+      
+      let container = document.getElementById('lessonsContainer');
+      if (!container.querySelector(`#lesson-${idx}`)) {
+        container.innerHTML += `<div id="lesson-${idx}" class="lesson-content active">${lessons[idx].content}<button class="practice-btn" onclick="startQuizForTopic(${idx})">📝 Practice This Topic</button></div>`;
+      } else {
+        document.querySelectorAll('.lesson-content').forEach(l => l.classList.remove('active'));
+        document.getElementById(`lesson-${idx}`).classList.add('active');
+      }
+    };
+
+    window.startQuizForTopic = function(idx) {
+      const topicName = lessons[idx].title.replace(/[🔤✏️⏰🎯🏗️📚📖✍️🚫]/g, '').trim();
+      quizState.questions = quizQuestions.filter(q => q.t.toLowerCase().includes(topicName.toLowerCase().split(' ')[0])).sort(() => Math.random() - 0.5);
+      quizState.q = 0;
+      quizState.score = 0;
+      quizState.selected = null;
+      quizState.answered = false;
+      
+      document.getElementById('learnMode').style.display = 'none';
+      document.getElementById('quizMode').classList.add('active');
+      document.getElementById('qTotal').textContent = quizState.questions.length;
+      loadQuizQuestion();
+    };
+
+    function loadQuizQuestion() {
+      const quest = quizState.questions[quizState.q];
+      document.getElementById('qText').innerHTML = quest.q;
+      const choices = document.getElementById('qChoices');
+      choices.innerHTML = quest.c.map((ch, i) => `
+        <div class="choice" onclick="selectChoice(${i})" role="button" tabindex="0" data-idx="${i}">
+          ${ch}
+        </div>
+      `).join('');
+      
+      document.getElementById('qFeedback').innerHTML = '';
+      document.getElementById('qFeedback').classList.remove('show');
+      document.getElementById('qIndex').textContent = quizState.q + 1;
+      document.getElementById('score').textContent = quizState.score;
+      document.getElementById('progressFill').style.width = ((quizState.q / quizState.questions.length) * 100) + '%';
+      quizState.selected = null;
+      quizState.answered = false;
+    }
+
+    window.selectChoice = function(i) {
+      if (quizState.answered) return;
+      quizState.selected = i;
+      document.querySelectorAll('.choice').forEach((c, j) => c.classList.toggle('selected', j === i));
+    };
+
+    document.getElementById('submitAnswer').addEventListener('click', () => {
+      if (quizState.answered || quizState.selected === null) return;
+      quizState.answered = true;
+      const quest = quizState.questions[quizState.q];
+      const feedback = document.getElementById('qFeedback');
+      if (quizState.selected === quest.a) {
+        quizState.score++;
+        document.querySelector(`.choice[data-idx="${quest.a}"]`).classList.add('correct');
+        feedback.innerHTML = '✅ <strong>Correct!</strong> ' + quest.e;
+      } else {
+        document.querySelector(`.choice[data-idx="${quizState.selected}"]`).classList.add('incorrect');
+        document.querySelector(`.choice[data-idx="${quest.a}"]`).classList.add('correct');
+        feedback.innerHTML = '❌ <strong>Not quite.</strong> ' + quest.e;
+      }
+      feedback.classList.add('show');
+      document.getElementById('score').textContent = quizState.score;
+    });
+
+    document.getElementById('nextQuestion').addEventListener('click', () => {
+      if (quizState.q < quizState.questions.length - 1) {
+        quizState.q++;
+        loadQuizQuestion();
+      } else {
+        alert(`Quiz Complete! Score: ${quizState.score}/${quizState.questions.length}`);
+        document.getElementById('quizMode').classList.remove('active');
+        document.getElementById('learnMode').style.display = 'block';
+        renderTopics();
+      }
+    });
+
+    document.getElementById('modeLearn').addEventListener('click', () => {
+      document.getElementById('modeLearn').classList.add('active');
+      document.getElementById('modeQuiz').classList.remove('active');
+      document.getElementById('learnMode').style.display = 'block';
+      document.getElementById('quizMode').classList.remove('active');
+    });
+
+    document.getElementById('modeQuiz').addEventListener('click', () => {
+      if (quizState.questions.length === 0) {
+        quizState.questions = quizQuestions.sort(() => Math.random() - 0.5);
+        quizState.q = 0;
+        quizState.score = 0;
+        quizState.selected = null;
+        quizState.answered = false;
+        document.getElementById('qTotal').textContent = quizState.questions.length;
+        loadQuizQuestion();
+      }
+      document.getElementById('modeQuiz').classList.add('active');
+      document.getElementById('modeLearn').classList.remove('active');
+      document.getElementById('learnMode').style.display = 'none';
+      document.getElementById('quizMode').classList.add('active');
+    });
+
+    // Initialize
+    renderTopics();
+  </script>
+</body>
+</html>
