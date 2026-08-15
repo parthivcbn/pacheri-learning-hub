@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Tutor | Parthiv Learning Hub</title>
+  <style>
+    :root {
+      --bg: #0a0e27;
+      --panel: rgba(15, 23, 42, 0.8);
+      --panel-strong: rgba(15, 23, 42, 0.95);
+      --border: rgba(96, 165, 250, 0.3);
+      --accent: #7dd3fc;
+      --accent-strong: #38bdf8;
+      --text: #e2e8f0;
+      --muted: #cbd5e1;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: Arial, sans-serif; background: radial-gradient(circle at top, #172554 0%, #0a0e27 38%, #020817 100%); color: var(--text); }
+    body { display: flex; justify-content: center; padding: 24px; }
+    .page { width: min(100%, 980px); }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+    .brand { font-size: 1.6rem; font-weight: 700; }
+    .back-link { color: var(--accent); text-decoration: none; font-weight: 600; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(56, 189, 248, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      margin-bottom: 20px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      color: var(--accent);
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .ask-box { display: flex; gap: 12px; margin-top: 16px; }
+    input {
+      flex: 1;
+      min-height: 50px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 1rem;
+    }
+    input::placeholder { color: #94a3b8; }
+    button {
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #06213a;
+      font-weight: 800;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .result h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .result p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 10px 0;
+    }
+
+    .mini-game {
+      margin-top: 18px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .mini-game h3 {
+      margin: 0 0 10px;
+      color: #dbeafe;
+      font-size: 1rem;
+    }
+
+    .mini-game .feedback {
+      color: var(--muted);
+      margin-bottom: 10px;
+      min-height: 20px;
+    }
+
+    .mini-game .choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .mini-game .choices button {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--text);
+      border: 1px solid rgba(125, 211, 252, 0.35);
+      padding: 10px 14px;
+      min-width: 120px;
+    }
+
+    .mini-game .choices button:disabled {
+      opacity: 0.7;
+      cursor: default;
+    }
+
+    .tips {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .tip {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 640px) {
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .ask-box { flex-direction: column; }
+      button { min-height: 46px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">Parthiv Learning Hub</div>
+      <a class="back-link" href="home.html">← Back to Home</a>
+    </div>
+
+    <div class="panel">
+      <div class="hero">
+        <h1>AI Tutor</h1>
+        <p>Ask a question about math, science, English, or general school topics. The tutor gives a simple explanation and a quick practice game.</p>
+      </div>
+
+      <div class="ask-box">
+        <input id="tutorQuestionInput" type="text" placeholder="Ask your question e.g. Why does gravity pull things down?" />
+        <button id="tutorAskBtn" type="button">Teach Me</button>
+      </div>
+
+      <div class="result">
+        <h2>Tutor Feedback</h2>
+        <div id="tutorReply">Ask a question to start learning.</div>
+        <div id="tutorGame" class="mini-game"></div>
+      </div>
+
+      <div class="tips">
+        <div class="tip">💡 Try: “What is photosynthesis?”</div>
+        <div class="tip">💡 Try: “How do I solve 3x + 5 = 20?”</div>
+        <div class="tip">💡 Try: “Why does the Moon stay in orbit?”</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -51,6 +51,8 @@ const tutorGame = document.getElementById('tutorGame');
     };
   Object.entries(elems).forEach(([k,v])=>{ if (!v) console.warn(`[init] Missing element: ${k}`); });
 
+  const hasQuizUI = !!(gradeSelect && subjectSelect && totalInput && qIndexEl && qCountEl && questionText && choicesEl && answerEl);
+
 let bank = {};
 let bankLists = [];
 let index = 0;
@@ -237,6 +239,109 @@ function makeDistractorsNumber(correct, rng){
   return choices;
 }
 
+class TutorLogic {
+  static getTutorResponse(question) {
+    const q = (question || '').trim();
+    const lower = q.toLowerCase();
+
+    if (!q) {
+      return {
+        topic: 'Let me help you learn',
+        explanation: 'Type a question and I will break it down into simple steps.',
+        example: 'Example: “What is 12 × 3?”',
+        game: {
+          prompt: 'Quick warm-up: What is 5 + 3?',
+          options: ['6', '7', '8', '9'],
+          correctIndex: 2,
+          feedback: 'Correct! 5 + 3 = 8.'
+        }
+      };
+    }
+
+    if (/(math|equation|solve|multiply|add|subtract|divide|number|algebra)/.test(lower)) {
+      return {
+        topic: 'Math Strategy',
+        explanation: 'Break the problem into the smallest steps. First identify the operation, then do it carefully, and finally check your answer by reversing the operation.',
+        example: 'For 3x + 5 = 20, subtract 5 from both sides, then divide by 3 to get x = 5.',
+        game: {
+          prompt: 'Quick check: What is x if 2x = 10?',
+          options: ['x = 2', 'x = 3', 'x = 4', 'x = 5'],
+          correctIndex: 3,
+          feedback: 'Correct! Dividing both sides by 2 gives x = 5.'
+        }
+      };
+    }
+
+    if (/(gravity|force|motion|speed|energy|physics|science)/.test(lower)) {
+      return {
+        topic: 'Science: Forces and Motion',
+        explanation: 'Gravity is a force that pulls objects toward Earth. Speed tells us how far something moves in time, and force can change motion.',
+        example: 'A ball falls because gravity pulls it down while air resistance slows it slightly.',
+        game: {
+          prompt: 'Which force pulls objects toward Earth?',
+          options: ['Magnetism', 'Gravity', 'Sound', 'Heat'],
+          correctIndex: 1,
+          feedback: 'Yes! Gravity is the force that pulls things toward Earth.'
+        }
+      };
+    }
+
+    if (/(plant|cell|animal|body|biology|life|human)/.test(lower)) {
+      return {
+        topic: 'Biology Basics',
+        explanation: 'Living things are made of cells, and cells work together to form tissues and organs. Plants use sunlight to make energy through photosynthesis.',
+        example: 'Roots absorb water while leaves capture sunlight for photosynthesis.',
+        game: {
+          prompt: 'What do plants use to make food?',
+          options: ['Sand', 'Sunlight', 'Plastic', 'Concrete'],
+          correctIndex: 1,
+          feedback: 'Correct! Plants use sunlight, water, and carbon dioxide to make food.'
+        }
+      };
+    }
+
+    if (/(planet|star|moon|space|galaxy|astronomy|solar system)/.test(lower)) {
+      return {
+        topic: 'Astronomy',
+        explanation: 'Our solar system includes the Sun, planets, moons, asteroids, and comets. The Earth orbits the Sun, and the Moon orbits Earth.',
+        example: 'The Earth takes about one year to orbit the Sun, while the Moon takes about one month to orbit Earth.',
+        game: {
+          prompt: 'Which planet is known as the Red Planet?',
+          options: ['Earth', 'Mars', 'Venus', 'Jupiter'],
+          correctIndex: 1,
+          feedback: 'Excellent! Mars is often called the Red Planet.'
+        }
+      };
+    }
+
+    if (/(english|grammar|word|sentence|reading|writing)/.test(lower)) {
+      return {
+        topic: 'English Skills',
+        explanation: 'Good writing starts with a clear idea, then uses correct grammar and strong words. A sentence needs a subject and a verb to make sense.',
+        example: 'Instead of “The dog run fast,” say “The dog runs fast.”',
+        game: {
+          prompt: 'Which sentence is correct?',
+          options: ['She go to school.', 'She goes to school.', 'She going to school.', 'She are to school.'],
+          correctIndex: 1,
+          feedback: 'Correct! “She goes to school” is grammatically correct.'
+        }
+      };
+    }
+
+    return {
+      topic: 'General Learning',
+      explanation: 'Start with what you know, look for the key word in the question, and then connect it to a simple fact or rule. Breaking a problem into smaller pieces makes it easier to solve.',
+      example: 'If the question asks about shapes, list the properties first: sides, corners, and angles.',
+      game: {
+        prompt: 'What is 4 × 4?',
+        options: ['12', '14', '16', '18'],
+        correctIndex: 2,
+        feedback: 'Right! 4 × 4 = 16.'
+      }
+    };
+  }
+}
+
 function totalCountFor(grade, subject){
   const raw = Number(totalInput.value) || 0;
   const safe = Number.isFinite(raw) ? Math.max(1, Math.min(raw, 50)) : 1;
@@ -364,6 +469,8 @@ if (tutorAskBtn) tutorAskBtn.addEventListener('click', runTutorSession);
 if (tutorQuestionInput) tutorQuestionInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') runTutorSession(); });
 
 function runTutorSession(){
+  if (!tutorQuestionInput || !tutorReply || !tutorGame) return;
+
   const question = tutorQuestionInput.value.trim();
   if (!question) {
     tutorReply.textContent = 'Please type a question so I can teach you.';
@@ -393,8 +500,10 @@ function runTutorSession(){
 }
 
 // Initialize
-scienceThemeLabel.style.display = 'none';
+if (scienceThemeLabel) scienceThemeLabel.style.display = 'none';
+if (hasQuizUI) {
   renderQuestion();
+}
 }
 
 if (document.readyState === 'loading') {
