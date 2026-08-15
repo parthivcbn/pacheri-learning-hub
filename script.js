@@ -23,6 +23,12 @@ const tutorQuestionInput = document.getElementById('tutorQuestionInput');
 const tutorAskBtn = document.getElementById('tutorAskBtn');
 const tutorReply = document.getElementById('tutorReply');
 const tutorGame = document.getElementById('tutorGame');
+  // Image generation elements
+const imagePromptInput = document.getElementById('imagePromptInput');
+const imageApiKeyInput = document.getElementById('imageApiKeyInput');
+const imageGenerateBtn = document.getElementById('imageGenerateBtn');
+const imageStatus = document.getElementById('imageStatus');
+const imagePreview = document.getElementById('imagePreview');
 
   // Diagnostics: log missing elements
     const elems = {
@@ -467,6 +473,64 @@ if (intervalInput) intervalInput.addEventListener('change', ()=>{ if (autoToggle
 
 if (tutorAskBtn) tutorAskBtn.addEventListener('click', runTutorSession);
 if (tutorQuestionInput) tutorQuestionInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') runTutorSession(); });
+
+// Image generation: helper to create a simple SVG placeholder
+function createPlaceholderDataUrl(prompt){
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='1024' height='576'>
+    <defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#0ea5e9'/><stop offset='1' stop-color='#06b6d4'/></linearGradient></defs>
+    <rect width='100%' height='100%' fill='url(#g)' />
+    <g fill='#071025' font-family='Arial,Helvetica,sans-serif' font-size='28'>
+      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#e6f8ff' font-weight='700'>${escapeHtml(prompt || 'Placeholder Image')}</text>
+    </g>
+  </svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+}
+
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+async function generateImage(){
+  if (!imagePromptInput || !imageGenerateBtn || !imagePreview || !imageStatus) return;
+  const prompt = imagePromptInput.value.trim();
+  if (!prompt){ imageStatus.textContent = 'Type a short prompt for the image.'; return; }
+
+  const apiKey = imageApiKeyInput ? imageApiKeyInput.value.trim() : '';
+  imageGenerateBtn.disabled = true; imageGenerateBtn.textContent = 'Generating...'; imageStatus.textContent = '';
+  imagePreview.innerHTML = '';
+
+  try {
+    if (apiKey){
+      // Call OpenAI Images (or compatible) endpoint. User must supply a valid key.
+      const res = await fetch('https://api.openai.com/v1/images/generations', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer ' + apiKey },
+        body: JSON.stringify({ model: 'gpt-image-1', prompt, size: '1024x1024' })
+      });
+      if (!res.ok) throw new Error('Image API error: ' + res.status);
+      const data = await res.json();
+      // Response may include b64_json or a url
+      const imgData = (data && data.data && data.data[0]) ? data.data[0] : null;
+      let src = '';
+      if (imgData && imgData.b64_json) src = 'data:image/png;base64,' + imgData.b64_json;
+      else if (imgData && imgData.url) src = imgData.url;
+      if (src){ const img = document.createElement('img'); img.src = src; img.style.maxWidth='100%'; img.style.height='auto'; imagePreview.appendChild(img); imageStatus.textContent = 'Image generated.'; }
+      else { imageStatus.textContent = 'No image returned by API.'; imagePreview.innerHTML = '<div style="padding:18px;color:var(--muted)">No image</div>'; }
+    } else {
+      // Fallback: create a simple SVG placeholder locally
+      const src = createPlaceholderDataUrl(prompt);
+      const img = document.createElement('img'); img.src = src; img.style.maxWidth='100%'; img.style.height='auto'; imagePreview.appendChild(img);
+      imageStatus.textContent = 'Placeholder image generated (no API key).';
+    }
+  } catch (err){
+    console.error('generateImage error', err);
+    imageStatus.textContent = 'Failed to generate image: ' + (err.message || err);
+    imagePreview.innerHTML = '<div style="padding:18px;color:var(--muted)">Error</div>';
+  } finally {
+    imageGenerateBtn.disabled = false; imageGenerateBtn.textContent = 'Generate Image';
+  }
+}
+
+if (imageGenerateBtn) imageGenerateBtn.addEventListener('click', generateImage);
+if (imagePromptInput) imagePromptInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') generateImage(); });
 
 function runTutorSession(){
   if (!tutorQuestionInput || !tutorReply || !tutorGame) return;

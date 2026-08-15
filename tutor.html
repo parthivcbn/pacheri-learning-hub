@@ -187,6 +187,25 @@
         <div class="tip">💡 Try: “How do I solve 3x + 5 = 20?”</div>
         <div class="tip">💡 Try: “Why does the Moon stay in orbit?”</div>
       </div>
+
+      <hr style="margin:20px 0; border:0; border-top:1px solid rgba(125,211,252,0.06);" />
+
+      <div class="hero" style="margin-top:6px;">
+        <h1 style="font-size:1.1rem;">Create Images</h1>
+        <p style="margin:0; color:var(--muted)">Generate a simple image from a short prompt. Paste an API key to use an AI image service, or generate a placeholder image locally.</p>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px;">
+        <input id="imagePromptInput" type="text" placeholder="Image prompt e.g. colourful nebula over mountains" />
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="imageApiKeyInput" type="text" placeholder="Optional: paste OpenAI API key (sk-...)" style="flex:1" />
+          <button id="imageGenerateBtn" type="button">Generate Image</button>
+        </div>
+        <div id="imageStatus" style="color:var(--muted);font-size:0.95rem"></div>
+        <div id="imagePreview" style="margin-top:8px;display:flex;align-items:center;justify-content:center;min-height:140px;background:rgba(15,23,42,0.6);border-radius:12px;border:1px solid var(--border);overflow:hidden">
+          <div style="color:var(--muted);padding:18px">No image yet</div>
+        </div>
+      </div>
     </div>
   </div>
 
