@@ -11,6 +11,8 @@
       box-sizing: border-box;
     }
 
+    html { width: 100%; }
+
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #1e3c72 0%, #2a5298 25%, #7e22ce 50%, #ec4899 75%, #f59e0b 100%);
@@ -339,9 +341,19 @@
       transform: scale(1.05);
     }
 
+    @media (max-width: 768px) {
+      body { padding: 14px; }
+      .container { padding: 20px 16px; }
+      .level-select { flex-wrap: wrap; }
+      .question-text { font-size: 20px; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .controls { flex-direction: column; }
+      .kb-geo-hint { left: 10px; right: 10px; bottom: 10px; }
+    }
+
     @media (max-width: 600px) {
       .container {
-        padding: 20px;
+        padding: 18px 14px;
       }
 
       h1 {
@@ -359,6 +371,10 @@
       .game-header {
         flex-direction: column;
         align-items: flex-start;
+      }
+
+      .level-btn, .btn-play, .btn-reset, button.btn-main {
+        width: 100%;
       }
     }
   </style>

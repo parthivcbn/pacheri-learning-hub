@@ -6,7 +6,8 @@
   <title>English Learning Guide — Learn ALL of English</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    main { max-width: 1000px; margin: 20px auto; }
+    * { box-sizing: border-box; }
+    main { max-width: min(1000px, calc(100% - 24px)); margin: 20px auto; }
     h1 { font-size: 24px; margin: 0 0 8px; }
     .subtitle { color: var(--muted); margin-bottom: 16px; }
     
@@ -136,6 +137,15 @@
     }
     .quiz-section.active {
       display: block;
+    }
+
+    @media (max-width: 640px) {
+      main { margin: 16px auto; }
+      .mode-toggle { flex-direction: column; }
+      .mode-btn { width: 100%; }
+      .topics-grid { grid-template-columns: 1fr; }
+      .lesson-content { padding: 14px; }
+      .question-area { padding: 12px; }
     }
 
     .question-area {

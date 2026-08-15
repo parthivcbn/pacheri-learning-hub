@@ -6,12 +6,13 @@
   <title>Maths Teacher — Grade 7 — Arithmetic Expressions</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    main{max-width:900px;margin:20px auto}
+    * { box-sizing: border-box; }
+    main{max-width:min(900px,100%);margin:20px auto;padding:0 12px}
     h1{font-size:24px;margin:0 0 8px}
     section{margin-top:16px}
     .example{background:rgba(0,0,0,0.02);padding:12px;border-radius:10px;border:1px solid rgba(11,18,32,0.03)}
     .practice{margin-top:12px}
-    .controls-row{display:flex;gap:8px;align-items:center;margin-top:10px}
+    .controls-row{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
     
     .choice.focused{
       border-color:rgba(0, 122, 255, 0.6);
@@ -33,6 +34,22 @@
       z-index:20;
       backdrop-filter:blur(10px);
       line-height:1.6;
+    }
+
+    @media (max-width: 640px) {
+      main { padding: 0 10px; }
+      .controls-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .controls-row > * {
+        width: 100%;
+      }
+      .kb-math-hint {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+      }
     }
   </style>
 </head>

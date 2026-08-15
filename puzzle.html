@@ -11,6 +11,8 @@
       box-sizing: border-box;
     }
 
+    html, body { width: 100%; }
+
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
@@ -265,9 +267,19 @@
       color: white;
     }
 
+    @media (max-width: 768px) {
+      body { padding: 14px; }
+      .container { padding: 20px 16px; }
+      .game-selector { padding: 12px; }
+      .difficulty-select { display: flex; flex-wrap: wrap; justify-content: center; }
+      .stats { gap: 8px; }
+      .controls { flex-direction: column; }
+      .kb-hint { left: 10px; right: 10px; bottom: 10px; }
+    }
+
     @media (max-width: 600px) {
       .container {
-        padding: 20px;
+        padding: 18px 14px;
       }
 
       h1 {
@@ -280,6 +292,11 @@
 
       .puzzle-tile {
         font-size: 24px;
+      }
+
+      .game-btn, .difficulty-btn, button {
+        width: 100%;
+        margin: 6px 0;
       }
     }
 

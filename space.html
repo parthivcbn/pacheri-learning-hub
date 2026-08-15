@@ -6,15 +6,19 @@
   <title>Space Explorer — Galaxies, Nebulas & Planets</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    * { box-sizing: border-box; }
+
     html, body {
       overflow-x: hidden !important;
       overflow-y: auto !important;
       min-height: auto;
+      width: 100%;
     }
 
     body {
       background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 25%, #0d1b4f 50%, #1a0f3e 75%, #0a0e27 100%);
       position: relative;
+      padding: 0;
     }
 
     /* Custom scrollbar */
@@ -399,8 +403,20 @@
       line-height: 1.6;
     }
 
+    @media (max-width: 900px) {
+      .app { width: min(100%, 900px); margin: 18px auto; padding: 18px; }
+      .section-nav { overflow-x: auto; white-space: nowrap; }
+      .planet-detail-panel { position: static; width: 100%; margin-top: 16px; }
+    }
+
     @media(max-width:640px){
       .kb-nav-hint{font-size:11px;padding:10px 12px;bottom:10px;left:10px}
+      .app { padding: 16px 12px; }
+      .section-nav { gap: 8px; }
+      .section-nav button { padding: 8px 10px; font-size: 11px; }
+      .section { margin-top: 16px; }
+      .controls-bottom { flex-direction: column; align-items: stretch; }
+      .jump-buttons { right: 10px; bottom: 10px; }
     }
 
     /* Jump buttons */
