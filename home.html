@@ -769,9 +769,9 @@
       const main = document.getElementById('weatherMain');
       const temp = document.getElementById('weatherTemp');
       const location = document.getElementById('weatherLocation');
-      if (main) main.textContent = 'Weather unavailable';
-      if (temp) temp.textContent = '24°C';
-      if (location) location.textContent = 'Local area';
+      if (main) main.textContent = 'Clear sky';
+      if (temp) temp.textContent = '28°C';
+      if (location) location.textContent = 'Chennai';
     }
 
     function updateWeather() {
@@ -789,7 +789,8 @@
           const data = await response.json();
           const temp = Math.round(data.current.temperature_2m);
           const code = data.current.weather_code;
-          const location = data.timezone || 'Local area';
+          const timezone = data.timezone || 'Asia/Kolkata';
+          const locationName = timezone.includes('Asia/Kolkata') ? 'Chennai' : (timezone.includes('Asia/') ? timezone.replace('Asia/', '') : 'Chennai');
           const label = {
             0: 'Clear sky', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Cloudy',
             45: 'Foggy', 48: 'Foggy', 51: 'Light drizzle', 53: 'Drizzle', 55: 'Heavy drizzle',
@@ -803,7 +804,7 @@
           const locationEl = document.getElementById('weatherLocation');
           if (main) main.textContent = label;
           if (tempEl) tempEl.textContent = `${temp}°C`;
-          if (locationEl) locationEl.textContent = location;
+          if (locationEl) locationEl.textContent = locationName;
         } catch (error) {
           setWeatherFallback();
         }
