@@ -387,8 +387,7 @@
     </div>
 
     <div class="level-select">
-      <button class="level-btn active" onclick="setGrade('4')">Grade 4</button>
-      <button class="level-btn" onclick="setGrade('7')">Grade 7</button>
+      <button class="level-btn active" onclick="setGrade('7')">Grade 7</button>
       <button class="level-btn" onclick="setGrade('space')">Space</button>
     </div>
 
@@ -496,8 +495,8 @@
     geographyQuestions.space = sharedQuestionPool;
 
     const TOTAL_QUESTIONS = 20;
-    let currentGrade = '4';
-    let currentQuestions = [...geographyQuestions['4']];
+    let currentGrade = '7';
+    let currentQuestions = [...geographyQuestions['7']];
     let currentIndex = 0;
     var score = 0;
     let streak = 0;
@@ -704,7 +703,7 @@
       }
     }
 
-    document.getElementById('gradeInfo').textContent = 'Grade 4';
+    document.getElementById('gradeInfo').textContent = 'Grade 7';
     showLeaderboard();
 
     // Keyboard navigation
@@ -750,13 +749,6 @@
           if (focusedOptionIndex >= 0 && buttons[focusedOptionIndex]) {
             buttons[focusedOptionIndex].click();
             focusedOptionIndex = -1;
-          }
-          break;
-
-        case '4':
-          e.preventDefault();
-          if (currentGrade !== '4') {
-            setGrade('4');
           }
           break;
 

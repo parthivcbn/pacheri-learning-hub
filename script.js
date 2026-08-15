@@ -68,43 +68,6 @@ let currentCorrect = null;
 
 // Multiple-choice BANK: each entry has {q, choices: [...], correct}
 bank = {
-  '4': {
-    math: [
-      {q: 'What is 6 × 7?', choices:['36','42','48','56'], correct:1},
-      {q: 'What is 81 ÷ 9?', choices:['7','8','9','10'], correct:2},
-      {q: 'Add: 234 + 178', choices:['402','412','422','432'], correct:1},
-      {q: 'What is the perimeter of a rectangle 5 m by 3 m?', choices:['15','16','20','30'], correct:3},
-      {q: 'What is 9²?', choices:['18','27','81','72'], correct:2}
-    ],
-    biology: [
-      {q: 'What is the main organ that pumps blood?', choices:['Brain','Heart','Lungs','Liver'], correct:1},
-      {q: 'Plants make their own food using sunlight. What is this process called?', choices:['Digestion','Breathing','Photosynthesis','Fermentation'], correct:2},
-      {q: 'How many legs does an insect have?', choices:['4','6','8','10'], correct:1},
-      {q: 'Which of these is a mammal?', choices:['Penguin','Salmon','Whale','Ostrich'], correct:2},
-      {q: 'What do plants need to grow?', choices:['Sunlight, water, and soil','Ice, sand, and salt','Fire, wood, and rocks','Concrete, plastic, and steel'], correct:0}
-    ],
-    chemistry: [
-      {q: 'What is the main gas we breathe?', choices:['Nitrogen','Oxygen','Carbon dioxide','Hydrogen'], correct:1},
-      {q: 'What happens when you mix baking soda and vinegar?', choices:['It freezes','It boils','It fizzes','It becomes invisible'], correct:2},
-      {q: 'What is water made of?', choices:['Hydrogen and carbon','Oxygen and nitrogen','Hydrogen and oxygen','Carbon and oxygen'], correct:2},
-      {q: 'Which of these is a metal?', choices:['Oxygen','Plastic','Iron','Nitrogen'], correct:2},
-      {q: 'What is the smallest part of matter?', choices:['Molecule','Atom','Dust','Drop'], correct:1}
-    ],
-    physics: [
-      {q: 'What force pulls objects toward Earth?', choices:['Magnetism','Electricity','Gravity','Friction'], correct:2},
-      {q: 'If you drop a ball, what happens?', choices:['It floats up','It falls down','It stays in place','It disappears'], correct:1},
-      {q: 'What do you need to make something move?', choices:['Heat','Speed','Force','Time'], correct:2},
-      {q: 'Which is the fastest: sound or light?', choices:['Sound','Light','They are the same speed','Neither travels'], correct:1},
-      {q: 'What does a magnet do?', choices:['Makes heat','Attracts metal','Breaks things','Creates wind'], correct:1}
-    ],
-    astronomy: [
-      {q: 'What shape is most galaxies?', choices:['Square','Spiral','Triangle','Star'], correct:1},
-      {q: 'Which is the largest planet in our solar system?', choices:['Saturn','Mars','Jupiter','Neptune'], correct:2},
-      {q: 'What is a group of stars called?', choices:['Galaxy','Nebula','Constellation','Asteroid'], correct:2},
-      {q: 'How many moons does Earth have?', choices:['0','1','2','3'], correct:1},
-      {q: 'What do we call a star that exploded?', choices:['Comet','Supernova','Planet','Moon'], correct:1}
-    ]
-  },
   '7': {
     math: [
       {q: 'What is the prime factorization of 84?', choices:['2×3×7','2²×3×7','2×2×7','2×3×3×7'], correct:1},
@@ -151,42 +114,26 @@ function seededRng(seed){
 }
 
 function generateMathQuestion(grade, i){
-  const rng = seededRng(i + (grade==='7'?7000:4000));
-  if (grade === '4'){
-    const a = Math.floor(rng()*8)+2;
-    const b = Math.floor(rng()*8)+2;
-    const templates = [
-      {q: (a,b)=>`What is ${a} + ${b}?`, ans: a+b},
-      {q: (a,b)=>`What is ${a} × ${b}?`, ans: a*b},
-      {q: (a,b)=>`Subtract: ${a+b} - ${a}`, ans: b},
-      {q: (a,b)=>`What is ${a} - ${b}?`, ans: a-b}
-    ];
-    const pick = templates[Math.floor(rng()*templates.length)];
-    const q = pick.q(a,b);
-    const correct = pick.ans;
-    const choices = makeDistractorsNumber(correct, rng);
-    return {q, choices, correctIndex: choices.indexOf(String(correct))};
-  } else {
-    const a = Math.floor(rng()*90)+10;
-    const b = Math.floor(rng()*12)+2;
-    const templates = [
-      {q: (a,b)=>`What is ${a} + ${b}?`, ans: a+b},
-      {q: (a,b)=>`What is ${a} × ${b}?`, ans: a*b},
-      {q: (a,b)=>`Subtract: ${a+b} - ${a}`, ans: b},
-      {q: (a,b)=>`What is ${a} - ${b}?`, ans: a-b},
-      {q: (a,b)=>`What is ${a} ÷ ${b}?`, ans: Math.floor(a/b)}
-    ];
-    const pick = templates[Math.floor(rng()*templates.length)];
-    let q = pick.q(a,b);
-    let correct = pick.ans;
-    if (typeof correct !== 'number') correct = Math.floor(correct);
-    const choices = makeDistractorsNumber(correct, rng);
-    return {q, choices, correctIndex: choices.indexOf(String(correct))};
-  }
+  const rng = seededRng(i + 7000);
+  const a = Math.floor(rng()*90)+10;
+  const b = Math.floor(rng()*12)+2;
+  const templates = [
+    {q: (a,b)=>`What is ${a} + ${b}?`, ans: a+b},
+    {q: (a,b)=>`What is ${a} × ${b}?`, ans: a*b},
+    {q: (a,b)=>`Subtract: ${a+b} - ${a}`, ans: b},
+    {q: (a,b)=>`What is ${a} - ${b}?`, ans: a-b},
+    {q: (a,b)=>`What is ${a} ÷ ${b}?`, ans: Math.floor(a/b)}
+  ];
+  const pick = templates[Math.floor(rng()*templates.length)];
+  let q = pick.q(a,b);
+  let correct = pick.ans;
+  if (typeof correct !== 'number') correct = Math.floor(correct);
+  const choices = makeDistractorsNumber(correct, rng);
+  return {q, choices, correctIndex: choices.indexOf(String(correct))};
 }
 
 function generateScienceQuestion(grade, i, theme){
-  const rng = seededRng(i + (grade==='7'?7700:4700));
+  const rng = seededRng(i + 7700);
   
   // Astronomy pool
   const astronomyPool = [
