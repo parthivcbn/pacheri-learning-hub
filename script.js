@@ -264,6 +264,21 @@ class TutorLogic {
       };
     }
 
+    // Handle simple greetings separately so 'hi' or 'hello' doesn't return the generic learning prompt
+    if (/^\s*(hi|hello|hey|hiya|greetings|good\s(morning|afternoon|evening))\b[!.,]?$/i.test(q)) {
+      return {
+        topic: 'Hello!',
+        explanation: 'Hi there — I am your Tutor. Ask me a question about math, science, English, or school topics.',
+        example: 'Try: "What is photosynthesis?"',
+        game: {
+          prompt: 'Warm-up: What is 2 + 2?',
+          options: ['2', '3', '4', '5'],
+          correctIndex: 2,
+          feedback: 'Great! 2 + 2 = 4.'
+        }
+      };
+    }
+
     if (/(math|equation|solve|multiply|add|subtract|divide|number|algebra)/.test(lower)) {
       return {
         topic: 'Math Strategy',
