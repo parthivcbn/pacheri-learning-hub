@@ -238,6 +238,36 @@
       font-size: 15px;
     }
 
+    .weather-card {
+      background: linear-gradient(135deg, rgba(14, 116, 144, 0.18), rgba(59, 130, 246, 0.12));
+      border-color: rgba(34, 211, 238, 0.35);
+    }
+
+    .weather-main {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .weather-temp {
+      font-size: 28px;
+      font-weight: 700;
+      color: #7dd3fc;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+
+    .weather-meta,
+    .weather-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
     .daily-card p {
       margin: 0;
       line-height: 1.6;
@@ -613,6 +643,20 @@
       </div>
 
       <div class="daily-grid">
+        <div class="daily-card weather-card">
+          <h4>⏰ Time & Weather</h4>
+          <div class="weather-main" id="weatherMain">Checking local conditions...</div>
+          <div class="weather-temp" id="weatherTemp">--°C</div>
+          <div class="weather-meta">
+            <span id="currentTime">--:--:--</span>
+            <span id="localTimezone">Local time</span>
+          </div>
+          <div class="weather-row">
+            <span>Location</span>
+            <strong id="weatherLocation">Detecting...</strong>
+          </div>
+        </div>
+
         <div class="daily-card">
           <h4>📘 Daily Learning Fact</h4>
           <p id="dailyFactText">Loading today’s fact...</p>
@@ -620,7 +664,7 @@
         </div>
 
         <div class="daily-card">
-          <h4> Other Religious Special Days</h4>
+          <h4>🕌 Other Religious Special Days</h4>
           <ul id="religionDayList"></ul>
         </div>
 
@@ -658,11 +702,6 @@
     ];
 
     const religiousSpecialDays = [
-      { name: 'Diwali', month: 10, day: 20, group: 'Hinduism', note: 'Festival of lights; celebration of hope, light, and togetherness.' },
-      { name: 'Holi', month: 3, day: 25, group: 'Hinduism', note: 'Festival of colors and happiness.' },
-      { name: 'Ganesh Chaturthi', month: 8, day: 30, group: 'Hinduism', note: 'Celebration of Lord Ganesha, wisdom, and new beginnings.' },
-      { name: 'Raksha Bandhan', month: 8, day: 19, group: 'Hinduism', note: 'A festival honoring sibling love and protection.' },
-      { name: 'Navratri', month: 9, day: 22, group: 'Hinduism', note: 'Nine nights of worship, prayer, and devotion.' },
       { name: 'Christmas', month: 12, day: 25, group: 'Christianity', note: 'Celebration of the birth of Jesus Christ.' },
       { name: 'Easter Sunday', month: 4, day: 20, group: 'Christianity', note: 'Celebrates resurrection and new life in Christian tradition.' },
       { name: 'Good Friday', month: 4, day: 18, group: 'Christianity', note: 'A solemn day remembering the crucifixion of Jesus.' },
@@ -697,6 +736,69 @@
       return matches.length ? matches : [{ name: 'No major event today', note: 'Check back tomorrow for more special days.' }];
     }
 
+    function updateClock() {
+      const now = new Date();
+      const timeEl = document.getElementById('currentTime');
+      const zoneEl = document.getElementById('localTimezone');
+      if (timeEl) {
+        timeEl.textContent = now.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+      }
+      if (zoneEl) {
+        zoneEl.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local time';
+      }
+    }
+
+    function setWeatherFallback() {
+      const main = document.getElementById('weatherMain');
+      const temp = document.getElementById('weatherTemp');
+      const location = document.getElementById('weatherLocation');
+      if (main) main.textContent = 'Weather unavailable';
+      if (temp) temp.textContent = '24°C';
+      if (location) location.textContent = 'Local area';
+    }
+
+    function updateWeather() {
+      if (!navigator.geolocation) {
+        setWeatherFallback();
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`;
+
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          const temp = Math.round(data.current.temperature_2m);
+          const code = data.current.weather_code;
+          const location = data.timezone || 'Local area';
+          const label = {
+            0: 'Clear sky', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Cloudy',
+            45: 'Foggy', 48: 'Foggy', 51: 'Light drizzle', 53: 'Drizzle', 55: 'Heavy drizzle',
+            61: 'Light rain', 63: 'Rain', 65: 'Heavy rain', 71: 'Light snow', 73: 'Snow',
+            75: 'Heavy snow', 80: 'Showers', 81: 'Rain showers', 82: 'Heavy showers',
+            95: 'Thunderstorm'
+          }[code] || 'Weather update';
+
+          const main = document.getElementById('weatherMain');
+          const tempEl = document.getElementById('weatherTemp');
+          const locationEl = document.getElementById('weatherLocation');
+          if (main) main.textContent = label;
+          if (tempEl) tempEl.textContent = `${temp}°C`;
+          if (locationEl) locationEl.textContent = location;
+        } catch (error) {
+          setWeatherFallback();
+        }
+      }, () => {
+        setWeatherFallback();
+      }, { timeout: 10000 });
+    }
+
     function renderDailyContent() {
       const today = new Date();
       const formattedDate = today.toLocaleDateString('en-US', {
@@ -706,18 +808,19 @@
         day: 'numeric'
       });
 
-      document.getElementById('todayDate').textContent = formattedDate;
+      const todayDateEl = document.getElementById('todayDate');
+      if (todayDateEl) todayDateEl.textContent = formattedDate;
 
       const factIndex = today.getDate() % dailyFactList.length;
       const fact = dailyFactList[factIndex];
-      document.getElementById('dailyFactText').textContent = fact.text;
-      document.getElementById('dailyFactTag').textContent = fact.tag;
+      const factTextEl = document.getElementById('dailyFactText');
+      const factTagEl = document.getElementById('dailyFactTag');
+      if (factTextEl) factTextEl.textContent = fact.text;
+      if (factTagEl) factTagEl.textContent = fact.tag;
 
-      const hinduMatches = getMatchesForDate(religiousSpecialDays.filter(event => event.group === 'Hinduism'), today);
-      const religionMatches = getMatchesForDate(religiousSpecialDays.filter(event => event.group !== 'Hinduism' && event.group !== 'Global'), today);
+      const religionMatches = getMatchesForDate(religiousSpecialDays.filter(event => event.group !== 'Global'), today);
       const countryMatches = getMatchesForDate(countrySpecialDays, today);
 
-      renderList('hinduDayList', hinduMatches, 'Hinduism');
       renderList('religionDayList', religionMatches, 'Other faiths');
       renderList('countryDayList', countryMatches, 'Countries');
     }
@@ -730,10 +833,15 @@
 
       matches.forEach(match => {
         const item = document.createElement('li');
-        const label = match.country ? match.country : match.group || fallbackLabel;
         item.textContent = `${match.name}${match.country ? ' — ' + match.country : ''}: ${match.note}`;
         list.appendChild(item);
       });
+
+      if (!matches.length || matches[0].name === 'No major event today') {
+        const item = document.createElement('li');
+        item.textContent = `No major event today: Check back tomorrow for more special days.`;
+        list.appendChild(item);
+      }
     }
 
     const cards = document.querySelectorAll('.grid .card');
@@ -811,6 +919,9 @@
     });
 
     renderDailyContent();
+    updateClock();
+    updateWeather();
+    setInterval(updateClock, 1000);
     updateSelection();
 
     cards.forEach((card, index) => {
