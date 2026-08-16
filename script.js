@@ -134,6 +134,20 @@ bank = {
       {q: 'What is a cloud of gas and dust in space called?', choices:['Nebula','Comet','Asteroid','Planet'], correct:0},
       {q: 'How many planets are in our solar system?', choices:['7','8','9','10'], correct:1},
       {q: 'What do we call a small rocky object that orbits the Sun?', choices:['Planet','Asteroid','Comet','Meteor'], correct:1}
+    ],
+    english: [
+      {q: 'Which part of speech describes an action or state?', choices:['Noun','Verb','Adjective','Adverb'], correct:1},
+      {q: 'What is the opposite of "generous"?', choices:['Kind','Selfish','Brave','Happy'], correct:1},
+      {q: 'Which sentence is grammatically correct?', choices:['She go to school','She goes to school','She going to school','She are going'], correct:1},
+      {q: 'What does "metaphor" mean?', choices:['A comparison using "like" or "as"','A direct comparison without "like" or "as"','A type of poem','A repeated sound'], correct:1},
+      {q: 'Which word is a synonym for "happy"?', choices:['Sad','Joyful','Angry','Tired'], correct:1}
+    ],
+    socialscience: [
+      {q: 'What is the capital of India?', choices:['Mumbai','Kolkata','New Delhi','Bangalore'], correct:2},
+      {q: 'Who wrote the Indian Constitution?', choices:['Mahatma Gandhi','B.R. Ambedkar','Jawaharlal Nehru','Sardar Patel'], correct:1},
+      {q: 'Which river is the longest in India?', choices:['Ganga','Brahmaputra','Godavari','Yamuna'], correct:0},
+      {q: 'In which year did India gain independence?', choices:['1945','1947','1950','1952'], correct:1},
+      {q: 'What are the three pillars of the Indian government?', choices:['Executive, Judiciary, Legislature','Military, Police, Court','President, Prime Minister, Governor','Federal, State, Local'], correct:0}
     ]
   }
 };
@@ -363,8 +377,10 @@ function renderQuestion(){
   }
   
   if (subject === 'math') {
-    themeNote.textContent = '� Math: addition, subtraction, multiplication, division, and problem solving.';
-  } else if (scienceTheme === 'astronomy') {
+    themeNote.textContent = '� Math: addition, subtraction, multiplication, division, and problem solving.';  } else if (subject === 'english') {
+    themeNote.textContent = '📚 English: grammar, vocabulary, sentence structure, and reading comprehension.';
+  } else if (subject === 'socialscience') {
+    themeNote.textContent = '🌍 Social Science: history, geography, civics, and Indian government.';  } else if (scienceTheme === 'astronomy') {
     themeNote.textContent = '🌌 Astronomy: explore galaxies, stars, planets, nebulae, and heavenly bodies.';
   } else if (scienceTheme === 'biology') {
     themeNote.textContent = '🧬 Biology: learn about cells, organisms, and life.';
