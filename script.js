@@ -53,14 +53,49 @@ const tutorGame = document.getElementById('tutorGame');
 
   const hasQuizUI = !!(gradeSelect && subjectSelect && totalInput && qIndexEl && qCountEl && questionText && choicesEl && answerEl);
 
-  const hasQuizUI = !!(gradeSelect && subjectSelect && totalInput && qIndexEl && qCountEl && questionText && choicesEl && answerEl);
-
 let bank = {};
 let bankLists = [];
 let index = 0;
 let autoTimer = null;
 let totalQuestions = 0;
 let currentCorrect = null;
+let correctCount = 0;
+let startTime = null;
+
+// Score tracking for social sharing
+function trackCorrectAnswer() {
+  correctCount++;
+}
+
+function getQuizScore() {
+  const percentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+  const elapsed = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
+  const minutes = Math.floor(elapsed / 60);
+  const seconds = elapsed % 60;
+  const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  return {
+    percentage,
+    correct: `${correctCount}/${totalQuestions}`,
+    time: timeStr
+  };
+}
+
+function shareQuizResults() {
+  const grade = gradeSelect.value;
+  const subject = subjectSelect.value === 'science' ? scienceThemeSelect.value : subjectSelect.value;
+  const score = getQuizScore();
+  const params = new URLSearchParams({
+    score: score.percentage,
+    subject: subject.charAt(0).toUpperCase() + subject.slice(1),
+    correct: score.correct,
+    time: score.time
+  });
+  sessionStorage.setItem('quizScore', score.percentage);
+  sessionStorage.setItem('quizSubject', subject.charAt(0).toUpperCase() + subject.slice(1));
+  sessionStorage.setItem('quizCorrect', score.correct);
+  sessionStorage.setItem('quizTime', score.time);
+  window.location.href = `social-share.html?${params}`;
+}
 
 // Multiple-choice BANK: each entry has {q, choices: [...], correct}
 bank = {
@@ -321,6 +356,12 @@ function renderQuestion(){
   totalQuestions = totalCountFor(grade, subject);
   if (totalQuestions === 0){ questionText.textContent='No questions'; choicesEl.innerHTML=''; qIndexEl.textContent=0; qCountEl.textContent=0; themeNote.textContent = 'Pick a grade and subject to launch your quiz.'; return; }
   
+  // Start timer on first question
+  if (index === 0 && !startTime) {
+    startTime = Date.now();
+    correctCount = 0;
+  }
+  
   if (subject === 'math') {
     themeNote.textContent = '� Math: addition, subtraction, multiplication, division, and problem solving.';
   } else if (scienceTheme === 'astronomy') {
@@ -381,6 +422,10 @@ if (choicesEl) {
       if (i === correctIndex) b.classList.add('correct');
       if (i === picked && i !== correctIndex) b.classList.add('incorrect');
     });
+    // Track if answer is correct
+    if (picked === correctIndex) {
+      trackCorrectAnswer();
+    }
     const correctText = choicesEl.children[correctIndex].textContent;
     if (answerEl) {
       answerEl.textContent = 'Answer: ' + correctText;

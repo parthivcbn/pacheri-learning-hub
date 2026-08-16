@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Your Quiz Results | Parthiv Learning Hub</title>
+  <style>
+    :root {
+      --bg: #0a0e27;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --accent: #00d4ff;
+      --accent-2: #7dd3fc;
+      --text: #e6f3ff;
+      --muted: #93c5fd;
+      --success: #34d399;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 25%, #0d1b4f 50%, #1a0f3e 75%, #0a0e27 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin: 0 0 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: var(--muted);
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 30px rgba(0, 122, 255, 0.15);
+    }
+
+    .score-display {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .score-number {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--success);
+      margin: 0;
+    }
+
+    .score-label {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .quiz-info {
+      background: rgba(59, 130, 246, 0.1);
+      border-left: 3px solid var(--accent);
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-label {
+      color: var(--muted);
+    }
+
+    .info-value {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .share-section {
+      margin-top: 30px;
+    }
+
+    .share-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .share-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 16px;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .share-btn:hover {
+      background: rgba(0, 212, 255, 0.2);
+      border-color: rgba(0, 212, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .share-btn.twitter:hover {
+      background: rgba(29, 161, 242, 0.2);
+      color: #1DA1F2;
+    }
+
+    .share-btn.facebook:hover {
+      background: rgba(59, 89, 152, 0.2);
+      color: #3b5998;
+    }
+
+    .share-btn.whatsapp:hover {
+      background: rgba(37, 211, 102, 0.2);
+      color: #25D366;
+    }
+
+    .share-btn.email:hover {
+      background: rgba(248, 113, 113, 0.2);
+      color: #f87171;
+    }
+
+    .copy-section {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(125, 211, 252, 0.2);
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .copy-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .copy-box {
+      display: flex;
+      gap: 8px;
+    }
+
+    .share-text {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      word-break: break-all;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+
+    .copy-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 24px;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      color: var(--accent);
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(0, 212, 255, 0.2);
+    }
+
+    @media (max-width: 480px) {
+      .share-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .score-number {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 Quiz Complete!</h1>
+      <p>Share your amazing results</p>
+    </div>
+
+    <div class="result-card">
+      <div class="score-display">
+        <p class="score-number" id="scoreDisplay">85%</p>
+        <p class="score-label">Your Score</p>
+      </div>
+
+      <div class="quiz-info">
+        <div class="info-row">
+          <span class="info-label">Subject:</span>
+          <span class="info-value" id="subjectDisplay">Math</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Grade Level:</span>
+          <span class="info-value">Grade 7</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Correct Answers:</span>
+          <span class="info-value" id="correctDisplay">17/20</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Time:</span>
+          <span class="info-value" id="timeDisplay">5:30</span>
+        </div>
+      </div>
+
+      <div class="share-section">
+        <p class="share-title">📤 Share Your Result</p>
+
+        <div class="share-buttons">
+          <button class="share-btn twitter" onclick="shareTwitter()">
+            𝕏 Twitter
+          </button>
+          <button class="share-btn facebook" onclick="shareFacebook()">
+            f Facebook
+          </button>
+          <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+            💬 WhatsApp
+          </button>
+          <button class="share-btn email" onclick="shareEmail()">
+            ✉️ Email
+          </button>
+        </div>
+
+        <div class="copy-section">
+          <div class="copy-label">Share Text:</div>
+          <div class="copy-box">
+            <div class="share-text" id="shareText">
+              🎉 I just scored 85% on the <span id="shareSubject">Math</span> quiz at Parthiv Learning Hub! Can you beat my score? Try it now! 🚀 https://parthivcbn.github.io/pacheri-learning-hub/
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <center>
+        <a href="tutor.html" class="back-btn">← Back to Quiz</a>
+      </center>
+    </div>
+  </div>
+
+  <script>
+    // Initialize from URL params or session storage
+    function init() {
+      const params = new URLSearchParams(window.location.search);
+      const score = params.get('score') || sessionStorage.getItem('quizScore') || '85';
+      const subject = params.get('subject') || sessionStorage.getItem('quizSubject') || 'Math';
+      const correct = params.get('correct') || sessionStorage.getItem('quizCorrect') || '17/20';
+      const time = params.get('time') || sessionStorage.getItem('quizTime') || '5:30';
+
+      document.getElementById('scoreDisplay').textContent = score + '%';
+      document.getElementById('subjectDisplay').textContent = subject;
+      document.getElementById('correctDisplay').textContent = correct;
+      document.getElementById('timeDisplay').textContent = time;
+      document.getElementById('shareSubject').textContent = subject;
+      document.getElementById('shareText').innerHTML = 
+        `🎉 I just scored ${score}% on the <strong>${subject}</strong> quiz at Parthiv Learning Hub! Can you beat my score? Try it now! 🚀 https://parthivcbn.github.io/pacheri-learning-hub/`;
+    }
+
+    function getShareText() {
+      const score = document.getElementById('scoreDisplay').textContent;
+      const subject = document.getElementById('subjectDisplay').textContent;
+      return `🎉 I just scored ${score} on the ${subject} quiz at Parthiv Learning Hub! Can you beat my score? Try it now! 🚀`;
+    }
+
+    function shareTwitter() {
+      const text = encodeURIComponent(getShareText());
+      const url = `https://twitter.com/intent/tweet?text=${text}&url=https://parthivcbn.github.io/pacheri-learning-hub/`;
+      window.open(url, '_blank', 'width=550,height=420');
+    }
+
+    function shareFacebook() {
+      const url = 'https://www.facebook.com/sharer/sharer.php?u=https://parthivcbn.github.io/pacheri-learning-hub/&quote=' + 
+                  encodeURIComponent(getShareText());
+      window.open(url, '_blank', 'width=550,height=420');
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(getShareText() + '\nhttps://parthivcbn.github.io/pacheri-learning-hub/');
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    function shareEmail() {
+      const subject = encodeURIComponent('Check out my Parthiv Learning Hub Quiz Score!');
+      const body = encodeURIComponent(getShareText() + '\n\nhttps://parthivcbn.github.io/pacheri-learning-hub/');
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    function copyToClipboard() {
+      const shareText = document.getElementById('shareText').textContent;
+      navigator.clipboard.writeText(shareText).then(() => {
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        alert('Failed to copy. Try again!');
+      });
+    }
+
+    // Run on page load
+    init();
+  </script>
+</body>
+</html>
