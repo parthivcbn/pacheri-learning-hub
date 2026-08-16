@@ -1,0 +1,20 @@
+<\!DOCTYPE html>
+<html>
+<head>
+<script>
+// Test to verify subjects are loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const dropdown = document.getElementById('subjectSelect');
+  if (dropdown) {
+    console.log('Subjects found:');
+    Array.from(dropdown.options).forEach((opt, i) => {
+      console.log(`${i}: ${opt.value} - ${opt.textContent}`);
+    });
+  }
+});
+</script>
+</head>
+<body>
+<p>Check console for subject list</p>
+</body>
+</html>

@@ -1,10 +1,10 @@
 Grade Quiz — Math & Science
 
-Quick local quiz app for 4th and 7th grade math and science. Supports **Astronomy**, **Biology**, **Chemistry**, and **Physics** themes for science, automatic question advancing, shuffling, and showing answers.
+Quick local quiz app for Grade 7 math and science. Supports **Astronomy**, **Biology**, **Chemistry**, and **Physics** themes for science, automatic question advancing, shuffling, and showing answers.
 
 How to use
 - Open [quiz/index.html][def] in your browser.
-- Choose Grade (4th or 7th) and Subject (Math or Science).
+- Choose Subject (Math or Science).
 - If Science is selected, choose a **Science Theme**:
   - **Astronomy** — galaxies, stars, planets, nebulae, and heavenly bodies shapes
   - **Biology** — cells, organisms, ecosystems, and life
