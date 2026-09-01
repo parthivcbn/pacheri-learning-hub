@@ -309,6 +309,270 @@ const languageDatabase = {
             { english: "Yearning", target: "الشوق", pronunciation: "Ash-shawq", explanation: "A deep longing or desire." },
             { english: "To strive", target: "اجتهد", pronunciation: "Ijthahada", explanation: "To make sincere effort or strive." }
         ]
+    },
+    hindi: {
+        name: "🇮🇳 Hindi",
+        beginner: [
+            { english: "Hello", target: "नमस्ते", pronunciation: "Namaste", explanation: "The traditional Indian greeting, means 'I bow to you'." },
+            { english: "Thank you", target: "धन्यवाद", pronunciation: "Dhanyavaad", explanation: "The polite way to express gratitude in Hindi." },
+            { english: "Yes", target: "हाँ", pronunciation: "Haan", explanation: "The affirmative response." },
+            { english: "No", target: "नहीं", pronunciation: "Nahin", explanation: "The negative response." },
+            { english: "Please", target: "कृपया", pronunciation: "Kripya", explanation: "A polite way to make requests." },
+            { english: "Sorry", target: "माफ़ करें", pronunciation: "Maaf karen", explanation: "Formal way to apologize." },
+            { english: "Water", target: "पानी", pronunciation: "Pani", explanation: "Essential word for basic needs." },
+            { english: "Food", target: "खाना", pronunciation: "Khana", explanation: "General word for any meal or food." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "आप कैसे हैं?", pronunciation: "Aap kaise hain?", explanation: "Formal way to ask how someone is." },
+            { english: "What is your name?", target: "आपका नाम क्या है?", pronunciation: "Aapka naam kya hai?", explanation: "Formal way to ask for a name." },
+            { english: "I don't understand", target: "मुझे समझ नहीं आया", pronunciation: "Mujhe samjh nahi aaya", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "माफ़ कीजिए", pronunciation: "Maaf kijiye", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "सुंदर", pronunciation: "Sundar", explanation: "Adjective meaning beautiful or pretty." },
+            { english: "Delicious", target: "स्वादिष्ट", pronunciation: "Swaadiśt", explanation: "Describing food that tastes great." },
+            { english: "Good morning", target: "सुप्रभात", pronunciation: "Suprabhat", explanation: "Greeting used in the morning." },
+            { english: "Good night", target: "शुभ रात्रि", pronunciation: "Shubh Ratri", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "फिर भी", pronunciation: "Phir bhi", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "यद्यपि", pronunciation: "Yad-yapi", explanation: "Used to introduce a concession." },
+            { english: "Profound", target: "गहरा", pronunciation: "Gahra", explanation: "Adjective meaning deep or profound." },
+            { english: "To contemplate", target: "ध्यान करना", pronunciation: "Dhyan karna", explanation: "To think deeply or meditate." },
+            { english: "Ambiguous", target: "अस्पष्ट", pronunciation: "Aspasht", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "स्मरण करना", pronunciation: "Smaran karna", explanation: "To remember or honor." },
+            { english: "Nostalgia", target: "नास्टेल्जिया", pronunciation: "Nostlelja", explanation: "A longing for the past." },
+            { english: "To strive", target: "प्रयास करना", pronunciation: "Prayas karna", explanation: "To make an effort or strive." }
+        ]
+    },
+    telugu: {
+        name: "🇮🇳 Telugu",
+        beginner: [
+            { english: "Hello", target: "నమస్కారం", pronunciation: "Namaskaram", explanation: "The traditional Telugu greeting." },
+            { english: "Thank you", target: "ధన్యవాదాలు", pronunciation: "Dhanyavadalu", explanation: "Expressing gratitude in Telugu." },
+            { english: "Yes", target: "అవును", pronunciation: "Avunu", explanation: "The affirmative response." },
+            { english: "No", target: "కాదు", pronunciation: "Kadu", explanation: "The negative response." },
+            { english: "Please", target: "దయచేసి", pronunciation: "Dayachesi", explanation: "A polite way to make requests." },
+            { english: "Sorry", target: "క్షమించండి", pronunciation: "Kshaminchandi", explanation: "Formal way to apologize." },
+            { english: "Water", target: "నీరు", pronunciation: "Neeru", explanation: "Essential word for basic needs." },
+            { english: "Food", target: "ఆహారం", pronunciation: "Aharam", explanation: "General word for any meal or food." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "మీరు ఎలా ఉన్నారు?", pronunciation: "Miru ela unnaru?", explanation: "Formal way to ask how someone is." },
+            { english: "What is your name?", target: "మీ పేరు ఏమిటి?", pronunciation: "Mi peru emiti?", explanation: "Formal way to ask for a name." },
+            { english: "I don't understand", target: "నాకు అర్థం కాలేదు", pronunciation: "Naku artham kaledu", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "క్షమించండి", pronunciation: "Kshaminchandi", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "అందమైన", pronunciation: "Andamayna", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "రుచికరమైన", pronunciation: "Ruchikaramayna", explanation: "Describing food that tastes great." },
+            { english: "Good morning", target: "శుభోదయం", pronunciation: "Subhodyam", explanation: "Greeting used in the morning." },
+            { english: "Good night", target: "శుభరాత్రి", pronunciation: "Subhratri", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "అయినా", pronunciation: "Ayina", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "అయినప్పటికీ", pronunciation: "Ayinappatiki", explanation: "Used to introduce a concession." },
+            { english: "Profound", target: "లోతైన", pronunciation: "Lotaina", explanation: "Adjective meaning deep or profound." },
+            { english: "To contemplate", target: "ధ్యానం చేయు", pronunciation: "Dhyanam cheyu", explanation: "To think deeply or meditate." },
+            { english: "Ambiguous", target: "అస్పష్టమైన", pronunciation: "Aspatmayna", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "జ్ఞాపకం చేయు", pronunciation: "Gnaptakam cheyu", explanation: "To remember or honor." },
+            { english: "Nostalgia", target: "గతం యొక్క ఆకాంక్ష", pronunciation: "Gatam yokka akanksha", explanation: "A longing for the past." },
+            { english: "To strive", target: "ప్రయత్నం చేయు", pronunciation: "Prayatnam cheyu", explanation: "To make an effort or strive." }
+        ]
+    },
+    tamil: {
+        name: "🇮🇳 Tamil",
+        beginner: [
+            { english: "Hello", target: "வணக்கம்", pronunciation: "Vanakkam", explanation: "The traditional Tamil greeting." },
+            { english: "Thank you", target: "நன்றி", pronunciation: "Nandri", explanation: "The basic way to express gratitude." },
+            { english: "Yes", target: "ஆம்", pronunciation: "Aam", explanation: "The affirmative response." },
+            { english: "No", target: "இல்லை", pronunciation: "Illai", explanation: "The negative response." },
+            { english: "Please", target: "தயவுசெய்து", pronunciation: "Thayavuseithu", explanation: "A polite way to make requests." },
+            { english: "Sorry", target: "மன்னிக்கவும்", pronunciation: "Mannikkavum", explanation: "Formal way to apologize." },
+            { english: "Water", target: "நீர்", pronunciation: "Neer", explanation: "Essential word for basic needs." },
+            { english: "Food", target: "உணவு", pronunciation: "Unavu", explanation: "General word for any meal or food." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "நீ எப்படி இருக்கிறாய்?", pronunciation: "Nee epadi irukkiay?", explanation: "Informal way to ask how someone is." },
+            { english: "What is your name?", target: "உன் பெயர் என்ன?", pronunciation: "Un peyar enna?", explanation: "Informal way to ask for a name." },
+            { english: "I don't understand", target: "எனக்குப் புரியாது", pronunciation: "Enak kupuriyadhu", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "மன்னிக்கவும்", pronunciation: "Mannikkavum", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "அழகான", pronunciation: "Azagaan", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "சுவையான", pronunciation: "Suvayana", explanation: "Describing food that tastes great." },
+            { english: "Good morning", target: "காலை வணக்கம்", pronunciation: "Kalai vanakkam", explanation: "Greeting used in the morning." },
+            { english: "Good night", target: "இரவு வணக்கம்", pronunciation: "Iravu vanakkam", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "ஆயினும்", pronunciation: "Aayinum", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "என்றாலும்", pronunciation: "Endaalum", explanation: "Used to introduce a concession." },
+            { english: "Profound", target: "ஆழமான", pronunciation: "Azamana", explanation: "Adjective meaning deep or profound." },
+            { english: "To contemplate", target: "சிந்திக்க", pronunciation: "Sinthikka", explanation: "To think deeply or meditate." },
+            { english: "Ambiguous", target: "தெளிவற்ற", pronunciation: "Thelivatra", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "நினைவுகொள்ள", pronunciation: "Ninaivu kolli", explanation: "To remember or honor." },
+            { english: "Nostalgia", target: "கடந்த கால ஆசை", pronunciation: "Kadantha kala asai", explanation: "A longing for the past." },
+            { english: "To strive", target: "முயற்சி செய்ய", pronunciation: "Muyrasi seiya", explanation: "To make an effort or strive." }
+        ]
+    },
+    russian: {
+        name: "🇷🇺 Russian",
+        beginner: [
+            { english: "Hello", target: "Привет", pronunciation: "Privet", explanation: "The casual greeting in Russian." },
+            { english: "Good morning", target: "Доброе утро", pronunciation: "Dobroye utro", explanation: "Formal greeting used in the morning." },
+            { english: "Thank you", target: "Спасибо", pronunciation: "Spasibo", explanation: "The basic way to express gratitude." },
+            { english: "Yes", target: "Да", pronunciation: "Da", explanation: "The affirmative response." },
+            { english: "No", target: "Нет", pronunciation: "Net", explanation: "The negative response." },
+            { english: "Please", target: "Пожалуйста", pronunciation: "Pozhaluysta", explanation: "A polite way to make requests." },
+            { english: "Water", target: "Вода", pronunciation: "Voda", explanation: "Essential word for basic needs." },
+            { english: "Bread", target: "Хлеб", pronunciation: "Khleb", explanation: "A staple food word." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "Как дела?", pronunciation: "Kak dela?", explanation: "Asking how someone is doing." },
+            { english: "What is your name?", target: "Как вас зовут?", pronunciation: "Kak vas zovut?", explanation: "Formal way to ask for a name." },
+            { english: "I don't understand", target: "Я не понимаю", pronunciation: "Ya ne ponimayu", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "Извините", pronunciation: "Izvinite", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "Красивый", pronunciation: "Krasivyy", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "Вкусный", pronunciation: "Vkusnyy", explanation: "Describing food that tastes great." },
+            { english: "I love you", target: "Я люблю тебя", pronunciation: "Ya lyublyu tebya", explanation: "A romantic expression." },
+            { english: "Good night", target: "Спокойной ночи", pronunciation: "Spokoyney nochi", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "Тем не менее", pronunciation: "Tem ne menee", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "Хотя", pronunciation: "Hotya", explanation: "Used to introduce a concession." },
+            { english: "Profound", target: "Глубокий", pronunciation: "Glubokiy", explanation: "Adjective meaning deep or profound." },
+            { english: "To contemplate", target: "Размышлять", pronunciation: "Razmyshlyat", explanation: "To think deeply or contemplate." },
+            { english: "Ambiguous", target: "Неоднозначный", pronunciation: "Neodnoroznaćnyy", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "Увековечить", pronunciation: "Uvekovechit", explanation: "To honor or commemorate." },
+            { english: "Melancholy", target: "Тоска", pronunciation: "Toska", explanation: "A deep emotional state of longing." },
+            { english: "To aspire", target: "Стремиться", pronunciation: "Stremitsya", explanation: "To have a strong desire to achieve." }
+        ]
+    },
+    dutch: {
+        name: "🇳🇱 Dutch",
+        beginner: [
+            { english: "Hello", target: "Hallo", pronunciation: "HAH-lo", explanation: "The standard greeting in Dutch." },
+            { english: "Good morning", target: "Goedemorgen", pronunciation: "KHOO-duh-MOR-khuh", explanation: "Formal greeting used in the morning." },
+            { english: "Thank you", target: "Dank je", pronunciation: "DANK yuh", explanation: "The basic way to express gratitude." },
+            { english: "Yes", target: "Ja", pronunciation: "yah", explanation: "The affirmative response." },
+            { english: "No", target: "Nee", pronunciation: "nay", explanation: "The negative response." },
+            { english: "Please", target: "Alstublieft", pronunciation: "AHL-stoo-BLEEFT", explanation: "A polite way to make requests." },
+            { english: "Water", target: "Water", pronunciation: "WAH-ter", explanation: "Essential word for basic needs." },
+            { english: "Cheese", target: "Kaas", pronunciation: "kahs", explanation: "A famous Dutch food!" }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "Hoe gaat het met je?", pronunciation: "hoo KHAT het met yuh?", explanation: "Asking how someone is doing." },
+            { english: "What is your name?", target: "Wat is je naam?", pronunciation: "vat is yuh nahm?", explanation: "Asking for someone's name." },
+            { english: "I don't understand", target: "Ik begrijp het niet", pronunciation: "ik buh-KHREYP het neet", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "Excuseer", pronunciation: "ek-skoo-SER", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "Mooi", pronunciation: "mooy", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "Lekker", pronunciation: "LEK-er", explanation: "Describing food that tastes great." },
+            { english: "I love you", target: "Ik hou van je", pronunciation: "ik how van yuh", explanation: "A romantic expression." },
+            { english: "Good night", target: "Goedenacht", pronunciation: "KHOO-duh-NAHKT", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "Desondanks", pronunciation: "duh-SON-danks", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "Hoewel", pronunciation: "HOO-vel", explanation: "Used to introduce a concession." },
+            { english: "Refined", target: "Verfijnd", pronunciation: "fer-FEYNT", explanation: "Adjective describing something elegant." },
+            { english: "To contemplate", target: "Overdenken", pronunciation: "OH-ver-DEN-ken", explanation: "To think deeply about something." },
+            { english: "Ambiguous", target: "Dubbelzinnig", pronunciation: "DU-bul-ZI-nikh", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "Herdenken", pronunciation: "HER-den-ken", explanation: "To honor or remember." },
+            { english: "Longing", target: "Verlangen", pronunciation: "fer-LAHNG-en", explanation: "A deep desire or yearning." },
+            { english: "To strive", target: "Streven", pronunciation: "STRAY-ven", explanation: "To make an effort or strive." }
+        ]
+    },
+    turkish: {
+        name: "🇹🇷 Turkish",
+        beginner: [
+            { english: "Hello", target: "Merhaba", pronunciation: "Mer-HAH-bah", explanation: "The standard greeting in Turkish." },
+            { english: "Good morning", target: "Günaydın", pronunciation: "Gühn-AY-din", explanation: "Formal greeting used in the morning." },
+            { english: "Thank you", target: "Teşekkür ederim", pronunciation: "Teh-shek-KÜR eh-deh-rim", explanation: "The polite way to express gratitude." },
+            { english: "Yes", target: "Evet", pronunciation: "EH-vet", explanation: "The affirmative response." },
+            { english: "No", target: "Hayır", pronunciation: "Hah-YIR", explanation: "The negative response." },
+            { english: "Please", target: "Lütfen", pronunciation: "LÜHT-fen", explanation: "A polite way to make requests." },
+            { english: "Water", target: "Su", pronunciation: "Soo", explanation: "Essential word for basic needs." },
+            { english: "Bread", target: "Ekmek", pronunciation: "EK-mek", explanation: "A staple food in Turkish cuisine." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "Nasılsın?", pronunciation: "Nah-SIL-sin?", explanation: "Informal way to ask how someone is." },
+            { english: "What is your name?", target: "Adın ne?", pronunciation: "Ah-DIN neh?", explanation: "Informal way to ask for a name." },
+            { english: "I don't understand", target: "Anlamıyorum", pronunciation: "Ahn-lah-MI-yo-rum", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "Affedersiniz", pronunciation: "Af-fed-er-SI-niz", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "Güzel", pronunciation: "Güh-ZEL", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "Lezzetli", pronunciation: "Lez-ZET-li", explanation: "Describing food that tastes great." },
+            { english: "I love you", target: "Seni seviyorum", pronunciation: "Seh-ni seh-VI-yo-rum", explanation: "A romantic expression." },
+            { english: "Good night", target: "İyi geceler", pronunciation: "İ-yi geh-JEH-ler", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "Yine de", pronunciation: "Yi-neh deh", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "Her ne kadar", pronunciation: "Her neh kah-DAR", explanation: "Used to introduce a concession." },
+            { english: "Sophisticated", target: "Sofistike", pronunciation: "So-fis-TI-keh", explanation: "Adjective meaning refined or complex." },
+            { english: "To contemplate", target: "Düşünmek", pronunciation: "Düh-SHÜN-mek", explanation: "To think deeply about something." },
+            { english: "Ambiguous", target: "Belirsiz", pronunciation: "Beh-lir-SIZ", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "Anmak", pronunciation: "AHN-mahk", explanation: "To honor or remember." },
+            { english: "Nostalgia", target: "Nostalji", pronunciation: "Nos-TAHL-ji", explanation: "A longing for the past." },
+            { english: "To strive", target: "Çalışmak", pronunciation: "Chah-LISH-mahk", explanation: "To make an effort or strive." }
+        ]
+    },
+    thai: {
+        name: "🇹🇭 Thai",
+        beginner: [
+            { english: "Hello", target: "สวัสดี", pronunciation: "Sawasdee", explanation: "The standard greeting in Thai." },
+            { english: "Thank you", target: "ขอบคุณ", pronunciation: "Khob khun", explanation: "The basic way to express gratitude." },
+            { english: "Yes", target: "ใช่", pronunciation: "Chai", explanation: "The affirmative response." },
+            { english: "No", target: "ไม่", pronunciation: "Mai", explanation: "The negative response." },
+            { english: "Please", target: "กรุณา", pronunciation: "Kruna", explanation: "A polite way to make requests." },
+            { english: "Sorry", target: "ขอโทษ", pronunciation: "Kho tote", explanation: "Formal way to apologize." },
+            { english: "Water", target: "น้ำ", pronunciation: "Nam", explanation: "Essential word for basic needs." },
+            { english: "Rice", target: "ข้าว", pronunciation: "Khao", explanation: "The staple food in Thai cuisine." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "คุณสบายดีไหม", pronunciation: "Khun sabai dee mai?", explanation: "Asking how someone is doing." },
+            { english: "What is your name?", target: "คุณชื่ออะไร", pronunciation: "Khun chue arai?", explanation: "Asking for someone's name." },
+            { english: "I don't understand", target: "ฉันไม่เข้าใจ", pronunciation: "Chan mai khao jai", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "ขอโทษนะ", pronunciation: "Kho tote na", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "สวย", pronunciation: "Suay", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "อร่อย", pronunciation: "Aroi", explanation: "Describing food that tastes great." },
+            { english: "Good morning", target: "สวัสดีตอนเช้า", pronunciation: "Sawasdee ton chao", explanation: "Greeting used in the morning." },
+            { english: "Good night", target: "ราตรีสวัสดิ์", pronunciation: "Ratree sawadi", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "อย่างไรก็ตาม", pronunciation: "Yangrai ko tam", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "แม้ว่า", pronunciation: "Maae wa", explanation: "Used to introduce a concession." },
+            { english: "Profound", target: "ลึก", pronunciation: "Luk", explanation: "Adjective meaning deep or profound." },
+            { english: "To contemplate", target: "ครุ่นคิด", pronunciation: "Khrun khid", explanation: "To think deeply or meditate." },
+            { english: "Ambiguous", target: "ไม่ชัดเจน", pronunciation: "Mai chet jen", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "ระลึก", pronunciation: "Raluk", explanation: "To remember or honor." },
+            { english: "Nostalgia", target: "ความคิดถึง", pronunciation: "Khwam khid thung", explanation: "A longing for the past." },
+            { english: "To strive", target: "พยายาม", pronunciation: "Phayayam", explanation: "To make an effort or strive." }
+        ]
+    },
+    vietnamese: {
+        name: "🇻🇳 Vietnamese",
+        beginner: [
+            { english: "Hello", target: "Xin chào", pronunciation: "Sin chow", explanation: "The standard greeting in Vietnamese." },
+            { english: "Thank you", target: "Cảm ơn", pronunciation: "Kahm ern", explanation: "The basic way to express gratitude." },
+            { english: "Yes", target: "Vâng", pronunciation: "Vung", explanation: "The formal affirmative response." },
+            { english: "No", target: "Không", pronunciation: "Khong", explanation: "The negative response." },
+            { english: "Please", target: "Vui lòng", pronunciation: "Voo lohng", explanation: "A polite way to make requests." },
+            { english: "Sorry", target: "Xin lỗi", pronunciation: "Sin loy", explanation: "Formal way to apologize." },
+            { english: "Water", target: "Nước", pronunciation: "Nuwk", explanation: "Essential word for basic needs." },
+            { english: "Rice", target: "Cơm", pronunciation: "Cum", explanation: "The staple food in Vietnamese cuisine." }
+        ],
+        intermediate: [
+            { english: "How are you?", target: "Bạn khỏe không?", pronunciation: "Ban kway khong?", explanation: "Asking how someone is doing." },
+            { english: "What is your name?", target: "Tên bạn là gì?", pronunciation: "Ten ban la zee?", explanation: "Asking for someone's name." },
+            { english: "I don't understand", target: "Tôi không hiểu", pronunciation: "Toy khong hew", explanation: "When you need clarification." },
+            { english: "Excuse me", target: "Xin lỗi", pronunciation: "Sin loy", explanation: "Polite way to get attention." },
+            { english: "Beautiful", target: "Đẹp", pronunciation: "Dep", explanation: "Adjective meaning beautiful." },
+            { english: "Delicious", target: "Ngon", pronunciation: "Ngon", explanation: "Describing food that tastes great." },
+            { english: "Good morning", target: "Chào buổi sáng", pronunciation: "Chow bwoy sang", explanation: "Greeting used in the morning." },
+            { english: "Good night", target: "Chúc ngủ ngon", pronunciation: "Chook ngu ngon", explanation: "Said before going to sleep." }
+        ],
+        advanced: [
+            { english: "Nevertheless", target: "Tuy nhiên", pronunciation: "Twee nee-en", explanation: "A conjunction showing contrast." },
+            { english: "Although", target: "Mặc dù", pronunciation: "Mak zoo", explanation: "Used to introduce a concession." },
+            { english: "Profound", target: "Sâu sắc", pronunciation: "Sau sak", explanation: "Adjective meaning deep or profound." },
+            { english: "To contemplate", target: "Suy tư", pronunciation: "Swee tuh", explanation: "To think deeply or meditate." },
+            { english: "Ambiguous", target: "Mơ hồ", pronunciation: "Muh hoh", explanation: "Something unclear or vague." },
+            { english: "To commemorate", target: "Tưởng nhớ", pronunciation: "Tuh-uhng nuh", explanation: "To remember or honor." },
+            { english: "Nostalgia", target: "Nhớ lại", pronunciation: "Nuh lie", explanation: "A longing for the past." },
+            { english: "To strive", target: "Nỗ lực", pronunciation: "Nuh luk", explanation: "To make an effort or strive." }
+        ]
     }
 };
 
