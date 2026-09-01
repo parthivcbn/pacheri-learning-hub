@@ -1,3 +1,63 @@
+// ✨ FUN CELEBRATION EFFECTS! ✨
+const celebrationMessages = ['🎉 Awesome!', '⭐ Brilliant!', '🚀 Fantastic!', '💫 Perfect!', '🌟 Excellent!', '🎯 Spot on!', '🔥 Amazing!', '✨ Superb!', '🏆 Champion!'];
+
+function triggerCelebration(x, y) {
+  const container = document.getElementById('celebrationContainer');
+  if (!container) return;
+  
+  // Confetti burst
+  for (let i = 0; i < 15; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    confetti.style.left = (x + (Math.random() - 0.5) * 100) + 'px';
+    confetti.style.top = (y + (Math.random() - 0.5) * 100) + 'px';
+    confetti.style.background = ['#00d4ff', '#7dd3fc', '#22c55e', '#fbbf24', '#f87171'][Math.floor(Math.random() * 5)];
+    confetti.style.setProperty('--delay', (Math.random() * 0.5) + 's');
+    container.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 3500);
+  }
+  
+  // Fireworks explosion
+  for (let i = 0; i < 20; i++) {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    const angle = (i / 20) * Math.PI * 2;
+    const distance = 100 + Math.random() * 50;
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance;
+    firework.style.left = x + 'px';
+    firework.style.top = y + 'px';
+    firework.style.background = ['#00d4ff', '#7dd3fc', '#22c55e', '#fbbf24', '#f87171'][Math.floor(Math.random() * 5)];
+    firework.style.setProperty('--tx', tx + 'px');
+    firework.style.setProperty('--ty', ty + 'px');
+    container.appendChild(firework);
+    setTimeout(() => firework.remove(), 1800);
+  }
+  
+  // Celebration text
+  const msg = celebrationMessages[Math.floor(Math.random() * celebrationMessages.length)];
+  const text = document.createElement('div');
+  text.className = 'celebration-text';
+  text.textContent = msg;
+  text.style.left = (x - 40) + 'px';
+  text.style.top = (y - 40) + 'px';
+  text.style.color = ['#00d4ff', '#22c55e', '#fbbf24'][Math.floor(Math.random() * 3)];
+  container.appendChild(text);
+  setTimeout(() => text.remove(), 1800);
+  
+  // Star burst
+  for (let i = 0; i < 8; i++) {
+    const star = document.createElement('div');
+    star.className = 'celebration-star';
+    star.textContent = ['⭐', '✨', '💫'][Math.floor(Math.random() * 3)];
+    const angle = (i / 8) * Math.PI * 2;
+    star.style.left = (x + Math.cos(angle) * 20) + 'px';
+    star.style.top = (y + Math.sin(angle) * 20) + 'px';
+    container.appendChild(star);
+    setTimeout(() => star.remove(), 1800);
+  }
+}
+
 // Quiz app logic (multiple-choice + on-the-fly math/science generator)
 function init(){
 // DOM-dependent initialization
@@ -441,6 +501,10 @@ if (choicesEl) {
     // Track if answer is correct
     if (picked === correctIndex) {
       trackCorrectAnswer();
+      // 🎉 TRIGGER CELEBRATION! 🎉
+      const rect = btn.getBoundingClientRect();
+      triggerCelebration(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      btn.classList.add('pulse-glow');
     }
     const correctText = choicesEl.children[correctIndex].textContent;
     if (answerEl) {
