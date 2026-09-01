@@ -8,8 +8,129 @@ var gameState = {
     totalQuestions: 0,
     selectedAnswer: null,
     lessons: [],
-    quizLessons: []
+    quizLessons: [],
+    flashcardFlipped: false,
+    progress: loadProgress()
 };
+
+const speechLanguageMap = {
+    spanish: 'es-ES',
+    french: 'fr-FR',
+    german: 'de-DE',
+    japanese: 'ja-JP',
+    korean: 'ko-KR',
+    chinese: 'zh-CN',
+    italian: 'it-IT',
+    portuguese: 'pt-BR',
+    arabic: 'ar-SA',
+    hindi: 'hi-IN',
+    telugu: 'te-IN',
+    tamil: 'ta-IN',
+    russian: 'ru-RU',
+    dutch: 'nl-NL',
+    turkish: 'tr-TR',
+    thai: 'th-TH',
+    vietnamese: 'vi-VN'
+};
+
+function loadProgress() {
+    try {
+        const saved = localStorage.getItem('languageTeacherProgress');
+        return saved ? JSON.parse(saved) : {};
+    } catch (error) {
+        return {};
+    }
+}
+
+function saveProgress() {
+    try {
+        localStorage.setItem('languageTeacherProgress', JSON.stringify(gameState.progress));
+    } catch (error) {
+        // Ignore storage failures in private browsing or restricted environments.
+    }
+}
+
+function getLanguageProgressKey() {
+    return `${gameState.language}:${gameState.difficulty}`;
+}
+
+function getCurrentProgress() {
+    const key = getLanguageProgressKey();
+    return gameState.progress[key] || [];
+}
+
+function updateStudyProgress() {
+    if (!gameState.language || !gameState.difficulty || !gameState.lessons.length) {
+        return;
+    }
+
+    const knownWords = getCurrentProgress();
+    const total = gameState.lessons.length;
+    const currentText = gameState.lessons[gameState.currentLesson].english;
+    const knownBtn = document.getElementById('knownBtn');
+    const progressValue = document.getElementById('studyProgressValue');
+
+    progressValue.textContent = `${knownWords.length}/${total}`;
+    knownBtn.textContent = knownWords.includes(currentText) ? '✅ Known' : '✅ Mark known';
+}
+
+function pronounceCurrentLesson() {
+    if (!gameState.language || !gameState.lessons.length) {
+        return;
+    }
+
+    const lesson = gameState.lessons[gameState.currentLesson];
+    if (!('speechSynthesis' in window)) {
+        alert('Speech is not supported in this browser.');
+        return;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(lesson.target);
+    utterance.lang = speechLanguageMap[gameState.language] || 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+}
+
+function toggleFlashcard() {
+    if (!gameState.lessons.length) {
+        return;
+    }
+
+    gameState.flashcardFlipped = !gameState.flashcardFlipped;
+    const lesson = gameState.lessons[gameState.currentLesson];
+    const flashcardBtn = document.getElementById('flashcardBtn');
+    const englishText = document.getElementById('englishText');
+    const targetText = document.getElementById('targetText');
+
+    if (gameState.flashcardFlipped) {
+        englishText.textContent = `English: ${lesson.english}`;
+        targetText.textContent = lesson.target;
+        flashcardBtn.textContent = '🃏 Show English';
+    } else {
+        englishText.textContent = lesson.english;
+        targetText.textContent = lesson.target;
+        flashcardBtn.textContent = '🃏 Flashcard';
+    }
+}
+
+function markLessonKnown() {
+    if (!gameState.language || !gameState.lessons.length) {
+        return;
+    }
+
+    const lesson = gameState.lessons[gameState.currentLesson];
+    const key = getLanguageProgressKey();
+    const knownWords = gameState.progress[key] || [];
+
+    if (!knownWords.includes(lesson.english)) {
+        knownWords.push(lesson.english);
+        gameState.progress[key] = knownWords;
+        saveProgress();
+    }
+
+    updateStudyProgress();
+}
 
 // Language vocabulary database
 const languageDatabase = {
@@ -629,6 +750,7 @@ function selectDifficulty(difficulty, el) {
 // Start lesson or quiz
 function startLesson() {
     const lessons = languageDatabase[gameState.language][gameState.difficulty];
+    gameState.flashcardFlipped = false;
     
     if (gameState.mode === 'learn') {
         gameState.lessons = lessons;
@@ -649,6 +771,8 @@ function startLesson() {
 // Display lesson
 function displayLesson() {
     const lesson = gameState.lessons[gameState.currentLesson];
+    gameState.flashcardFlipped = false;
+    document.getElementById('flashcardBtn').textContent = '🃏 Flashcard';
     document.getElementById('currentLesson').textContent = gameState.currentLesson + 1;
     document.getElementById('totalLessons').textContent = gameState.lessons.length;
     document.getElementById('englishText').textContent = lesson.english;
@@ -658,6 +782,7 @@ function displayLesson() {
     
     updateProgressDots();
     updateLessonButtons();
+    updateStudyProgress();
 }
 
 // Update lesson buttons
@@ -690,6 +815,7 @@ function previousLesson() {
 function endLesson() {
     gameState.currentLesson = 0;
     gameState.selectedAnswer = null;
+    gameState.flashcardFlipped = false;
     selectLanguage(gameState.language, null);
     showScreen('languageScreen');
 }
@@ -800,7 +926,9 @@ function changeLanguage() {
         totalQuestions: 0,
         selectedAnswer: null,
         lessons: [],
-        quizLessons: []
+        quizLessons: [],
+        flashcardFlipped: false,
+        progress: loadProgress()
     };
     
     document.querySelectorAll('.language-btn').forEach(btn => btn.classList.remove('active'));
@@ -833,7 +961,9 @@ function goHome() {
         totalQuestions: 0,
         selectedAnswer: null,
         lessons: [],
-        quizLessons: []
+        quizLessons: [],
+        flashcardFlipped: false,
+        progress: loadProgress()
     };
     document.querySelectorAll('.language-btn, .mode-btn, .difficulty-btn').forEach(btn => btn.classList.remove('active'));
     showScreen('languageScreen');
