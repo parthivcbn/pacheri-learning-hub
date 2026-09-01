@@ -58,6 +58,125 @@ function triggerCelebration(x, y) {
   }
 }
 
+// 🎮 MINI GAME: Quick Memory Challenge
+const memoryGameData = {
+  questionsAnswered: 0,
+  nextGameAt: Math.floor(Math.random() * 2) + 4, // 4-5 questions
+  items: [],
+  correctAnswer: null,
+  isGameActive: false
+};
+
+const memoryItems = ['🐱', '🎸', '🍕', '⚡', '🌟', '📚', '🎨', '🚀', '🎲', '🏆', '🌈', '💎'];
+
+function getRandomItems(count = 3) {
+  const shuffled = memoryItems.sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+}
+
+function showMiniGame() {
+  if (memoryGameData.isGameActive) return;
+  
+  memoryGameData.isGameActive = true;
+  memoryGameData.items = getRandomItems(3);
+  memoryGameData.correctAnswer = memoryGameData.items.join('');
+  
+  const modal = document.getElementById('miniGameModal');
+  const overlay = document.getElementById('miniGameOverlay');
+  const itemsContainer = document.getElementById('memoryItemsContainer');
+  const gameContent = document.getElementById('memoryGameContent');
+  const bonusAlert = document.getElementById('bonusAlert');
+  
+  if (!modal) return;
+  
+  // Show items
+  itemsContainer.innerHTML = '';
+  memoryGameData.items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.textContent = item;
+    itemsContainer.appendChild(card);
+  });
+  
+  gameContent.innerHTML = '';
+  bonusAlert.innerHTML = '';
+  
+  modal.classList.add('show');
+  overlay.classList.add('show');
+  
+  // Hide items after 3 seconds
+  setTimeout(() => {
+    itemsContainer.querySelectorAll('.memory-card').forEach(card => {
+      card.classList.add('hidden');
+    });
+    
+    // Add input to guess
+    const inputDiv = document.createElement('div');
+    inputDiv.className = 'memory-input-group';
+    inputDiv.innerHTML = `
+      <input type="text" id="memoryInput" placeholder="What were the items? (no spaces)" maxlength="3">
+    `;
+    gameContent.appendChild(inputDiv);
+    
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'memory-btn';
+    submitBtn.textContent = 'Submit Answer';
+    submitBtn.onclick = checkMemoryAnswer;
+    gameContent.appendChild(submitBtn);
+    
+    const inputField = document.getElementById('memoryInput');
+    inputField.focus();
+  }, 3000);
+}
+
+function checkMemoryAnswer() {
+  const input = document.getElementById('memoryInput');
+  if (!input) return;
+  
+  const userAnswer = input.value.trim().toUpperCase();
+  const correctAnswer = memoryGameData.correctAnswer;
+  const bonusAlert = document.getElementById('bonusAlert');
+  const gameContent = document.getElementById('memoryGameContent');
+  
+  if (userAnswer === correctAnswer) {
+    // Correct! Add bonus points
+    correctCount += 10;
+    bonusAlert.innerHTML = '✅ Correct! +10 Bonus Points! 🎉';
+    bonusAlert.style.background = 'rgba(34, 197, 94, 0.3)';
+    bonusAlert.style.borderColor = '#22c55e';
+    bonusAlert.style.color = '#86efac';
+    
+    triggerCelebration(window.innerWidth / 2, window.innerHeight / 2);
+  } else {
+    bonusAlert.innerHTML = `❌ Oops! The answer was: ${correctAnswer}`;
+    bonusAlert.style.background = 'rgba(248, 113, 113, 0.2)';
+    bonusAlert.style.borderColor = '#f87171';
+    bonusAlert.style.color = '#fca5a5';
+  }
+  
+  // Disable input
+  input.disabled = true;
+  const submitBtn = gameContent.querySelector('button');
+  if (submitBtn) submitBtn.disabled = true;
+  
+  // Close after 3 seconds
+  setTimeout(() => {
+    closeMiniGame();
+  }, 3000);
+}
+
+function closeMiniGame() {
+  const modal = document.getElementById('miniGameModal');
+  const overlay = document.getElementById('miniGameOverlay');
+  
+  if (modal) modal.classList.remove('show');
+  if (overlay) overlay.classList.remove('show');
+  
+  memoryGameData.isGameActive = false;
+  memoryGameData.questionsAnswered = 0;
+  memoryGameData.nextGameAt = Math.floor(Math.random() * 2) + 4; // Reset for next game
+}
+
 // Quiz app logic (multiple-choice + on-the-fly math/science generator)
 function init(){
 // DOM-dependent initialization
@@ -517,7 +636,20 @@ if (choicesEl) {
 function showAnswer(){ if (!choicesEl || !choicesEl.children.length) return; Array.from(choicesEl.children).forEach((b)=>b.classList.add('dim')); const correct = Array.from(choicesEl.children).find(b=>b.classList.contains('correct')); if (!correct){ // force highlight
   const grade=gradeSelect.value, subject=subjectSelect.value; const bankList=(bank[grade]&&bank[grade][subject])?bank[grade][subject]:[]; let correctIndex = (index<bankList.length)?bankList[index].correct: (subject==='math'?generateMathQuestion(grade,index).correctIndex:generateScienceQuestion(grade,index).correctIndex); Array.from(choicesEl.children)[correctIndex].classList.add('correct'); const correctText = Array.from(choicesEl.children)[correctIndex].textContent; if (answerEl) { answerEl.textContent='Answer: '+correctText; answerEl.setAttribute('aria-hidden','false'); } return; } const correctText = correct.textContent; if (answerEl) { answerEl.textContent = 'Answer: ' + correctText; answerEl.setAttribute('aria-hidden','false'); } }
 
-function nextQuestion(){ totalQuestions = Number(totalInput.value) || totalQuestions; index = (index + 1) % totalQuestions; renderQuestion(); }
+function nextQuestion(){ 
+  totalQuestions = Number(totalInput.value) || totalQuestions; 
+  index = (index + 1) % totalQuestions; 
+  
+  // Check if we should trigger mini game
+  memoryGameData.questionsAnswered++;
+  if (memoryGameData.questionsAnswered >= memoryGameData.nextGameAt) {
+    setTimeout(() => {
+      showMiniGame();
+    }, 500);
+  }
+  
+  renderQuestion(); 
+}
 function prevQuestion(){ totalQuestions = Number(totalInput.value) || totalQuestions; index = (index - 1 + totalQuestions) % totalQuestions; renderQuestion(); }
 
 function shuffleQuestions(){ // in generator mode randomize index
@@ -556,6 +688,15 @@ if (intervalInput) intervalInput.addEventListener('change', ()=>{ if (autoToggle
 
 if (tutorAskBtn) tutorAskBtn.addEventListener('click', runTutorSession);
 if (tutorQuestionInput) tutorQuestionInput.addEventListener('keydown', (e)=>{ if (e.key === 'Enter') runTutorSession(); });
+
+// Mini Game Event Listeners
+const memoryStartBtn = document.getElementById('memoryStartBtn');
+const memoryCloseBtn = document.getElementById('memoryCloseBtn');
+if (memoryStartBtn) memoryStartBtn.addEventListener('click', () => {
+  const itemsContainer = document.getElementById('memoryItemsContainer');
+  if (itemsContainer) itemsContainer.querySelectorAll('.memory-card').forEach(card => card.classList.remove('hidden'));
+});
+if (memoryCloseBtn) memoryCloseBtn.addEventListener('click', closeMiniGame);
 
 function runTutorSession(){
   if (!tutorQuestionInput || !tutorReply || !tutorGame) return;
