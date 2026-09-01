@@ -69,7 +69,7 @@ const questionDatabase = {
             { q: "Which is the only country in the world with no capital?", options: ["Vatican City", "Monaco", "Nauru", "Mauritius"], correct: 0 },
             { q: "What is the deepest ocean trench?", options: ["Mariana Trench", "Tonga Trench", "Philippine Trench", "Kuril-Kamchatka"], correct: 0 },
             { q: "Which is the smallest country in the world?", options: ["Vatican City", "Monaco", "San Marino", "Liechtenstein"], correct: 0 },
-            { q: "What is the capital of Suriname?", options: ["Paramaribo", "Lelydorp", "Lelydorp", "Groningen"], correct: 0 },
+            { q: "What is the capital of Suriname?", options: ["Paramaribo", "Georgetown", "Port of Spain", "Castries"], correct: 0 },
             { q: "Which country has the most time zones?", options: ["France", "Russia", "United States", "China"], correct: 0 },
             { q: "What is the highest mountain outside of Asia?", options: ["Mount Aconcagua", "Mount McKinley", "Mount Elbrus", "Kilimanjaro"], correct: 0 },
             { q: "Which capital is the highest in the world?", options: ["La Paz", "Mexico City", "Bogotá", "Quito"], correct: 0 },
@@ -241,13 +241,12 @@ function selectAnswer(index) {
     const optionBtns = document.querySelectorAll('.option-btn');
     
     optionBtns.forEach((btn, i) => {
+        btn.setAttribute('aria-pressed', String(i === index || i === question.correct));
         if (i === question.correct) {
             btn.classList.add('correct');
-            btn.setAttribute('aria-pressed', String(i === index));
         }
         if (i === index && i !== question.correct) {
             btn.classList.add('incorrect');
-            btn.setAttribute('aria-pressed', String(i === index));
         }
         btn.disabled = true;
     });
