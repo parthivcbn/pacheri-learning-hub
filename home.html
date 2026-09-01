@@ -457,6 +457,114 @@
       .daily-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
     }
 
+    /* Help & Getting Started Section */
+    .help-panel {
+      margin-top: 18px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.12);
+    }
+
+    .help-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .help-header h3 {
+      margin: 0;
+      color: var(--text);
+      font-size: 20px;
+      flex: 1;
+    }
+
+    .help-toggle {
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .help-toggle.collapsed {
+      transform: rotate(-90deg);
+    }
+
+    .help-content {
+      display: grid;
+      gap: 14px;
+    }
+
+    .help-content.hidden {
+      display: none;
+    }
+
+    .help-section {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 12px;
+      padding: 12px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .help-section h4 {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 14px;
+    }
+
+    .help-section p, .help-section li {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .help-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .help-section li {
+      margin: 6px 0;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .help-section li:before {
+      content: "▸ ";
+      color: var(--accent);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tip-card {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .tip-card strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 4px;
+    }
+
     @media (max-width: 640px){
       body { padding: 12px 10px; }
       .container { width: min(100%, 100%); }
@@ -469,6 +577,7 @@
       .card { padding: 14px; }
       .card-icon { font-size: 24px; }
       .rocket { opacity: 0.35; }
+      .tips-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -720,6 +829,144 @@
         <div class="daily-card">
           <h4>🇮🇳 Country Special Days</h4>
           <ul id="countryDayList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Help & Getting Started Section -->
+    <section class="help-panel" id="helpPanel">
+      <div class="help-header" onclick="toggleHelp()">
+        <h3>❓ Help & Getting Started</h3>
+        <span class="help-toggle" id="helpToggle">▶</span>
+      </div>
+
+      <div class="help-content" id="helpContent">
+        <!-- What is Learning Hub -->
+        <div class="help-section">
+          <h4>🎯 What is Learning Hub?</h4>
+          <p>Welcome to Parthiv Learning Hub! This is an interactive learning platform designed for Grade 7 students. We offer quizzes, lessons, games, and tools to help you master Math, Science, English, Geography, and 19 different languages. Everything is designed with a fun space theme!</p>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="help-section">
+          <h4>🚀 Getting Started (3 Simple Steps)</h4>
+          <ul>
+            <li><strong>Step 1:</strong> Choose any feature card above (Quiz Master, Maths Teacher, Space Explorer, etc.)</li>
+            <li><strong>Step 2:</strong> Select your difficulty level (Beginner, Intermediate, or Advanced depending on the feature)</li>
+            <li><strong>Step 3:</strong> Start learning! Use keyboard shortcuts or mouse to interact</li>
+          </ul>
+        </div>
+
+        <!-- Feature Overview -->
+        <div class="help-section">
+          <h4>📚 Feature Overview</h4>
+          <ul>
+            <li><strong>Quiz Master:</strong> Take adaptive quizzes in Math & Science with 6 themes. Features auto-advance and shuffle modes!</li>
+            <li><strong>Maths Teacher:</strong> Learn Grade 7 Arithmetic with lessons, examples, and practice MCQs</li>
+            <li><strong>Space Explorer:</strong> Explore planets, stars, moons, asteroids & exoplanets interactively</li>
+            <li><strong>Cosmic Puzzle:</strong> Fun memory matching game with 5 themes and 5 difficulty levels</li>
+            <li><strong>Earth Geography:</strong> Adventure game with 20 geography questions, power-ups & leaderboard</li>
+            <li><strong>Language Teacher:</strong> Learn 19 languages with pronunciation! Supports beginner to advanced levels</li>
+            <li><strong>English Learning:</strong> Master grammar, vocabulary, and writing with interactive lessons & quizzes</li>
+            <li><strong>AI Tutor:</strong> Ask any school question and get a simple explanation + mini quiz</li>
+          </ul>
+        </div>
+
+        <!-- Keyboard Shortcuts -->
+        <div class="help-section">
+          <h4>⌨️ Keyboard Shortcuts You Should Know</h4>
+          <div class="tips-grid">
+            <div class="tip-card">
+              <strong>Navigate Cards</strong>
+              ⬆️ ⬇️ ⬅️ ➡️ Arrow Keys
+            </div>
+            <div class="tip-card">
+              <strong>Select Answer</strong>
+              1-4 or A-D Keys (in quizzes)
+            </div>
+            <div class="tip-card">
+              <strong>Open Feature</strong>
+              ↵ Enter Key
+            </div>
+            <div class="tip-card">
+              <strong>Jump to Top</strong>
+              Home Key
+            </div>
+            <div class="tip-card">
+              <strong>Jump to Bottom</strong>
+              End Key
+            </div>
+            <div class="tip-card">
+              <strong>Navigate Up/Down</strong>
+              ⬆️ ⬇️ in quizzes & games
+            </div>
+          </div>
+        </div>
+
+        <!-- Important Tips -->
+        <div class="help-section">
+          <h4>💡 Important Tips for Better Learning</h4>
+          <ul>
+            <li>📱 <strong>Use keyboard navigation:</strong> Arrow keys make moving between questions faster</li>
+            <li>🎯 <strong>Read explanations:</strong> After each quiz answer, read why it's correct to learn better</li>
+            <li>🎮 <strong>Try different modes:</strong> Shuffle and random modes help test your knowledge differently</li>
+            <li>🌍 <strong>Explore languages:</strong> Language Teacher has SLOW PRONUNCIATION to help you learn - listen carefully!</li>
+            <li>🔄 <strong>Retry quizzes:</strong> Taking quizzes multiple times helps reinforce learning</li>
+            <li>📝 <strong>Track progress:</strong> Language Teacher saves your progress - see which words you've learned</li>
+            <li>🚀 <strong>Space theme is just for fun:</strong> The rockets and animations are decorative - focus on learning!</li>
+            <li>⏰ <strong>Use auto-advance wisely:</strong> Set a comfortable pace - don't rush through questions</li>
+          </ul>
+        </div>
+
+        <!-- Feature Requirements -->
+        <div class="help-section">
+          <h4>✅ System Requirements & Notes</h4>
+          <ul>
+            <li>📶 <strong>Internet:</strong> Most features work online. Some require internet for initial load</li>
+            <li>🎤 <strong>Microphone/Speaker:</strong> Language Teacher & AI Tutor use speech - ensure audio is enabled</li>
+            <li>💾 <strong>Local Storage:</strong> Your progress is saved automatically in your browser (Language Teacher, Geography)</li>
+            <li>🌐 <strong>Modern Browser:</strong> Use Chrome, Firefox, Safari, or Edge for best experience</li>
+            <li>📱 <strong>Mobile Friendly:</strong> Most features work on tablets and phones, but desktop is recommended</li>
+          </ul>
+        </div>
+
+        <!-- Language Teacher Help -->
+        <div class="help-section">
+          <h4>🌍 Language Teacher: Special Guide</h4>
+          <ul>
+            <li>🎤 <strong>Slow Pronunciation:</strong> Words are spoken at 50% normal speed to help you learn clearly</li>
+            <li>📚 <strong>Learning Mode:</strong> Shows English word → Target language with pronunciation & explanation</li>
+            <li>❓ <strong>Quiz Mode:</strong> Multiple choice questions test if you've learned the words</li>
+            <li>✅ <strong>Mark Known:</strong> Click "Mark known" to track which words you've learned successfully</li>
+            <li>🃏 <strong>Flashcard:</strong> Click flashcard to flip between English and target language</li>
+            <li>📊 <strong>3 Levels:</strong> Beginner (basic words) → Intermediate (common phrases) → Advanced (complex vocabulary)</li>
+          </ul>
+        </div>
+
+        <!-- Troubleshooting -->
+        <div class="help-section">
+          <h4>🔧 Troubleshooting & Common Questions</h4>
+          <ul>
+            <li><strong>Q: Audio not working?</strong> Check browser volume, enable microphone permissions, restart page</li>
+            <li><strong>Q: Progress not saving?</strong> Ensure cookies/local storage is enabled in browser settings</li>
+            <li><strong>Q: Can't navigate cards?</strong> Click inside the page first, then use arrow keys</li>
+            <li><strong>Q: Want to clear saved progress?</strong> Open browser developer tools (F12) → Application → Clear Local Storage</li>
+            <li><strong>Q: Mobile screen too small?</strong> Try landscape mode or use desktop for best experience</li>
+          </ul>
+        </div>
+
+        <!-- Pro Tips -->
+        <div class="help-section">
+          <h4>⭐ Pro Learning Tips</h4>
+          <ul>
+            <li>🎯 Start with Beginner level to build confidence, then progress to Advanced</li>
+            <li>🔁 Repeat quizzes until you get 100% - it helps memory retention</li>
+            <li>📖 Use Maths Teacher & English Learning Guide for structured lessons before taking quizzes</li>
+            <li>🌟 The AI Tutor is perfect for asking "Why?" questions about topics you don't understand</li>
+            <li>🗺️ Use Geography and Space Explorer for visual learning - they're interactive!</li>
+            <li>🎮 Cosmic Puzzle and games are great for brain breaks - learning should be fun!</li>
+            <li>📱 Share your results on social media to motivate yourself and challenge friends!</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -984,6 +1231,20 @@
         updateSelection();
       });
     });
+
+    // Help Panel Toggle Function
+    function toggleHelp() {
+      const helpContent = document.getElementById('helpContent');
+      const helpToggle = document.getElementById('helpToggle');
+      
+      if (helpContent.classList.contains('hidden')) {
+        helpContent.classList.remove('hidden');
+        helpToggle.classList.remove('collapsed');
+      } else {
+        helpContent.classList.add('hidden');
+        helpToggle.classList.add('collapsed');
+      }
+    }
   </script>
   <script src="nav-controls.js"></script>
 </body>

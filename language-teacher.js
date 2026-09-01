@@ -87,7 +87,7 @@ function pronounceCurrentLesson() {
 
     const utterance = new SpeechSynthesisUtterance(lesson.target);
     utterance.lang = speechLanguageMap[gameState.language] || 'en-US';
-    utterance.rate = 0.9;
+    utterance.rate = 0.5;
     window.speechSynthesis.cancel();
     window.speechSynthesis.speak(utterance);
 }
