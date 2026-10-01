@@ -85,13 +85,13 @@ function renderMap() {
     svg.setAttribute('class', 'world-svg');
 
     const landShapes = [
-      { name: 'North America', d: 'M118 144 L170 96 L220 86 L270 104 L320 134 L350 168 L368 198 L330 228 L312 254 L284 270 L258 290 L220 288 L188 304 L150 298 L120 258 L96 214 L104 176 Z' },
-      { name: 'South America', d: 'M258 300 L292 330 L308 366 L314 410 L296 454 L276 494 L248 520 L220 486 L212 448 L218 406 L210 360 L224 322 Z' },
-      { name: 'Europe', d: 'M456 122 L490 106 L526 110 L548 134 L564 162 L548 184 L514 192 L482 176 L456 150 Z' },
-      { name: 'Africa', d: 'M466 200 L512 184 L560 196 L602 228 L614 286 L592 340 L570 390 L536 448 L500 470 L468 430 L450 400 L440 328 L446 252 Z' },
-      { name: 'Asia', d: 'M572 150 L628 118 L688 108 L738 116 L798 136 L850 160 L900 196 L920 230 L904 274 L874 304 L822 300 L776 318 L724 292 L676 306 L628 286 L594 246 L564 214 Z' },
-      { name: 'Australia', d: 'M760 350 L820 340 L892 360 L912 400 L890 440 L832 462 L770 430 L744 388 Z' },
-      { name: 'Antarctica', d: 'M200 500 L332 482 L474 490 L628 488 L808 500 L878 526 L862 548 L664 548 L420 542 L262 532 Z' }
+      { name: 'North America', d: 'M114 146 L156 98 L212 74 L278 84 L332 116 L368 160 L390 190 L360 214 L336 246 L292 262 L270 296 L234 300 L196 322 L152 314 L118 282 L94 232 L88 196 L104 172 Z', fill: '#f4a261' },
+      { name: 'South America', d: 'M276 300 L316 334 L332 374 L330 430 L314 484 L286 522 L250 530 L224 504 L214 456 L220 412 L206 364 L222 322 Z', fill: '#e9c46a' },
+      { name: 'Europe', d: 'M458 126 L490 104 L534 100 L566 116 L588 144 L576 176 L542 198 L506 196 L474 172 L454 146 Z', fill: '#90be6d' },
+      { name: 'Africa', d: 'M466 204 L518 186 L572 196 L606 230 L624 282 L612 344 L578 410 L538 454 L502 470 L468 434 L448 390 L438 332 L448 266 Z', fill: '#8ecae6' },
+      { name: 'Asia', d: 'M572 144 L632 110 L704 104 L770 120 L836 150 L900 184 L930 226 L916 272 L884 306 L824 314 L778 332 L734 308 L682 316 L634 290 L600 246 L574 204 Z', fill: '#a7c957' },
+      { name: 'Australia', d: 'M758 356 L826 344 L896 360 L918 400 L900 444 L844 464 L782 444 L742 402 Z', fill: '#ffb703' },
+      { name: 'Antarctica', d: 'M206 500 L340 488 L482 490 L630 488 L814 502 L874 526 L864 548 L644 550 L414 542 L272 534 Z', fill: '#8ecae6' }
     ];
 
     landShapes.forEach((shape) => {
@@ -99,6 +99,9 @@ function renderMap() {
       path.setAttribute('d', shape.d);
       path.setAttribute('class', 'continent-shape');
       path.setAttribute('data-shape-name', shape.name);
+      path.setAttribute('fill', shape.fill);
+      path.setAttribute('stroke', '#1e293b');
+      path.setAttribute('stroke-width', '2.2');
       svg.appendChild(path);
     });
 
