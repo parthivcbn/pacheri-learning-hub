@@ -102,6 +102,11 @@ function renderMap() {
       path.setAttribute('fill', shape.fill);
       path.setAttribute('stroke', '#1e293b');
       path.setAttribute('stroke-width', '2.2');
+      path.setAttribute('stroke-linejoin', 'round');
+      path.setAttribute('stroke-linecap', 'round');
+      path.style.fill = shape.fill;
+      path.style.stroke = '#1e293b';
+      path.style.strokeWidth = '2.2';
       svg.appendChild(path);
     });
 
