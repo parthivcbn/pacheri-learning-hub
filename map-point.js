@@ -70,6 +70,48 @@ function renderMap() {
   mapSurface.className = `map-surface ${currentMap === 'earth' ? 'earth-map' : 'space-map'}`;
   mapSurface.innerHTML = '';
 
+  if (currentMap === 'earth') {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 1000 560');
+    svg.setAttribute('class', 'world-svg');
+
+    const landShapes = [
+      { name: 'North America', d: 'M110 148 L170 90 L246 96 L290 130 L294 166 L260 196 L230 220 L192 210 L170 246 L146 235 L120 212 L96 180 Z' },
+      { name: 'South America', d: 'M255 248 L285 278 L310 330 L298 390 L278 450 L246 500 L220 472 L210 420 L226 356 L216 300 Z' },
+      { name: 'Europe', d: 'M470 120 L508 94 L548 100 L566 136 L551 168 L516 180 L484 166 Z' },
+      { name: 'Africa', d: 'M500 188 L560 175 L604 214 L620 258 L612 312 L574 370 L530 412 L492 372 L472 300 L486 236 Z' },
+      { name: 'Asia', d: 'M565 120 L668 94 L760 112 L836 136 L900 170 L918 240 L870 278 L788 268 L716 290 L654 270 L610 212 L586 164 Z' },
+      { name: 'Australia', d: 'M770 365 L838 342 L892 368 L898 428 L860 470 L794 458 L760 420 Z' },
+      { name: 'Antarctica', d: 'M210 490 L410 468 L620 484 L790 478 L900 500 L878 532 L650 544 L370 536 L220 520 Z' }
+    ];
+
+    landShapes.forEach((shape) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', shape.d);
+      path.setAttribute('class', 'continent-shape');
+      path.setAttribute('data-shape-name', shape.name);
+      svg.appendChild(path);
+    });
+
+    const oceanText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    oceanText.setAttribute('x', '500');
+    oceanText.setAttribute('y', '45');
+    oceanText.setAttribute('text-anchor', 'middle');
+    oceanText.setAttribute('class', 'ocean-label');
+    oceanText.textContent = 'Pacific Ocean';
+    svg.appendChild(oceanText);
+
+    const oceanText2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    oceanText2.setAttribute('x', '500');
+    oceanText2.setAttribute('y', '540');
+    oceanText2.setAttribute('text-anchor', 'middle');
+    oceanText2.setAttribute('class', 'ocean-label');
+    oceanText2.textContent = 'Southern Ocean';
+    svg.appendChild(oceanText2);
+
+    mapSurface.appendChild(svg);
+  }
+
   selectedMap.points.forEach((point) => {
     const btn = document.createElement('button');
     btn.type = 'button';
