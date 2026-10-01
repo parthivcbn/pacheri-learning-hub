@@ -8,14 +8,23 @@ const mapData = {
       { name: 'Africa', x: 55, y: 52 },
       { name: 'Asia', x: 72, y: 34 },
       { name: 'Australia', x: 85, y: 72 },
-      { name: 'Antarctica', x: 52, y: 88 }
+      { name: 'Antarctica', x: 52, y: 88 },
+      { name: 'Pacific Ocean', x: 22, y: 52 },
+      { name: 'Atlantic Ocean', x: 40, y: 46 },
+      { name: 'Indian Ocean', x: 70, y: 66 },
+      { name: 'Arctic Ocean', x: 48, y: 12 }
     ],
     questions: [
       { question: 'Tap the continent where the Sahara Desert is found.', answer: 'Africa' },
       { question: 'Which continent is the largest and has the Great Wall?', answer: 'Asia' },
       { question: 'Tap the continent that is the smallest and is also an island.', answer: 'Australia' },
       { question: 'Which continent is home to the Amazon Rainforest?', answer: 'South America' },
-      { question: 'Which continent is directly west of Europe?', answer: 'North America' }
+      { question: 'Which continent is directly west of Europe?', answer: 'North America' },
+      { question: 'Tap the ocean between North America and Europe.', answer: 'Atlantic Ocean' },
+      { question: 'Which ocean is the largest and lies west of South America?', answer: 'Pacific Ocean' },
+      { question: 'Tap the ocean that is found near the North Pole.', answer: 'Arctic Ocean' },
+      { question: 'Which ocean lies between Africa and Australia?', answer: 'Indian Ocean' },
+      { question: 'Tap the continent that is freezing and surrounds the South Pole.', answer: 'Antarctica' }
     ]
   },
   space: {
