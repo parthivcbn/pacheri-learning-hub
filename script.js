@@ -638,7 +638,13 @@ function showAnswer(){ if (!choicesEl || !choicesEl.children.length) return; Arr
 
 function nextQuestion(){ 
   totalQuestions = Number(totalInput.value) || totalQuestions; 
-  index = (index + 1) % totalQuestions; 
+  if (!Number.isFinite(totalQuestions) || totalQuestions <= 0) return;
+  if (index >= totalQuestions - 1) {
+    stopAuto();
+    return;
+  }
+
+  index += 1;
   
   // Check if we should trigger mini game
   memoryGameData.questionsAnswered++;
@@ -650,7 +656,7 @@ function nextQuestion(){
   
   renderQuestion(); 
 }
-function prevQuestion(){ totalQuestions = Number(totalInput.value) || totalQuestions; index = (index - 1 + totalQuestions) % totalQuestions; renderQuestion(); }
+function prevQuestion(){ totalQuestions = Number(totalInput.value) || totalQuestions; if (!Number.isFinite(totalQuestions) || totalQuestions <= 0) return; index = Math.max(0, index - 1); renderQuestion(); }
 
 function shuffleQuestions(){ // in generator mode randomize index
   const grade = gradeSelect.value; 
