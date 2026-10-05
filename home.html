@@ -538,6 +538,306 @@
       font-weight: 600;
     }
 
+    .color-game-panel,
+    .plane-game-panel,
+    .leaderboard-panel {
+      margin-top: 24px;
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid rgba(0, 212, 255, 0.22);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 12px 28px rgba(0, 212, 255, 0.12);
+    }
+
+    .color-game-header,
+    .plane-game-header,
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .score-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .score-pill {
+      background: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    .color-target-wrap {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .color-label {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .color-target {
+      display: inline-block;
+      min-width: 150px;
+      padding: 16px 28px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #f8fbff;
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.08);
+    }
+
+    .color-options,
+    .plane-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+    }
+
+    .color-swatch,
+    .plane-option {
+      position: relative;
+      min-height: 110px;
+      border: 2px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      color: #ffffff;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.2);
+    }
+
+    .color-swatch:hover,
+    .plane-option:hover,
+    .plane-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      border-color: rgba(255,255,255,0.45);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+    }
+
+    .color-swatch.correct,
+    .plane-option.correct {
+      outline: 3px solid rgba(34, 197, 94, 0.9);
+      outline-offset: 2px;
+    }
+
+    .color-swatch.wrong,
+    .plane-option.wrong {
+      outline: 3px solid rgba(239, 68, 68, 0.9);
+      outline-offset: 2px;
+    }
+
+    .color-game-footer,
+    .plane-game-footer,
+    .leaderboard-footer {
+      margin-top: 18px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .color-restart-btn,
+    .plane-restart-btn,
+    .save-score-btn {
+      background: linear-gradient(135deg, #00d4ff, #3b82f6);
+      border: none;
+      color: #05131f;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .plane-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .plane-card {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+
+    .plane-card.selected {
+      border-color: rgba(0, 212, 255, 0.8);
+      box-shadow: 0 0 18px rgba(0, 212, 255, 0.28);
+      background: rgba(0, 212, 255, 0.08);
+    }
+
+    .plane-icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .plane-card strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .plane-question-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .plane-question-card h4 {
+      margin: 0 0 12px;
+      color: var(--accent);
+      font-size: 16px;
+    }
+
+    .plane-question {
+      margin: 0 0 14px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .plane-learning-box {
+      margin-top: 16px;
+      background: rgba(59, 130, 246, 0.06);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .plane-learning-box strong {
+      color: var(--text);
+    }
+
+    .result-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 20px;
+    }
+
+    .result-modal.show {
+      display: flex;
+    }
+
+    .result-modal-inner {
+      width: min(520px, 100%);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(17, 24, 39, 0.92));
+      border: 1px solid rgba(0, 212, 255, 0.28);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .result-modal-inner h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .result-modal-inner p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0 0 14px;
+    }
+
+    .result-close-btn {
+      margin-top: 10px;
+      background: linear-gradient(135deg, #22c55e, #14b8a6);
+      border: none;
+      color: #05131f;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .leaderboard-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .leaderboard-input {
+      flex: 1;
+      min-width: 140px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(15, 23, 42, 0.7);
+      color: var(--text);
+      padding: 10px 12px;
+    }
+
+    .leaderboard-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--muted);
+      gap: 12px;
+    }
+
+    .leaderboard-item strong {
+      color: var(--text);
+    }
+
+    .leaderboard-rank {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d4ff, #3b82f6);
+      color: #05131f;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
     footer{text-align:center;margin-top:12px;color:var(--muted);font-size:12px}
 
     /* Rocket animation */
@@ -1140,6 +1440,21 @@
         <span class="btn-visit">Start Quest</span>
       </a>
 
+      <!-- Color Game Card -->
+      <div class="card" data-game-card>
+        <div class="card-icon">🎨</div>
+        <div class="card-title">Color Match Challenge</div>
+        <div class="card-desc">Tap the matching color as fast as you can. Every correct pick adds points and keeps the streak going.</div>
+        <span class="card-badge">Game • Fast • Score</span>
+        <div class="card-features">
+          <strong>How to play:</strong>
+          <div class="feature-item">Read the color name shown on screen</div>
+          <div class="feature-item">Pick the swatch with the same color</div>
+          <div class="feature-item">Beat the timer and chase a high score</div>
+        </div>
+        <button class="btn-visit" type="button" onclick="document.getElementById('colorGameSection').scrollIntoView({behavior:'smooth', block:'start'});">Play Color Game</button>
+      </div>
+
       <!-- AI Tutor Card -->
       <a href="tutor.html" class="card">
         <div class="card-icon">🧠</div>
@@ -1459,6 +1774,81 @@
       </div>
     </section>
 
+    <section id="colorGameSection" class="color-game-panel" aria-live="polite">
+      <div class="color-game-header">
+        <div>
+          <div class="daily-eyebrow">Mini Game</div>
+          <h3>🎨 Color Match Challenge</h3>
+        </div>
+        <div class="score-row">
+          <span class="score-pill">Score: <strong id="colorScore">0</strong></span>
+          <span class="score-pill">Time: <strong id="colorTimer">12</strong>s</span>
+        </div>
+      </div>
+
+      <div class="color-target-wrap">
+        <p class="color-label">Find the color:</p>
+        <div id="colorTarget" class="color-target">Red</div>
+      </div>
+
+      <div id="colorOptions" class="color-options"></div>
+
+      <div class="color-game-footer">
+        <button id="colorRestartBtn" class="color-restart-btn" type="button">Restart Game</button>
+      </div>
+    </section>
+
+    <section id="planeGameSection" class="plane-game-panel" aria-live="polite">
+      <div class="plane-game-header">
+        <div>
+          <div class="daily-eyebrow">Flight Learning</div>
+          <h3>✈️ Choose a Plane, Learn & Answer</h3>
+        </div>
+        <div class="score-row">
+          <span class="score-pill">Plane Score: <strong id="planeScore">0</strong></span>
+        </div>
+      </div>
+
+      <div id="planeGrid" class="plane-grid"></div>
+
+      <div class="plane-question-card">
+        <h4>Question</h4>
+        <p id="planeQuestion" class="plane-question">Choose a plane to start your flight lesson.</p>
+        <div id="planeOptions" class="plane-options"></div>
+        <div id="planeLearning" class="plane-learning-box">
+          <strong>Learning:</strong> Select a plane to learn how it is built, how it flies, and what it is used for.
+        </div>
+      </div>
+
+      <div class="plane-game-footer">
+        <button id="planeRestartBtn" class="plane-restart-btn" type="button">New Question</button>
+      </div>
+    </section>
+
+    <section class="leaderboard-panel" aria-live="polite">
+      <div class="leaderboard-header">
+        <div>
+          <div class="daily-eyebrow">Top Pilots</div>
+          <h3>🏆 Sleek Leaderboard</h3>
+        </div>
+      </div>
+
+      <div class="leaderboard-controls">
+        <input id="playerNameInput" class="leaderboard-input" type="text" maxlength="18" placeholder="Your name" value="Player" />
+        <button id="saveScoreBtn" class="save-score-btn" type="button">Save Score</button>
+      </div>
+
+      <ul id="leaderboardList" class="leaderboard-list"></ul>
+    </section>
+
+    <div id="planeResultModal" class="result-modal" aria-modal="true" role="dialog">
+      <div class="result-modal-inner">
+        <h3 id="resultTitle">Great job!</h3>
+        <p id="resultMessage">Your answer is correct.</p>
+        <button id="resultCloseBtn" class="result-close-btn" type="button">Continue</button>
+      </div>
+    </div>
+
     <footer>
       <p>© <time id="copyrightYear" datetime="2026">2026</time> Parthiv Learning Hub. Built for curious learners.</p>
     </footer>
@@ -1665,6 +2055,297 @@
         list.appendChild(item);
       });
     }
+
+    const colors = [
+      { name: 'Red', value: '#ef4444' },
+      { name: 'Blue', value: '#3b82f6' },
+      { name: 'Green', value: '#22c55e' },
+      { name: 'Yellow', value: '#facc15' },
+      { name: 'Purple', value: '#a855f7' },
+      { name: 'Orange', value: '#f97316' },
+      { name: 'Pink', value: '#ec4899' },
+      { name: 'Teal', value: '#14b8a6' }
+    ];
+
+    const leaderboardStorageKey = 'learning-hub-leaderboard';
+
+    let score = 0;
+    let timeLeft = 12;
+    let currentTarget = null;
+    let timerId = null;
+    let colorGameActive = true;
+
+    function getDefaultLeaderboard() {
+      return [
+        { name: 'Ava', score: 180 },
+        { name: 'Leo', score: 160 },
+        { name: 'Mia', score: 140 },
+        { name: 'Noah', score: 120 },
+        { name: 'Zoe', score: 100 }
+      ];
+    }
+
+    function renderLeaderboard() {
+      const list = document.getElementById('leaderboardList');
+      if (!list) return;
+
+      const saved = JSON.parse(localStorage.getItem(leaderboardStorageKey) || 'null') || getDefaultLeaderboard();
+      const sorted = [...saved].sort((a, b) => b.score - a.score).slice(0, 5);
+      list.innerHTML = sorted.map((entry, index) => `
+        <li class="leaderboard-item">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="leaderboard-rank">${index + 1}</span>
+            <strong>${entry.name}</strong>
+          </div>
+          <span>${entry.score} pts</span>
+        </li>
+      `).join('');
+    }
+
+    function saveScoreToLeaderboard(name, points) {
+      const cleanName = (name || 'Player').trim().slice(0, 18) || 'Player';
+      const saved = JSON.parse(localStorage.getItem(leaderboardStorageKey) || 'null') || getDefaultLeaderboard();
+      saved.push({ name: cleanName, score: Number(points) || 0 });
+      const sorted = [...saved].sort((a, b) => b.score - a.score).slice(0, 5);
+      localStorage.setItem(leaderboardStorageKey, JSON.stringify(sorted));
+      renderLeaderboard();
+    }
+
+    function updateColorTimerText() {
+      const timer = document.getElementById('colorTimer');
+      if (timer) {
+        timer.textContent = Math.max(0, Number(timeLeft.toFixed(1))).toString();
+      }
+    }
+
+    function pickRandomColor() {
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function buildRound() {
+      const target = pickRandomColor();
+      const options = [...colors].sort(() => Math.random() - 0.5).slice(0, 4);
+      if (!options.some(option => option.name === target.name)) {
+        options[0] = target;
+      }
+
+      currentTarget = target;
+      const targetEl = document.getElementById('colorTarget');
+      if (targetEl) {
+        targetEl.textContent = target.name;
+        targetEl.style.color = target.value;
+        targetEl.style.textShadow = `0 0 18px ${target.value}55`;
+      }
+
+      const optionContainer = document.getElementById('colorOptions');
+      if (!optionContainer) return;
+      optionContainer.innerHTML = '';
+
+      options.forEach((option) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'color-swatch';
+        button.textContent = option.name;
+        button.style.background = option.value;
+        button.setAttribute('aria-label', `Choose ${option.name}`);
+        button.addEventListener('click', () => {
+          if (!currentTarget || !colorGameActive) return;
+          const isCorrect = option.name === currentTarget.name;
+
+          if (isCorrect) {
+            score += 10;
+            timeLeft = Math.max(2.2, timeLeft - 0.9);
+            document.getElementById('colorScore').textContent = score;
+            updateColorTimerText();
+          }
+
+          const allButtons = optionContainer.querySelectorAll('.color-swatch');
+          allButtons.forEach((item) => {
+            item.disabled = true;
+            item.classList.remove('correct', 'wrong');
+            if (item.textContent === currentTarget.name) {
+              item.classList.add('correct');
+            }
+            if (item === button && !isCorrect) {
+              item.classList.add('wrong');
+            }
+          });
+
+          setTimeout(() => {
+            if (colorGameActive) {
+              buildRound();
+            }
+          }, 420);
+        });
+        optionContainer.appendChild(button);
+      });
+    }
+
+    function finishColorGame() {
+      colorGameActive = false;
+      clearInterval(timerId);
+      const targetEl = document.getElementById('colorTarget');
+      if (targetEl) {
+        targetEl.textContent = 'Time Up!';
+        targetEl.style.color = '#f8fbff';
+      }
+      const optionContainer = document.getElementById('colorOptions');
+      if (optionContainer) {
+        optionContainer.innerHTML = `<div class="score-pill" style="grid-column:1/-1; justify-self:center; padding:14px 20px;">Final score: ${score}</div>`;
+      }
+
+      const name = document.getElementById('playerNameInput')?.value.trim() || 'Player';
+      saveScoreToLeaderboard(name, score);
+    }
+
+    function startColorGame() {
+      score = 0;
+      timeLeft = 12;
+      colorGameActive = true;
+      document.getElementById('colorScore').textContent = score;
+      updateColorTimerText();
+      buildRound();
+
+      clearInterval(timerId);
+      timerId = setInterval(() => {
+        if (!colorGameActive) return;
+        timeLeft = Math.max(0, timeLeft - 0.1);
+        updateColorTimerText();
+        if (timeLeft <= 0) {
+          finishColorGame();
+        }
+      }, 100);
+    }
+
+    const planeProfiles = [
+      {
+        id: 'fighter',
+        name: 'Fighter Jet',
+        icon: '🛩️',
+        question: 'Which plane is designed for speed and combat missions?',
+        options: ['Fighter Jet', 'Cargo Plane', 'Hot Air Balloon', 'Helicopter'],
+        answer: 'Fighter Jet',
+        learning: 'Fighter jets are built for very high speed, quick turns, and military missions. They are often used to protect airspace and perform fast air attacks.'
+      },
+      {
+        id: 'cargo',
+        name: 'Cargo Plane',
+        icon: '📦',
+        question: 'What is the main job of a cargo plane?',
+        options: ['Carry goods and supplies', 'Carry only passengers', 'Stand still in a hangar', 'Fly underwater'],
+        answer: 'Carry goods and supplies',
+        learning: 'Cargo planes transport large amounts of goods, food, medicine, and emergency supplies across long distances.'
+      },
+      {
+        id: 'passenger',
+        name: 'Passenger Plane',
+        icon: '🧳',
+        question: 'Why are passenger planes very important to travel?',
+        options: ['They move people between cities and countries', 'They only lift animals', 'They work only on water', 'They never fly high'],
+        answer: 'They move people between cities and countries',
+        learning: 'Passenger planes are built to carry many travelers safely and comfortably over long distances, helping people visit family, study, and work.'
+      },
+      {
+        id: 'helicopter',
+        name: 'Helicopter',
+        icon: '🚁',
+        question: 'What makes a helicopter different from a normal airplane?',
+        options: ['It can hover and lift straight up', 'It has no engines', 'It runs only on roads', 'It cannot fly high'],
+        answer: 'It can hover and lift straight up',
+        learning: 'A helicopter has rotating blades that create lift, so it can hover, land in small spaces, and help with rescue missions.'
+      }
+    ];
+
+    let selectedPlaneId = 'fighter';
+    let planeScore = 0;
+
+    function renderPlaneChoices() {
+      const grid = document.getElementById('planeGrid');
+      if (!grid) return;
+      grid.innerHTML = planeProfiles.map((plane) => `
+        <button class="plane-card ${selectedPlaneId === plane.id ? 'selected' : ''}" type="button" data-plane-id="${plane.id}">
+          <span class="plane-icon">${plane.icon}</span>
+          <strong>${plane.name}</strong>
+        </button>
+      `).join('');
+
+      grid.querySelectorAll('[data-plane-id]').forEach((button) => {
+        button.addEventListener('click', () => {
+          selectedPlaneId = button.dataset.planeId;
+          renderPlaneChoices();
+          showPlaneQuestion();
+        });
+      });
+    }
+
+    function showPlaneQuestion() {
+      const plane = planeProfiles.find(item => item.id === selectedPlaneId) || planeProfiles[0];
+      const questionEl = document.getElementById('planeQuestion');
+      const optionContainer = document.getElementById('planeOptions');
+      const learningEl = document.getElementById('planeLearning');
+
+      if (questionEl) questionEl.textContent = plane.question;
+      if (learningEl) learningEl.innerHTML = `<strong>Learning:</strong> ${plane.learning}`;
+      if (!optionContainer) return;
+
+      const shuffledOptions = [...plane.options].sort(() => Math.random() - 0.5);
+      optionContainer.innerHTML = '';
+
+      shuffledOptions.forEach((option) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'plane-option';
+        button.textContent = option;
+        button.style.background = option === plane.answer ? '#14532d' : 'linear-gradient(135deg, #0f172a, #1e293b)';
+        button.style.borderColor = option === plane.answer ? 'rgba(34,197,94,0.8)' : 'rgba(148,163,184,0.2)';
+
+        button.addEventListener('click', () => {
+          const correct = option === plane.answer;
+          const modal = document.getElementById('planeResultModal');
+          const title = document.getElementById('resultTitle');
+          const message = document.getElementById('resultMessage');
+
+          if (correct) {
+            planeScore += 10;
+            document.getElementById('planeScore').textContent = planeScore;
+            if (title) title.textContent = 'Correct!';
+            if (message) message.textContent = `Nice work! ${plane.name} is the right choice. ${plane.learning}`;
+          } else {
+            if (title) title.textContent = 'Almost!';
+            if (message) message.textContent = `The correct answer is ${plane.answer}. ${plane.learning}`;
+          }
+
+          if (modal) modal.classList.add('show');
+          optionContainer.querySelectorAll('.plane-option').forEach((item) => {
+            item.disabled = true;
+            item.classList.remove('correct', 'wrong');
+            if (item.textContent === plane.answer) item.classList.add('correct');
+            if (item === button && !correct) item.classList.add('wrong');
+          });
+        });
+
+        optionContainer.appendChild(button);
+      });
+    }
+
+    document.getElementById('planeRestartBtn')?.addEventListener('click', () => {
+      showPlaneQuestion();
+    });
+
+    document.getElementById('resultCloseBtn')?.addEventListener('click', () => {
+      document.getElementById('planeResultModal')?.classList.remove('show');
+      showPlaneQuestion();
+    });
+
+    document.getElementById('saveScoreBtn')?.addEventListener('click', () => {
+      const currentScore = Number(document.getElementById('colorScore')?.textContent || 0);
+      const name = document.getElementById('playerNameInput')?.value.trim() || 'Player';
+      saveScoreToLeaderboard(name, currentScore);
+    });
+
+    renderLeaderboard();
+    renderPlaneChoices();
+    showPlaneQuestion();
 
     const cards = document.querySelectorAll('.grid .card');
     let selectedIndex = 0;
@@ -1874,6 +2555,9 @@
     setInterval(updateClock, 1000);
     updateSelection();
     schedulePopupQuiz();
+    startColorGame();
+
+    document.getElementById('colorRestartBtn')?.addEventListener('click', startColorGame);
 
     const copyrightYear = document.getElementById('copyrightYear');
     if (copyrightYear) {
