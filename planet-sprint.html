@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planet Sprint | Parthiv Learning Hub</title>
+  <meta name="description" content="A fast-paced space quiz game that tests planet facts, moon facts, and astronomy knowledge." />
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-2: #101d33;
+      --panel: rgba(11, 19, 34, 0.88);
+      --panel-alt: rgba(19, 31, 53, 0.9);
+      --accent: #7dd3fc;
+      --accent-2: #a78bfa;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --text: #e6f4ff;
+      --muted: #b5c6d9;
+      --shadow: rgba(12, 22, 39, 0.5);
+      --card: rgba(13, 25, 44, 0.9);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(125, 211, 252, 0.2), transparent 30%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    .game-shell {
+      width: min(880px, 100%);
+      background: var(--panel);
+      border: 1px solid rgba(125, 211, 252, 0.2);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 20px;
+      background: rgba(11, 19, 34, 0.8);
+      border-bottom: 1px solid rgba(125, 211, 252, 0.2);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: clamp(1.5rem, 2vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      background: rgba(125, 211, 252, 0.14);
+      color: var(--text);
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .content {
+      padding: 28px 20px 20px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(17, 28, 48, 0.95), rgba(11, 19, 34, 0.95));
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      flex-wrap: wrap;
+    }
+
+    .question {
+      font-size: clamp(1.2rem, 2vw, 1.9rem);
+      font-weight: 700;
+      line-height: 1.35;
+      margin: 18px 0 22px;
+      min-height: 72px;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .answer-btn {
+      background: rgba(125, 211, 252, 0.08);
+      color: var(--text);
+      border: 1px solid rgba(125, 211, 252, 0.25);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      min-height: 62px;
+      text-align: left;
+    }
+
+    .answer-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(125, 211, 252, 0.12);
+      border-color: rgba(125, 211, 252, 0.5);
+    }
+
+    .answer-btn:disabled {
+      cursor: default;
+      opacity: 0.98;
+    }
+
+    .answer-btn.correct {
+      background: rgba(52, 211, 153, 0.15);
+      border-color: rgba(52, 211, 153, 0.9);
+    }
+
+    .answer-btn.wrong {
+      background: rgba(251, 113, 133, 0.12);
+      border-color: rgba(251, 113, 133, 0.9);
+    }
+
+    .message {
+      min-height: 28px;
+      margin-top: 18px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .message.success { color: var(--success); }
+    .message.error { color: var(--danger); }
+    .message.info { color: var(--warning); }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .start-btn,
+    .home-btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #040b16;
+      box-shadow: 0 10px 30px rgba(125, 211, 252, 0.22);
+    }
+
+    .home-btn {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .start-btn:hover,
+    .home-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 640px) {
+      .answers {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 18px 16px;
+      }
+
+      .topbar {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-shell">
+    <div class="topbar">
+      <div class="brand">🚀 Planet Sprint</div>
+      <div class="status-row">
+        <div class="badge" id="score">Score: 0</div>
+        <div class="badge" id="timer">Time: 15s</div>
+        <div class="badge" id="streak">Streak: 0</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="card">
+        <div class="meta">
+          <span id="progress">Question 1/10</span>
+          <span>Space facts challenge</span>
+        </div>
+
+        <div class="question" id="questionText">Press start to begin your mission.</div>
+        <div class="answers" id="answerList"></div>
+        <div class="message info" id="message">Ready for lift-off?</div>
+
+        <div class="controls">
+          <button class="start-btn" id="startBtn" type="button">Start Mission</button>
+          <a class="home-btn" href="home.html">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="planet-sprint.js"></script>
+</body>
+</html>

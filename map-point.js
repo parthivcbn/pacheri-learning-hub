@@ -76,10 +76,16 @@ function showPanel(name) {
 function renderMap() {
   const selectedMap = mapData[currentMap];
   const mapSurface = mapContainerEl;
-  mapSurface.className = `map-surface ${currentMap === 'earth' ? 'earth-map' : 'space-map'}`;
+  const mapClassName = currentMap === 'earth' ? 'earth-map' : 'space-map';
+  mapSurface.className = `map-surface ${mapClassName}`;
+  mapSurface.style.backgroundImage = '';
   mapSurface.innerHTML = '';
 
   if (currentMap === 'earth') {
+    const referenceImageUrl = 'world-map-reference.png';
+    mapSurface.classList.add('reference-map');
+    mapSurface.style.backgroundImage = `url("${referenceImageUrl}")`;
+
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 1000 560');
     svg.setAttribute('class', 'world-svg');

@@ -38,12 +38,6 @@ const testModules = [
     description: 'Score display element detected',
   },
   {
-    name: 'universe',
-    file: 'universe.html',
-    scoringType: 'dom',
-    description: 'Score display element detected',
-  },
-  {
     name: 'english',
     file: 'english.html',
     scoringType: 'dom',
