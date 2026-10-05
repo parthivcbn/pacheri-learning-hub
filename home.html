@@ -1828,9 +1828,15 @@
       popupFeedback.className = 'popup-feedback';
     }
 
+    function getPopupQuizDelayMs() {
+      const randomMinutes = [4, 5, 10][Math.floor(Math.random() * 3)];
+      const extraSeconds = Math.random() * 60;
+      return (randomMinutes * 60 + extraSeconds) * 1000;
+    }
+
     function schedulePopupQuiz() {
       if (pendingPopupTimer) clearTimeout(pendingPopupTimer);
-      const nextDelay = 2500 + Math.random() * 22000;
+      const nextDelay = getPopupQuizDelayMs();
       pendingPopupTimer = setTimeout(() => {
         if (!popupActive) {
           openPopupQuiz();
@@ -1868,7 +1874,6 @@
     setInterval(updateClock, 1000);
     updateSelection();
     schedulePopupQuiz();
-    setTimeout(() => openPopupQuiz(), 1600);
 
     const copyrightYear = document.getElementById('copyrightYear');
     if (copyrightYear) {
