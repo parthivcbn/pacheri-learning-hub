@@ -244,8 +244,8 @@
     .events-calendar.is-dragging { cursor:grabbing; }
     .events-calendar.is-dragging button,
     .events-calendar.is-dragging select { pointer-events:none; }
-    .events-calendar.is-floating {
-      position:fixed;
+    .events-calendar.is-positioned {
+      position:absolute;
       z-index:50;
       width:min(270px, calc(100vw - 24px));
       max-height:calc(100vh - 24px);
@@ -1475,7 +1475,7 @@
       body { padding: 12px 10px; }
       .container { width: min(100%, 100%); }
       header { grid-template-columns:1fr; gap:14px; }
-      .events-calendar:not(.is-floating) { width:min(100%, 320px); justify-self:center; }
+      .events-calendar:not(.is-positioned) { width:min(100%, 320px); justify-self:center; }
       h1{font-size:22px}
       .grid{grid-template-columns:1fr}
       .daily-grid { grid-template-columns: 1fr; }
@@ -2224,8 +2224,10 @@
 
     function clampCalendarPosition(left, top) {
       const rect = eventsCalendar.getBoundingClientRect();
-      const maxLeft = Math.max(8, window.innerWidth - rect.width - 8);
-      const maxTop = Math.max(8, window.innerHeight - Math.min(rect.height, window.innerHeight - 16) - 8);
+      const pageWidth = Math.max(document.documentElement.scrollWidth, document.documentElement.clientWidth);
+      const pageHeight = Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight);
+      const maxLeft = Math.max(8, pageWidth - rect.width - 8);
+      const maxTop = Math.max(8, pageHeight - rect.height - 8);
       return {
         left: Math.min(Math.max(8, left), maxLeft),
         top: Math.min(Math.max(8, top), maxTop)
@@ -2234,7 +2236,7 @@
 
     function setCalendarPosition(left, top, save = true) {
       if (!eventsCalendar) return;
-      eventsCalendar.classList.add('is-floating');
+      eventsCalendar.classList.add('is-positioned');
       const position = clampCalendarPosition(left, top);
       eventsCalendar.style.left = `${position.left}px`;
       eventsCalendar.style.top = `${position.top}px`;
@@ -2254,7 +2256,7 @@
       calendarMoveEnabled = enabled;
       if (enabled) {
         const rect = eventsCalendar.getBoundingClientRect();
-        setCalendarPosition(rect.left, rect.top);
+        setCalendarPosition(rect.left + window.scrollX, rect.top + window.scrollY);
       }
       eventsCalendar.classList.toggle('is-movable', enabled);
       calendarMoveToggle.setAttribute('aria-pressed', String(enabled));
@@ -2275,7 +2277,7 @@
     document.getElementById('calendarResetPosition')?.addEventListener('click', () => {
       if (!eventsCalendar) return;
       setCalendarMoveMode(false);
-      eventsCalendar.classList.remove('is-floating');
+      eventsCalendar.classList.remove('is-positioned');
       eventsCalendar.style.removeProperty('left');
       eventsCalendar.style.removeProperty('top');
       eventsCalendar.style.removeProperty('right');
@@ -2294,8 +2296,8 @@
         pointerId: event.pointerId,
         x: event.clientX,
         y: event.clientY,
-        left: rect.left,
-        top: rect.top,
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY,
         moved: false
       };
     });
@@ -2322,7 +2324,7 @@
       eventsCalendar.classList.remove('is-dragging');
       if (wasMoved) {
         const rect = eventsCalendar.getBoundingClientRect();
-        setCalendarPosition(rect.left, rect.top);
+        setCalendarPosition(rect.left + window.scrollX, rect.top + window.scrollY);
         suppressCalendarClick = true;
         setTimeout(() => { suppressCalendarClick = false; }, 0);
       }
@@ -2347,7 +2349,7 @@
       const offset = offsets[event.key];
       if (!offset) return;
       const rect = eventsCalendar.getBoundingClientRect();
-      setCalendarPosition(rect.left + offset[0], rect.top + offset[1]);
+      setCalendarPosition(rect.left + window.scrollX + offset[0], rect.top + window.scrollY + offset[1]);
       event.preventDefault();
     });
 
