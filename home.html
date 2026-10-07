@@ -238,9 +238,12 @@
 
     .calendar-heading { justify-content:space-between; gap:8px; margin-bottom:10px; }
     .calendar-heading h2 { margin:0; color:var(--calendar-text); font-size:14px; }
-    .calendar-drag-handle { touch-action:none; }
-    .events-calendar.is-movable .calendar-drag-handle { cursor:grab; }
-    .events-calendar.is-dragging .calendar-drag-handle { cursor:grabbing; }
+    .events-calendar.is-movable { cursor:grab; touch-action:none; user-select:none; }
+    .events-calendar.is-movable button,
+    .events-calendar.is-movable select { cursor:pointer; }
+    .events-calendar.is-dragging { cursor:grabbing; }
+    .events-calendar.is-dragging button,
+    .events-calendar.is-dragging select { pointer-events:none; }
     .events-calendar.is-floating {
       position:fixed;
       z-index:50;
@@ -2171,6 +2174,7 @@
     const calendarPositionStorageKey = 'learning-hub-calendar-position';
     let calendarMoveEnabled = false;
     let calendarDragState = null;
+    let suppressCalendarClick = false;
 
     function setCalendarTheme(theme) {
       const availableThemes = ['cosmic', 'aurora', 'sunset', 'light'];
@@ -2283,34 +2287,55 @@
       }
     });
 
-    calendarDragHandle?.addEventListener('pointerdown', event => {
+    eventsCalendar?.addEventListener('pointerdown', event => {
       if (!calendarMoveEnabled || event.button !== 0) return;
       const rect = eventsCalendar.getBoundingClientRect();
-      calendarDragState = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, left: rect.left, top: rect.top };
-      eventsCalendar.classList.add('is-dragging');
-      event.preventDefault();
-      calendarDragHandle.setPointerCapture(event.pointerId);
+      calendarDragState = {
+        pointerId: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        left: rect.left,
+        top: rect.top,
+        moved: false
+      };
     });
 
-    calendarDragHandle?.addEventListener('pointermove', event => {
+    document.addEventListener('pointermove', event => {
       if (!calendarDragState || calendarDragState.pointerId !== event.pointerId) return;
+      const deltaX = event.clientX - calendarDragState.x;
+      const deltaY = event.clientY - calendarDragState.y;
+      if (!calendarDragState.moved && Math.hypot(deltaX, deltaY) < 4) return;
+      calendarDragState.moved = true;
+      eventsCalendar.classList.add('is-dragging');
       setCalendarPosition(
-        calendarDragState.left + event.clientX - calendarDragState.x,
-        calendarDragState.top + event.clientY - calendarDragState.y,
+        calendarDragState.left + deltaX,
+        calendarDragState.top + deltaY,
         false
       );
+      event.preventDefault();
     });
 
     function finishCalendarDrag(event) {
       if (!calendarDragState || calendarDragState.pointerId !== event.pointerId) return;
+      const wasMoved = calendarDragState.moved;
       calendarDragState = null;
       eventsCalendar.classList.remove('is-dragging');
-      const rect = eventsCalendar.getBoundingClientRect();
-      setCalendarPosition(rect.left, rect.top);
+      if (wasMoved) {
+        const rect = eventsCalendar.getBoundingClientRect();
+        setCalendarPosition(rect.left, rect.top);
+        suppressCalendarClick = true;
+        setTimeout(() => { suppressCalendarClick = false; }, 0);
+      }
     }
 
-    calendarDragHandle?.addEventListener('pointerup', finishCalendarDrag);
-    calendarDragHandle?.addEventListener('pointercancel', finishCalendarDrag);
+    document.addEventListener('pointerup', finishCalendarDrag);
+    document.addEventListener('pointercancel', finishCalendarDrag);
+    document.addEventListener('click', event => {
+      if (!suppressCalendarClick) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      suppressCalendarClick = false;
+    }, true);
     calendarDragHandle?.addEventListener('keydown', event => {
       if (!calendarMoveEnabled) return;
       const offsets = {
