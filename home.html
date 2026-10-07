@@ -2772,37 +2772,37 @@
         id: 'fighter',
         name: 'Fighter Jet',
         icon: '🛩️',
-        question: 'Which plane is designed for speed and combat missions?',
-        options: ['Fighter Jet', 'Cargo Plane', 'Hot Air Balloon', 'Helicopter'],
+        question: 'Mission scenario: An air-defense crew must intercept a fast intruder, maneuver rapidly, and carry air-to-air weapons. Which aircraft best fits the mission?',
+        options: ['Fighter Jet', 'Cargo Plane', 'Passenger Plane', 'Helicopter'],
         answer: 'Fighter Jet',
-        learning: 'Fighter jets are built for very high speed, quick turns, and military missions. They are often used to protect airspace and perform fast air attacks.'
+        learning: 'Fighter jets combine high thrust, agility, sensors, and combat systems to intercept or defend against other aircraft. Their design prioritizes tactical performance rather than carrying cargo or many passengers.'
       },
       {
         id: 'cargo',
         name: 'Cargo Plane',
         icon: '📦',
-        question: 'What is the main job of a cargo plane?',
-        options: ['Carry goods and supplies', 'Carry only passengers', 'Stand still in a hangar', 'Fly underwater'],
-        answer: 'Carry goods and supplies',
-        learning: 'Cargo planes transport large amounts of goods, food, medicine, and emergency supplies across long distances.'
+        question: 'Aircraft design: Which combination most directly helps an aircraft load and carry heavy palletized vehicles and supplies?',
+        options: ['Reinforced cargo floor and a wide loading ramp', 'Air-to-air radar and weapons pylons', 'Passenger cabin pressurization and rows of seats', 'A powered rotor with variable-pitch blades'],
+        answer: 'Reinforced cargo floor and a wide loading ramp',
+        learning: 'Cargo aircraft are designed around payload volume and weight. Wide doors or ramps, reinforced floors, and cargo-handling systems help load supplies, vehicles, and other heavy equipment.'
       },
       {
         id: 'passenger',
         name: 'Passenger Plane',
         icon: '🧳',
-        question: 'Why are passenger planes very important to travel?',
-        options: ['They move people between cities and countries', 'They only lift animals', 'They work only on water', 'They never fly high'],
-        answer: 'They move people between cities and countries',
-        learning: 'Passenger planes are built to carry many travelers safely and comfortably over long distances, helping people visit family, study, and work.'
+        question: 'Cabin systems: At high cruising altitude, outside air pressure is too low for people to breathe safely. Which system keeps a passenger cabin at a suitable pressure?',
+        options: ['Cabin pressurization system', 'Cargo-loading ramp', 'Rotor-pitch control system', 'Air-to-air targeting system'],
+        answer: 'Cabin pressurization system',
+        learning: 'Passenger aircraft are designed to carry people safely over scheduled routes. At cruising altitude, cabin pressurization keeps the air inside suitable for breathing while the aircraft travels efficiently over long distances.'
       },
       {
         id: 'helicopter',
         name: 'Helicopter',
         icon: '🚁',
-        question: 'What makes a helicopter different from a normal airplane?',
-        options: ['It can hover and lift straight up', 'It has no engines', 'It runs only on roads', 'It cannot fly high'],
-        answer: 'It can hover and lift straight up',
-        learning: 'A helicopter has rotating blades that create lift, so it can hover, land in small spaces, and help with rescue missions.'
+        question: 'Flight mechanics: What lets a helicopter hover and move vertically without first building airplane-like forward speed?',
+        options: ['Its powered rotor produces lift, with blade pitch controlling that lift', 'Its fixed wings accelerate air only during a runway takeoff', 'Its pressurized cabin pushes the aircraft upward', 'Its cargo ramp redirects air beneath the fuselage'],
+        answer: 'Its powered rotor produces lift, with blade pitch controlling that lift',
+        learning: 'A helicopter uses a powered rotor to produce lift. Changing blade pitch lets the pilot hover, move vertically, and maneuver into confined places where runway-dependent aircraft cannot land.'
       }
     ];
 
@@ -2846,8 +2846,8 @@
         button.type = 'button';
         button.className = 'plane-option';
         button.textContent = option;
-        button.style.background = option === plane.answer ? '#14532d' : 'linear-gradient(135deg, #0f172a, #1e293b)';
-        button.style.borderColor = option === plane.answer ? 'rgba(34,197,94,0.8)' : 'rgba(148,163,184,0.2)';
+        button.style.background = 'linear-gradient(135deg, #0f172a, #1e293b)';
+        button.style.borderColor = 'rgba(148,163,184,0.2)';
 
         button.addEventListener('click', () => {
           const correct = option === plane.answer;
@@ -2869,8 +2869,16 @@
           optionContainer.querySelectorAll('.plane-option').forEach((item) => {
             item.disabled = true;
             item.classList.remove('correct', 'wrong');
-            if (item.textContent === plane.answer) item.classList.add('correct');
-            if (item === button && !correct) item.classList.add('wrong');
+            if (item.textContent === plane.answer) {
+              item.classList.add('correct');
+              item.style.background = '#14532d';
+              item.style.borderColor = 'rgba(34,197,94,0.8)';
+            }
+            if (item === button && !correct) {
+              item.classList.add('wrong');
+              item.style.background = '#7f1d1d';
+              item.style.borderColor = 'rgba(239,68,68,0.8)';
+            }
           });
         });
 
