@@ -202,7 +202,9 @@ const tutorQuestionInput = document.getElementById('tutorQuestionInput');
 const tutorAskBtn = document.getElementById('tutorAskBtn');
 const tutorReply = document.getElementById('tutorReply');
 const tutorGame = document.getElementById('tutorGame');
-const tutorApiUrl = document.querySelector('meta[name="tutor-api-url"]')?.content.trim() || '/tutor';
+const configuredTutorApiUrl = document.querySelector('meta[name="tutor-api-url"]')?.content.trim();
+const localFallbackTutorUrl = ['localhost', '127.0.0.1'].includes(window.location.hostname) ? 'http://127.0.0.1:5000/tutor' : '';
+const tutorApiUrl = configuredTutorApiUrl || localFallbackTutorUrl || '/tutor';
 
   // Diagnostics: log missing elements
     const elems = {
@@ -770,7 +772,8 @@ async function runTutorSession(){
     });
     tutorGame.replaceChildren(game);
   } catch (err) {
-    tutorReply.textContent = err.message || 'Sorry, the tutor could not respond. Please try again.';
+    const defaultTutorError = 'Tutor service unavailable. Start the Flask app in the gemini-assistant folder with python app.py, or set a meta tag named tutor-api-url to your backend URL.';
+    tutorReply.textContent = err.message && !err.message.includes('Failed to fetch') ? err.message : defaultTutorError;
     tutorGame.replaceChildren();
     console.error('Tutor error', err);
   } finally {
