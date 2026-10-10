@@ -202,6 +202,7 @@ const tutorQuestionInput = document.getElementById('tutorQuestionInput');
 const tutorAskBtn = document.getElementById('tutorAskBtn');
 const tutorReply = document.getElementById('tutorReply');
 const tutorGame = document.getElementById('tutorGame');
+const tutorApiUrl = document.querySelector('meta[name="tutor-api-url"]')?.content.trim() || '/tutor';
 
   // Diagnostics: log missing elements
     const elems = {
@@ -704,8 +705,10 @@ if (memoryStartBtn) memoryStartBtn.addEventListener('click', () => {
 });
 if (memoryCloseBtn) memoryCloseBtn.addEventListener('click', closeMiniGame);
 
-function runTutorSession(){
+async function runTutorSession(){
   if (!tutorQuestionInput || !tutorReply || !tutorGame) return;
+  const askBtn = tutorAskBtn;
+  if (askBtn?.disabled) return;
 
   const question = tutorQuestionInput.value.trim();
   if (!question) {
@@ -715,48 +718,65 @@ function runTutorSession(){
     return;
   }
 
-  // UI: show loading and prevent duplicate requests
-  const askBtn = tutorAskBtn;
   if (askBtn) { askBtn.disabled = true; askBtn.textContent = 'Thinking...'; }
-  tutorReply.innerHTML = '<em>Thinking...</em>';
-  tutorGame.innerHTML = '';
+  tutorReply.setAttribute('aria-busy', 'true');
+  tutorReply.textContent = 'Thinking...';
+  tutorGame.replaceChildren();
 
-  // simulate async response to keep UI responsive (TutorLogic is synchronous)
-  setTimeout(() => {
-    try {
-      const reply = TutorLogic.getTutorResponse(question);
-      tutorReply.innerHTML = `<strong>${reply.topic}</strong><br>${reply.explanation}<br><br><em>Example:</em> ${reply.example}`;
+  const subject = subjectSelect?.value || 'general learning';
+  const grade = gradeSelect?.value || '4-7';
+  const context = questionText?.textContent || '';
 
-      tutorGame.innerHTML = '';
-      if (reply.game && reply.game.options && reply.game.options.length) {
-        const game = document.createElement('div');
-        game.innerHTML = `<div class="feedback">${reply.game.prompt}</div>`;
-        reply.game.options.forEach((opt, optIndex) => {
-          const button = document.createElement('button');
-          button.textContent = opt;
-          button.addEventListener('click', () => {
-            const isCorrect = optIndex === reply.game.correctIndex;
-            const fb = game.querySelector('.feedback');
-            if (fb) fb.textContent = isCorrect ? reply.game.feedback : 'Try again — the tutor will help you learn.';
-            game.querySelectorAll('button').forEach((btn) => btn.disabled = true);
-            if (isCorrect) {
-              // small UX: clear input and focus for next question
-              tutorQuestionInput.value = '';
-              tutorQuestionInput.focus();
-            }
-          });
-          game.appendChild(button);
-        });
-        tutorGame.appendChild(game);
-      }
-    } catch (err) {
-      tutorReply.textContent = 'Sorry, the tutor failed to generate a response.';
-      tutorGame.innerHTML = '';
-      console.error('Tutor error', err);
-    } finally {
-      if (askBtn) { askBtn.disabled = false; askBtn.textContent = 'Teach Me'; }
+  try {
+    const response = await fetch(tutorApiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, grade, subject, context })
+    });
+    const reply = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(reply.error || 'Tutor service unavailable. Check the tutor API URL and try again.');
     }
-  }, 200);
+
+    const title = document.createElement('strong');
+    title.textContent = reply.topic;
+    const explanation = document.createElement('p');
+    explanation.textContent = reply.explanation;
+    const example = document.createElement('p');
+    const exampleLabel = document.createElement('em');
+    exampleLabel.textContent = 'Example: ';
+    example.append(exampleLabel, document.createTextNode(reply.example));
+    tutorReply.replaceChildren(title, explanation, example);
+
+    const game = document.createElement('div');
+    const feedback = document.createElement('div');
+    feedback.className = 'feedback';
+    feedback.textContent = reply.game.prompt;
+    game.appendChild(feedback);
+    reply.game.options.forEach((option, optionIndex) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = option;
+      button.addEventListener('click', () => {
+        const isCorrect = optionIndex === reply.game.correctIndex;
+        feedback.textContent = isCorrect ? reply.game.feedback : 'Try again — think about the explanation above.';
+        game.querySelectorAll('button').forEach((choice) => { choice.disabled = true; });
+        if (isCorrect) {
+          tutorQuestionInput.value = '';
+          tutorQuestionInput.focus();
+        }
+      });
+      game.appendChild(button);
+    });
+    tutorGame.replaceChildren(game);
+  } catch (err) {
+    tutorReply.textContent = err.message || 'Sorry, the tutor could not respond. Please try again.';
+    tutorGame.replaceChildren();
+    console.error('Tutor error', err);
+  } finally {
+    tutorReply.setAttribute('aria-busy', 'false');
+    if (askBtn) { askBtn.disabled = false; askBtn.textContent = 'Teach Me'; }
+  }
 }
 
 // Initialize

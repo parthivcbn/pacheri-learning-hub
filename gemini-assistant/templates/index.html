@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <title>AI Assistant</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --text-color: #f8fafc;
+            --muted-color: #a8b5c8;
+            --user-msg: #3b82f6;
+            --ai-msg: #334155;
+            --accent-btn: #10b981;
+            --input-bg: #111c30;
+            --focus-ring: #93c5fd;
+        }
+
+        [data-theme="ocean"] {
+            color-scheme: dark;
+            --bg-color: #0a192f; --card-bg: #112240; --border-color: #233554;
+            --text-color: #e6f1ff; --muted-color: #9db2ce; --user-msg: #007f9e;
+            --ai-msg: #1d3557; --accent-btn: #0077b6; --input-bg: #0b1c34; --focus-ring: #67e8f9;
+        }
+        [data-theme="cyberpunk"] {
+            color-scheme: dark;
+            --bg-color: #120e24; --card-bg: #221544; --border-color: #8f1959;
+            --text-color: #e3fbff; --muted-color: #c7a9df; --user-msg: #a9005d;
+            --ai-msg: #2d1b54; --accent-btn: #b39f00; --input-bg: #180f31; --focus-ring: #00f0ff;
+        }
+        [data-theme="sunset"] {
+            color-scheme: dark;
+            --bg-color: #2b1055; --card-bg: #4c1d95; --border-color: #7c3aed;
+            --text-color: #ffedd5; --muted-color: #e9c7ff; --user-msg: #c2410c;
+            --ai-msg: #5b21b6; --accent-btn: #b91c1c; --input-bg: #35146f; --focus-ring: #fdba74;
+        }
+        [data-theme="emerald"] {
+            color-scheme: dark;
+            --bg-color: #064e3b; --card-bg: #047857; --border-color: #10b981;
+            --text-color: #ecfdf5; --muted-color: #c3f7df; --user-msg: #047857;
+            --ai-msg: #065f46; --accent-btn: #047c54; --input-bg: #075f47; --focus-ring: #a7f3d0;
+        }
+        [data-theme="matrix"] {
+            color-scheme: dark;
+            --bg-color: #000; --card-bg: #0d1f0d; --border-color: #168b39;
+            --text-color: #b6ffc4; --muted-color: #8ee69e; --user-msg: #006b0d;
+            --ai-msg: #003b00; --accent-btn: #008f25; --input-bg: #061206; --focus-ring: #00ff41;
+        }
+        [data-theme="rosegold"] {
+            color-scheme: light;
+            --bg-color: #fdf2f8; --card-bg: #fff8fc; --border-color: #f472b6;
+            --text-color: #5e1235; --muted-color: #7e3155; --user-msg: #b51e6f;
+            --ai-msg: #fbcfe8; --accent-btn: #a9165d; --input-bg: #fff;
+            --focus-ring: #9d174d;
+        }
+        [data-theme="solarized"] {
+            color-scheme: light;
+            --bg-color: #fdf6e3; --card-bg: #fffdf6; --border-color: #93a1a1;
+            --text-color: #073642; --muted-color: #536c70; --user-msg: #176da5;
+            --ai-msg: #eee8d5; --accent-btn: #147e77; --input-bg: #fffdf6;
+            --focus-ring: #268bd2;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 32px 16px;
+            display: grid;
+            place-items: center;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            transition: background-color .25s ease, color .25s ease;
+        }
+        button, input { font: inherit; }
+        .chat-container {
+            width: min(100%, 720px);
+            padding: clamp(18px, 4vw, 30px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--card-bg);
+            box-shadow: 0 24px 70px #0003;
+            transition: background-color .25s ease, border-color .25s ease;
+        }
+        .theme-selector-bar { padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .theme-label { display: block; margin-bottom: 12px; font-size: .9rem; font-weight: 700; }
+        .theme-swatch-container { display: flex; gap: 10px; overflow-x: auto; padding: 3px; }
+        .theme-btn {
+            flex: 0 0 34px;
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 0 1px #0003;
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+        .theme-btn:hover { transform: scale(1.12); }
+        .theme-btn[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--focus-ring); }
+        :focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 3px; }
+        .heading { margin: 22px 0 4px; font-size: 1.6rem; letter-spacing: -.03em; }
+        .subtitle { margin: 0 0 18px; color: var(--muted-color); font-size: .95rem; }
+        .chat-box {
+            height: min(52vh, 430px);
+            min-height: 260px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            background: color-mix(in srgb, var(--bg-color) 62%, transparent);
+            scroll-behavior: smooth;
+        }
+        .msg {
+            max-width: min(88%, 540px);
+            padding: 11px 14px;
+            border-radius: 14px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+        .user { align-self: flex-end; border-bottom-right-radius: 5px; background: var(--user-msg); color: #fff; }
+        .ai { align-self: flex-start; border: 1px solid var(--border-color); border-bottom-left-radius: 5px; background: var(--ai-msg); }
+        .input-group { display: flex; gap: 10px; margin-top: 14px; }
+        #user-input {
+            min-width: 0;
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--input-bg);
+            color: var(--text-color);
+        }
+        #user-input::placeholder { color: var(--muted-color); opacity: .85; }
+        .send-btn {
+            padding: 0 20px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--accent-btn);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter .15s ease, opacity .15s ease;
+        }
+        .send-btn:hover:not(:disabled) { filter: brightness(1.12); }
+        .send-btn:disabled { cursor: wait; opacity: .65; }
+        .hint { margin: 9px 2px 0; color: var(--muted-color); font-size: .78rem; }
+        @media (max-width: 480px) {
+            body { padding: 12px 8px; }
+            .chat-container { border-radius: 15px; }
+            .chat-box { min-height: 300px; height: 50vh; padding: 11px; }
+            .send-btn { padding: 0 14px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <main class="chat-container">
+        <section class="theme-selector-bar" aria-labelledby="theme-label">
+            <span class="theme-label" id="theme-label">Choose a theme</span>
+            <div class="theme-swatch-container" role="group" aria-label="Chat color themes">
+                <button class="theme-btn" type="button" data-theme-choice="" aria-label="Dark Space theme" aria-pressed="true" style="background:linear-gradient(135deg,#0f172a,#3b82f6)" title="Dark Space"></button>
+                <button class="theme-btn" type="button" data-theme-choice="ocean" aria-label="Ocean Wave theme" aria-pressed="false" style="background:linear-gradient(135deg,#0a192f,#00b4d8)" title="Ocean Wave"></button>
+                <button class="theme-btn" type="button" data-theme-choice="cyberpunk" aria-label="Cyberpunk theme" aria-pressed="false" style="background:linear-gradient(135deg,#120e24,#ff007f)" title="Cyberpunk"></button>
+                <button class="theme-btn" type="button" data-theme-choice="sunset" aria-label="Sunset theme" aria-pressed="false" style="background:linear-gradient(135deg,#2b1055,#f97316)" title="Sunset"></button>
+                <button class="theme-btn" type="button" data-theme-choice="emerald" aria-label="Emerald Forest theme" aria-pressed="false" style="background:linear-gradient(135deg,#064e3b,#10b981)" title="Emerald Forest"></button>
+                <button class="theme-btn" type="button" data-theme-choice="matrix" aria-label="Neon Matrix theme" aria-pressed="false" style="background:linear-gradient(135deg,#000,#00ff41)" title="Neon Matrix"></button>
+                <button class="theme-btn" type="button" data-theme-choice="rosegold" aria-label="Rose Gold theme" aria-pressed="false" style="background:linear-gradient(135deg,#fdf2f8,#ec4899)" title="Rose Gold"></button>
+                <button class="theme-btn" type="button" data-theme-choice="solarized" aria-label="Solarized Light theme" aria-pressed="false" style="background:linear-gradient(135deg,#fdf6e3,#268bd2)" title="Solarized Light"></button>
+            </div>
+        </section>
+
+        <h1 class="heading">AI Assistant</h1>
+        <p class="subtitle">Ask a question and explore an idea.</p>
+        <div id="chat-box" class="chat-box" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Conversation">
+            <div class="msg ai">Hi! What would you like help with?</div>
+        </div>
+        <form class="input-group" id="chat-form">
+            <input type="text" id="user-input" name="message" maxlength="4000" placeholder="Ask anything…" aria-label="Your message" autocomplete="off" required>
+            <button class="send-btn" id="send-btn" type="submit">Send</button>
+        </form>
+        <p class="hint">Your messages are sent to the Gemini API to generate replies.</p>
+    </main>
+
+    <script>
+        const themeButtons = document.querySelectorAll("[data-theme-choice]");
+        const chatBox = document.getElementById("chat-box");
+        const input = document.getElementById("user-input");
+        const sendButton = document.getElementById("send-btn");
+
+        function setTheme(themeName) {
+            if (themeName) document.documentElement.dataset.theme = themeName;
+            else delete document.documentElement.dataset.theme;
+            themeButtons.forEach((button) => {
+                button.setAttribute("aria-pressed", String(button.dataset.themeChoice === themeName));
+            });
+            try { localStorage.setItem("assistant-theme", themeName); } catch (_) { /* Storage may be unavailable. */ }
+        }
+
+        function addMessage(text, kind) {
+            const message = document.createElement("div");
+            message.className = `msg ${kind}`;
+            message.textContent = text;
+            chatBox.append(message);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return message;
+        }
+
+        themeButtons.forEach((button) => {
+            button.addEventListener("click", () => setTheme(button.dataset.themeChoice));
+        });
+
+        try {
+            const savedTheme = localStorage.getItem("assistant-theme");
+            if ([...themeButtons].some((button) => button.dataset.themeChoice === savedTheme)) setTheme(savedTheme);
+        } catch (_) { /* Keep the default theme when Storage is unavailable. */ }
+
+        document.getElementById("chat-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const message = input.value.trim();
+            if (!message || sendButton.disabled) return;
+
+            addMessage(message, "user");
+            input.value = "";
+            sendButton.disabled = true;
+            sendButton.textContent = "Thinking…";
+            const pendingMessage = addMessage("Thinking…", "ai");
+
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "The request failed.");
+                pendingMessage.textContent = data.response;
+            } catch (error) {
+                pendingMessage.textContent = error.message || "Unable to connect. Please try again.";
+            } finally {
+                sendButton.disabled = false;
+                sendButton.textContent = "Send";
+                input.focus();
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
