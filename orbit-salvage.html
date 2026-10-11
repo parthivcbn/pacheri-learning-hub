@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111e">
+  <title>Orbit Salvage | Learning Hub</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --sky: #07111e;
+      --panel: rgba(9, 22, 37, .92);
+      --line: rgba(97, 213, 226, .3);
+      --ink: #effbff;
+      --soft: #9bb9c6;
+      --glow: #63e6da;
+      --glow2: #82aaff;
+      --warning: #ffca75;
+      --danger: #ff7187;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      color: var(--ink);
+      background: radial-gradient(ellipse at 50% -20%, #183344 0, #0a1725 45%, #050a12 100%);
+    }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    .shell { width: min(1120px, 100%); margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin: 0 0 18px; }
+    .back-link { color: var(--soft); text-decoration: none; font-weight: 650; }
+    .back-link:hover { color: var(--glow); }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 14px; color: var(--glow); background: rgba(99,230,218,.08); font-size: 21px; }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin-bottom: 3px; font-size: clamp(1.1rem, 3vw, 1.55rem); letter-spacing: .08em; }
+    .tagline { margin: 0; color: var(--soft); font-size: .9rem; }
+    .settings { display: flex; align-items: center; gap: 10px; }
+    .settings label { color: var(--soft); font-size: .88rem; }
+    select, input[type="text"] { min-height: 42px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); background: #0a1927; }
+    :focus-visible { outline: 3px solid var(--warning); outline-offset: 3px; }
+    .game-frame { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: 0 25px 90px #0008, 0 0 40px color-mix(in srgb, var(--glow) 12%, transparent); }
+    .hud { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 14px; border-bottom: 1px solid var(--line); background: rgba(4, 11, 20, .7); }
+    .meter { min-width: 0; padding: 8px 12px; border: 1px solid rgba(255,255,255,.07); border-radius: 12px; background: rgba(255,255,255,.025); }
+    .meter-label { display: block; color: var(--soft); font-size: .68rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .meter strong { display: block; overflow: hidden; margin-top: 2px; color: var(--glow); font-size: 1.2rem; text-overflow: ellipsis; white-space: nowrap; }
+    .canvas-wrap { position: relative; background: var(--sky); }
+    canvas { display: block; width: 100%; height: auto; aspect-ratio: 12 / 7; touch-action: none; }
+    .overlay { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: 22px; background: rgba(3, 9, 16, .73); backdrop-filter: blur(5px); }
+    .overlay[hidden] { display: none; }
+    .dialog { width: min(490px, 100%); padding: clamp(20px, 5vw, 36px); border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: 0 20px 70px #0009; text-align: center; }
+    .eyebrow { margin-bottom: 10px; color: var(--glow); font-size: .72rem; font-weight: 850; letter-spacing: .2em; text-transform: uppercase; }
+    .dialog h2 { margin-bottom: 10px; font-size: clamp(1.55rem, 4vw, 2.15rem); }
+    .dialog p { color: var(--soft); line-height: 1.5; }
+    .name-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0; text-align: left; }
+    .name-fields label { display: grid; gap: 6px; color: var(--soft); font-size: .83rem; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 16px; }
+    .button { min-height: 44px; padding: 10px 17px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.06); font-weight: 750; cursor: pointer; transition: transform .15s ease, border-color .15s ease, background .15s ease; }
+    .button:hover { transform: translateY(-1px); border-color: var(--glow); }
+    .button.primary { border-color: transparent; color: #04151a; background: linear-gradient(120deg, var(--glow), var(--glow2)); }
+    .button:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .below { display: grid; grid-template-columns: 1.2fr .8fr; gap: 14px; padding: 14px; }
+    .info-card { padding: 15px 17px; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; background: rgba(255,255,255,.025); }
+    .info-card h2 { margin: 0 0 9px; color: var(--glow); font-size: .86rem; letter-spacing: .1em; text-transform: uppercase; }
+    .info-card p { margin: 0; color: var(--soft); font-size: .92rem; line-height: 1.55; }
+    .leaderboard { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+    .leaderboard li { display: flex; justify-content: space-between; gap: 12px; color: var(--soft); font-size: .9rem; }
+    .leaderboard b { color: var(--ink); }
+    .touch-controls { display: none; justify-content: space-between; align-items: center; gap: 16px; padding: 0 16px 16px; }
+    .touch-group { display: flex; gap: 8px; }
+    .touch-button { width: 52px; height: 48px; border: 1px solid var(--line); border-radius: 12px; color: var(--glow); background: rgba(255,255,255,.06); font-weight: 900; touch-action: none; }
+    .touch-button.active { background: color-mix(in srgb, var(--glow) 26%, transparent); }
+    .footer-note { margin: 14px 4px 0; color: var(--soft); font-size: .82rem; text-align: center; }
+    body[data-palette="reef"] { --sky:#071a1c; --panel:rgba(7,29,31,.94); --line:rgba(89,226,180,.32); --glow:#59e2b4; --glow2:#3ca4c8; }
+    body[data-palette="dusk"] { --sky:#1a1021; --panel:rgba(31,17,37,.94); --line:rgba(245,163,129,.32); --glow:#ffbd87; --glow2:#ee7ba8; }
+    body[data-palette="ice"] { --sky:#081729; --panel:rgba(8,23,41,.94); --line:rgba(147,197,253,.34); --glow:#93e7ff; --glow2:#9eafff; }
+    @media (max-width: 680px) {
+      body { padding: 12px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .settings { width: 100%; justify-content: space-between; }
+      .settings select { flex: 1; }
+      .hud { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 9px; gap: 7px; }
+      .meter { padding: 7px 10px; }
+      .below { grid-template-columns: 1fr; }
+      .touch-controls { display: flex; }
+      .name-fields { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="back-link" href="home.html">← Learning Hub</a>
+      <div class="brand"><div class="brand-mark" aria-hidden="true">✦</div><div><h1>ORBIT SALVAGE</h1><p class="tagline">A quiet sector. A risky retrieval. Bring the light home.</p></div></div>
+      <div class="settings"><label for="paletteSelect">Display palette</label><select id="paletteSelect" aria-label="Display palette"><option value="deep">Deep Space</option><option value="reef">Reef Signal</option><option value="dusk">Copper Dusk</option><option value="ice">Glacier</option></select></div>
+    </header>
+
+    <section class="game-frame" aria-label="Orbit Salvage game">
+      <div class="hud" aria-live="polite">
+        <div class="meter"><span class="meter-label">Pilot</span><strong id="pilotHud">Ready</strong></div>
+        <div class="meter"><span class="meter-label">Recovered</span><strong id="scoreHud">0</strong></div>
+        <div class="meter"><span class="meter-label">Hull integrity</span><strong id="hullHud">100%</strong></div>
+        <div class="meter"><span class="meter-label">Time remaining</span><strong id="timeHud">60</strong></div>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="field" width="960" height="560" aria-label="Orbital salvage playfield"></canvas>
+        <div class="overlay" id="startOverlay">
+          <section class="dialog" aria-labelledby="dialogTitle">
+            <p class="eyebrow">Local arcade • 60-second run</p>
+            <h2 id="dialogTitle">Recover the drifting cores</h2>
+            <p>Steer your drone through the debris belt. Get close to a core or hold the salvage beam to pull it in from farther away. Avoid debris and the planet's gravity well.</p>
+            <div class="name-fields">
+              <label>Pilot one<input id="pilotOneName" type="text" maxlength="16" value="Pilot 1" autocomplete="off"></label>
+              <label id="pilotTwoLabel">Pilot two<input id="pilotTwoName" type="text" maxlength="16" value="Pilot 2" autocomplete="off"></label>
+            </div>
+            <div class="actions"><button class="button primary" id="soloStart" type="button">Solo flight</button><button class="button" id="duoStart" type="button">Pass-and-play</button></div>
+            <p class="footer-note">Keyboard: WASD / arrows to steer · hold Space to salvage · P to pause</p>
+          </section>
+        </div>
+        <div class="overlay" id="pauseOverlay" hidden>
+          <section class="dialog"><p class="eyebrow">Flight suspended</p><h2>Paused</h2><p>Take a breath; the field will wait.</p><div class="actions"><button class="button primary" id="resumeButton" type="button">Resume flight</button><button class="button" id="quitButton" type="button">End run</button></div></section>
+        </div>
+        <div class="overlay" id="handoffOverlay" hidden>
+          <section class="dialog"><p class="eyebrow">Pilot change</p><h2 id="handoffTitle">Pass the controls</h2><p id="handoffCopy">The next pilot is ready to launch.</p><div class="actions"><button class="button primary" id="nextPilotButton" type="button">Start next flight</button></div></section>
+        </div>
+        <div class="overlay" id="resultOverlay" hidden>
+          <section class="dialog"><p class="eyebrow">Flight report</p><h2 id="resultTitle">Run complete</h2><p id="resultCopy"></p><div class="actions"><button class="button primary" id="playAgainButton" type="button">Fly again</button><a class="button back-link" href="home.html">Learning Hub</a></div></section>
+        </div>
+      </div>
+      <div class="touch-controls" aria-label="Touch flight controls">
+        <div class="touch-group"><button class="touch-button" data-key="ArrowLeft" aria-label="Steer left">←</button><button class="touch-button" data-key="ArrowUp" aria-label="Steer up">↑</button><button class="touch-button" data-key="ArrowDown" aria-label="Steer down">↓</button><button class="touch-button" data-key="ArrowRight" aria-label="Steer right">→</button></div>
+        <button class="touch-button" data-key="Space" aria-label="Activate salvage beam">◉</button>
+      </div>
+      <div class="below">
+        <section class="info-card"><h2>Flight manual</h2><p>Use brief steering bursts to orbit around the central planet. The salvage beam reaches farther than direct contact, but the drone's momentum carries through after you release the controls. Each recovered core repairs a little hull.</p></section>
+        <section class="info-card"><h2>Local high scores</h2><ol class="leaderboard" id="leaderboard" aria-live="polite"></ol></section>
+      </div>
+    </section>
+    <p class="footer-note">Scores and palette stay on this device. Pass-and-play shares one screen; it does not connect players online.</p>
+  </main>
+  <script>
+    (() => {
+      'use strict';
+      const canvas = document.getElementById('field');
+      const ctx = canvas.getContext('2d');
+      const ui = Object.fromEntries(['pilotHud', 'scoreHud', 'hullHud', 'timeHud', 'startOverlay', 'pauseOverlay', 'handoffOverlay', 'resultOverlay', 'resultTitle', 'resultCopy', 'handoffTitle', 'handoffCopy', 'leaderboard', 'paletteSelect', 'pilotOneName', 'pilotTwoName'].map(id => [id, document.getElementById(id)]));
+      const W = canvas.width, H = canvas.height, CENTER = { x: W / 2, y: H / 2 };
+      const STORE_SCORES = 'orbit-salvage-scores-v1';
+      const STORE_PALETTE = 'orbit-salvage-palette-v1';
+      const palettes = {
+        deep: { background: '#06121d', glow: '#63e6da', secondary: '#82aaff', hazard: '#ff7187', core: '#ffca75' },
+        reef: { background: '#071a1c', glow: '#59e2b4', secondary: '#3ca4c8', hazard: '#ff8073', core: '#ffe08a' },
+        dusk: { background: '#1a1021', glow: '#ffbd87', secondary: '#ee7ba8', hazard: '#ff5c7a', core: '#f6dc85' },
+        ice: { background: '#081729', glow: '#93e7ff', secondary: '#9eafff', hazard: '#ff789f', core: '#fff1a8' }
+      };
+      let palette = palettes.deep;
+      let audio;
+      let mode = 'solo';
+      let pilots = ['Pilot 1', 'Pilot 2'];
+      let pilotIndex = 0;
+      let scores = [0, 0];
+      let score = 0, hull = 100, remaining = 60, running = false, paused = false;
+      let previousTime = 0, spawnClock = 0, debrisClock = 0, damageCooldown = 0, tractorClock = 0, frameId = 0;
+      let ship, cores = [], debris = [], sparks = [];
+      const held = new Set();
+      const stars = Array.from({ length: 115 }, () => ({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.5 + .25, a: Math.random() * .65 + .18, phase: Math.random() * 6 }));
+
+      function safeLoadScores() {
+        try {
+          const value = JSON.parse(localStorage.getItem(STORE_SCORES) || '[]');
+          return Array.isArray(value) ? value.filter(item => item && typeof item.name === 'string' && Number.isFinite(item.score)).slice(0, 30) : [];
+        } catch { return []; }
+      }
+      function drawLeaderboard() {
+        const rows = safeLoadScores().sort((a, b) => b.score - a.score).slice(0, 5);
+        ui.leaderboard.replaceChildren();
+        if (!rows.length) {
+          const empty = document.createElement('li'); empty.textContent = 'No flights logged yet'; ui.leaderboard.append(empty); return;
+        }
+        rows.forEach((entry, index) => {
+          const row = document.createElement('li');
+          const name = document.createElement('b'); name.textContent = `${index + 1}. ${entry.name}`;
+          const points = document.createElement('span'); points.textContent = `${entry.score} pts`;
+          row.append(name, points); ui.leaderboard.append(row);
+        });
+      }
+      function recordScore(name, value) {
+        const list = safeLoadScores();
+        list.push({ name: String(name).trim().slice(0, 16) || 'Pilot', score: Math.max(0, Math.floor(value)), date: new Date().toISOString() });
+        try { localStorage.setItem(STORE_SCORES, JSON.stringify(list.sort((a, b) => b.score - a.score).slice(0, 20))); } catch { /* Play remains available when storage is blocked. */ }
+        drawLeaderboard();
+      }
+      function choosePalette(name, save = true) {
+        palette = palettes[name] ? palettes[name] : palettes.deep;
+        document.body.dataset.palette = name in palettes && name !== 'deep' ? name : 'deep';
+        ui.paletteSelect.value = name in palettes ? name : 'deep';
+        if (save) { try { localStorage.setItem(STORE_PALETTE, ui.paletteSelect.value); } catch { /* Theme still applies for this visit. */ } }
+      }
+      try { choosePalette(localStorage.getItem(STORE_PALETTE) || 'deep', false); } catch { choosePalette('deep', false); }
+      ui.paletteSelect.addEventListener('change', () => choosePalette(ui.paletteSelect.value));
+
+      function sound(kind) {
+        try {
+          audio ||= new (window.AudioContext || window.webkitAudioContext)();
+          if (audio.state === 'suspended') audio.resume();
+          const osc = audio.createOscillator(), gain = audio.createGain();
+          const now = audio.currentTime;
+          osc.connect(gain); gain.connect(audio.destination);
+          if (kind === 'pickup') { osc.type = 'sine'; osc.frequency.setValueAtTime(420, now); osc.frequency.exponentialRampToValueAtTime(900, now + .12); }
+          else { osc.type = 'triangle'; osc.frequency.setValueAtTime(180, now); osc.frequency.exponentialRampToValueAtTime(65, now + .22); }
+          gain.gain.setValueAtTime(.055, now); gain.gain.exponentialRampToValueAtTime(.001, now + (kind === 'pickup' ? .14 : .24));
+          osc.start(now); osc.stop(now + (kind === 'pickup' ? .15 : .25));
+        } catch { /* Audio is an optional enhancement. */ }
+      }
+      function newShip() { return { x: 770, y: 280, vx: 0, vy: -28, angle: -Math.PI / 2, invulnerable: 0 }; }
+      function makeCore() {
+        const angle = Math.random() * Math.PI * 2, radius = 205 + Math.random() * 90;
+        const x = CENTER.x + Math.cos(angle) * radius, y = CENTER.y + Math.sin(angle) * radius;
+        const tangent = Math.sqrt(110000 / radius) * (.65 + Math.random() * .5);
+        cores.push({ x, y, vx: -Math.sin(angle) * tangent, vy: Math.cos(angle) * tangent, value: Math.random() < .15 ? 30 : 10, phase: Math.random() * 6 });
+      }
+      function makeDebris() {
+        const angle = Math.random() * Math.PI * 2, radius = 155 + Math.random() * 170;
+        const x = CENTER.x + Math.cos(angle) * radius, y = CENTER.y + Math.sin(angle) * radius;
+        const tangent = Math.sqrt(82000 / radius) * (.65 + Math.random() * .7);
+        debris.push({ x, y, vx: -Math.sin(angle) * tangent + (Math.random() - .5) * 14, vy: Math.cos(angle) * tangent + (Math.random() - .5) * 14, r: 7 + Math.random() * 11, spin: (Math.random() - .5) * 2, angle: Math.random() * 6 });
+      }
+      function burst(x, y, color, count = 12) {
+        for (let i = 0; i < count; i++) {
+          const a = Math.random() * Math.PI * 2, speed = 25 + Math.random() * 145;
+          sparks.push({ x, y, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed, life: .35 + Math.random() * .55, max: .9, size: 1 + Math.random() * 3, color });
+        }
+      }
+      function startRound(which = 0) {
+        pilotIndex = which; score = 0; hull = 100; remaining = 60; running = true; paused = false;
+        previousTime = performance.now(); spawnClock = 0; debrisClock = 0; damageCooldown = 0; tractorClock = 0;
+        ship = newShip(); cores = []; debris = []; sparks = []; held.clear();
+        for (let i = 0; i < 7; i++) makeCore();
+        for (let i = 0; i < 9; i++) makeDebris();
+        ui.startOverlay.hidden = true; ui.pauseOverlay.hidden = true; ui.handoffOverlay.hidden = true; ui.resultOverlay.hidden = true;
+        syncHud(); cancelAnimationFrame(frameId); frameId = requestAnimationFrame(loop);
+      }
+      function beginGame(selectedMode) {
+        mode = selectedMode;
+        pilots = [ui.pilotOneName.value.trim().slice(0, 16) || 'Pilot 1', ui.pilotTwoName.value.trim().slice(0, 16) || 'Pilot 2'];
+        scores = [0, 0];
+        startRound(0);
+      }
+      function syncHud() {
+        document.getElementById('pilotHud').textContent = pilots[pilotIndex] || 'Pilot';
+        document.getElementById('scoreHud').textContent = String(score);
+        document.getElementById('hullHud').textContent = `${Math.max(0, Math.round(hull))}%`;
+        document.getElementById('timeHud').textContent = String(Math.ceil(remaining));
+      }
+      function endRound() {
+        running = false; held.clear(); scores[pilotIndex] = score;
+        recordScore(pilots[pilotIndex], score);
+        if (mode === 'duo' && pilotIndex === 0) {
+          ui.handoffTitle.textContent = `${pilots[1]} is up next`;
+          ui.handoffCopy.textContent = `${pilots[0]} recovered ${score} points. Pass the controls, then launch the second flight.`;
+          ui.handoffOverlay.hidden = false;
+          return;
+        }
+        ui.resultTitle.textContent = mode === 'duo' ? (scores[0] === scores[1] ? 'A perfectly even flight' : `${pilots[scores[0] > scores[1] ? 0 : 1]} takes the lead`) : 'Flight report';
+        ui.resultCopy.textContent = mode === 'duo' ? `${pilots[0]}: ${scores[0]} points. ${pilots[1]}: ${scores[1]} points.` : `${pilots[0]} recovered ${score} salvage points with ${Math.max(0, Math.round(hull))}% hull remaining.`;
+        ui.resultOverlay.hidden = false;
+      }
+      function pauseGame() {
+        if (!running) return;
+        running = false; paused = true; held.clear(); ui.pauseOverlay.hidden = false;
+      }
+      function resumeGame() {
+        if (!paused) return;
+        paused = false; running = true; previousTime = performance.now(); ui.pauseOverlay.hidden = true; frameId = requestAnimationFrame(loop);
+      }
+      function wrap(object) {
+        if (object.x < -18) object.x = W + 18;
+        if (object.x > W + 18) object.x = -18;
+        if (object.y < -18) object.y = H + 18;
+        if (object.y > H + 18) object.y = -18;
+      }
+      function step(dt) {
+        remaining = Math.max(0, remaining - dt);
+        spawnClock += dt; debrisClock += dt; damageCooldown = Math.max(0, damageCooldown - dt); tractorClock += dt;
+        if (spawnClock > 1.7 && cores.length < 11) { spawnClock = 0; makeCore(); }
+        if (debrisClock > 2.5 && debris.length < 14) { debrisClock = 0; makeDebris(); }
+        const left = held.has('ArrowLeft') || held.has('KeyA'), right = held.has('ArrowRight') || held.has('KeyD');
+        const up = held.has('ArrowUp') || held.has('KeyW'), down = held.has('ArrowDown') || held.has('KeyS');
+        let ax = (right ? 1 : 0) - (left ? 1 : 0), ay = (down ? 1 : 0) - (up ? 1 : 0);
+        const mag = Math.hypot(ax, ay) || 1; ax /= mag; ay /= mag;
+        ship.vx += ax * 190 * dt; ship.vy += ay * 190 * dt;
+        const dx = CENTER.x - ship.x, dy = CENTER.y - ship.y, radius2 = Math.max(9500, dx * dx + dy * dy), gravity = 400000 / (radius2 * Math.sqrt(radius2));
+        ship.vx += dx * gravity * dt; ship.vy += dy * gravity * dt;
+        const drag = Math.pow(.988, dt * 60); ship.vx *= drag; ship.vy *= drag;
+        const speed = Math.hypot(ship.vx, ship.vy);
+        if (speed > 270) { ship.vx = ship.vx / speed * 270; ship.vy = ship.vy / speed * 270; }
+        ship.x += ship.vx * dt; ship.y += ship.vy * dt; wrap(ship);
+        if (speed > 2) ship.angle = Math.atan2(ship.vy, ship.vx);
+        ship.invulnerable = Math.max(0, ship.invulnerable - dt);
+        if (Math.hypot(ship.x - CENTER.x, ship.y - CENTER.y) < 92) {
+          hull = Math.max(0, hull - 28 * dt);
+          if (damageCooldown <= 0) { sound('hit'); burst(ship.x, ship.y, palette.hazard, 8); damageCooldown = .8; }
+        }
+        const tractor = held.has('Space'), range = tractor ? 98 : 23;
+        if (tractor && tractorClock > .1) { tractorClock = 0; }
+        cores.forEach(core => {
+          core.x += core.vx * dt; core.y += core.vy * dt; core.phase += dt * 3;
+          const ox = CENTER.x - core.x, oy = CENTER.y - core.y, r2 = Math.max(10000, ox * ox + oy * oy), pull = 110000 / (r2 * Math.sqrt(r2));
+          core.vx += ox * pull * dt; core.vy += oy * pull * dt;
+          if (tractor) {
+            const sx = ship.x - core.x, sy = ship.y - core.y, dist = Math.hypot(sx, sy);
+            if (dist < 145 && dist > 1) { core.vx += sx / dist * 185 * dt; core.vy += sy / dist * 185 * dt; }
+          }
+          core.vx *= Math.pow(.998, dt * 60); core.vy *= Math.pow(.998, dt * 60); wrap(core);
+        });
+        for (let i = cores.length - 1; i >= 0; i--) {
+          const core = cores[i];
+          if (Math.hypot(ship.x - core.x, ship.y - core.y) < range) {
+            score += core.value; hull = Math.min(100, hull + 5); burst(core.x, core.y, palette.core, 14); cores.splice(i, 1); sound('pickup');
+          }
+        }
+        for (let i = debris.length - 1; i >= 0; i--) {
+          const rock = debris[i]; rock.x += rock.vx * dt; rock.y += rock.vy * dt; rock.angle += rock.spin * dt;
+          const ox = CENTER.x - rock.x, oy = CENTER.y - rock.y, r2 = Math.max(9000, ox * ox + oy * oy), pull = 82000 / (r2 * Math.sqrt(r2));
+          rock.vx += ox * pull * dt; rock.vy += oy * pull * dt; rock.vx *= Math.pow(.999, dt * 60); rock.vy *= Math.pow(.999, dt * 60); wrap(rock);
+          if (ship.invulnerable <= 0 && damageCooldown <= 0 && Math.hypot(ship.x - rock.x, ship.y - rock.y) < rock.r + 9) {
+            hull = Math.max(0, hull - 23); damageCooldown = .9; ship.invulnerable = .8; burst(rock.x, rock.y, palette.hazard, 16); sound('hit');
+          }
+        }
+        sparks = sparks.filter(p => (p.life -= dt) > 0);
+        sparks.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= .98; p.vy *= .98; });
+        syncHud();
+        if (remaining <= 0 || hull <= 0) endRound();
+      }
+      function draw() {
+        ctx.fillStyle = palette.background; ctx.fillRect(0, 0, W, H);
+        const nebula = ctx.createRadialGradient(CENTER.x, CENTER.y, 40, CENTER.x, CENTER.y, 450);
+        nebula.addColorStop(0, 'rgba(56,95,130,.14)'); nebula.addColorStop(1, 'rgba(2,8,16,0)'); ctx.fillStyle = nebula; ctx.fillRect(0, 0, W, H);
+        const now = performance.now() / 1000;
+        stars.forEach(star => { ctx.globalAlpha = star.a * (.7 + .3 * Math.sin(now + star.phase)); ctx.fillStyle = '#d9f5ff'; ctx.beginPath(); ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2); ctx.fill(); }); ctx.globalAlpha = 1;
+        ctx.strokeStyle = 'rgba(255,255,255,.045)'; ctx.lineWidth = 1;
+        for (let r = 125; r < 500; r += 72) { ctx.beginPath(); ctx.arc(CENTER.x, CENTER.y, r, 0, Math.PI * 2); ctx.stroke(); }
+        const planet = ctx.createRadialGradient(CENTER.x - 30, CENTER.y - 38, 8, CENTER.x, CENTER.y, 94);
+        planet.addColorStop(0, '#54788b'); planet.addColorStop(.55, '#1d4057'); planet.addColorStop(1, '#0a1e2d');
+        ctx.fillStyle = planet; ctx.shadowBlur = 30; ctx.shadowColor = palette.secondary; ctx.beginPath(); ctx.arc(CENTER.x, CENTER.y, 84, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+        ctx.strokeStyle = 'rgba(174,222,241,.2)'; ctx.beginPath(); ctx.ellipse(CENTER.x, CENTER.y, 88, 30, -.3, .2, 5.8); ctx.stroke();
+        ctx.fillStyle = 'rgba(218,241,250,.7)'; ctx.font = '700 11px system-ui'; ctx.textAlign = 'center'; ctx.fillText('KEPLER-9', CENTER.x, CENTER.y + 5);
+        debris.forEach(rock => { ctx.save(); ctx.translate(rock.x, rock.y); ctx.rotate(rock.angle); ctx.fillStyle = '#778593'; ctx.strokeStyle = '#a6b3bc'; ctx.lineWidth = 1.5; ctx.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, r = rock.r * (i % 2 ? .78 : 1); const x = Math.cos(a) * r, y = Math.sin(a) * r; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); });
+        cores.forEach(core => { const pulse = 1 + Math.sin(core.phase) * .16; ctx.save(); ctx.shadowBlur = 18; ctx.shadowColor = palette.core; ctx.fillStyle = palette.core; ctx.beginPath(); ctx.arc(core.x, core.y, (core.value > 10 ? 8 : 6) * pulse, 0, Math.PI * 2); ctx.fill(); ctx.restore(); });
+        if (held.has('Space') && ship) { ctx.save(); ctx.strokeStyle = `${palette.glow}66`; ctx.setLineDash([6, 8]); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(ship.x, ship.y, 98, 0, Math.PI * 2); ctx.stroke(); ctx.restore(); }
+        if (ship) {
+          if (ship.invulnerable <= 0 || Math.floor(now * 12) % 2 === 0) {
+            ctx.save(); ctx.translate(ship.x, ship.y); ctx.rotate(ship.angle);
+            ctx.shadowBlur = 17; ctx.shadowColor = palette.glow; ctx.fillStyle = palette.glow;
+            ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(-10, -9); ctx.lineTo(-6, 0); ctx.lineTo(-10, 9); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = '#f6fdff'; ctx.beginPath(); ctx.arc(0, 0, 3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+          }
+        }
+        sparks.forEach(p => { ctx.globalAlpha = Math.max(0, p.life / p.max); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); }); ctx.globalAlpha = 1;
+        ctx.textAlign = 'left';
+      }
+      function loop(timestamp) {
+        if (!running) return;
+        const dt = Math.min(.032, Math.max(0, (timestamp - previousTime) / 1000)); previousTime = timestamp;
+        step(dt); draw();
+        if (running) frameId = requestAnimationFrame(loop); else draw();
+      }
+      function setKey(code, down) {
+        if (code === 'KeyP' && down && !held.has(code)) { held.add(code); running ? pauseGame() : resumeGame(); return; }
+        if (code === 'KeyP' && !down) { held.delete(code); return; }
+        if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyA','KeyD','KeyW','KeyS','Space'].includes(code)) {
+          if (down) held.add(code); else held.delete(code);
+        }
+      }
+      window.addEventListener('keydown', event => {
+        if (event.target instanceof HTMLElement && event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
+        if (event.code === 'KeyP' && event.repeat) return;
+        if (['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Space'].includes(event.code)) event.preventDefault();
+        setKey(event.code, true);
+      });
+      window.addEventListener('keyup', event => setKey(event.code, false));
+      window.addEventListener('blur', () => held.clear());
+      document.querySelectorAll('.touch-button').forEach(button => {
+        const code = button.dataset.key;
+        button.addEventListener('pointerdown', event => { event.preventDefault(); button.setPointerCapture(event.pointerId); button.classList.add('active'); setKey(code, true); });
+        const release = () => { button.classList.remove('active'); setKey(code, false); };
+        button.addEventListener('pointerup', release); button.addEventListener('pointercancel', release); button.addEventListener('lostpointercapture', release);
+      });
+      document.getElementById('soloStart').addEventListener('click', () => beginGame('solo'));
+      document.getElementById('duoStart').addEventListener('click', () => beginGame('duo'));
+      document.getElementById('resumeButton').addEventListener('click', resumeGame);
+      document.getElementById('quitButton').addEventListener('click', () => { running = false; paused = false; ui.pauseOverlay.hidden = true; ui.startOverlay.hidden = false; draw(); });
+      document.getElementById('nextPilotButton').addEventListener('click', () => startRound(1));
+      document.getElementById('playAgainButton').addEventListener('click', () => { ui.resultOverlay.hidden = true; ui.startOverlay.hidden = false; });
+      drawLeaderboard();
+      ship = newShip(); for (let i = 0; i < 7; i++) makeCore(); for (let i = 0; i < 9; i++) makeDebris(); draw();
+    })();
+  </script>
+</body>
+</html>
