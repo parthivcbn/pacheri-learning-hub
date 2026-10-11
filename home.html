@@ -315,6 +315,53 @@
     .calendar-event-list li { color:var(--calendar-text); font-size:11px; line-height:1.35; }
     .calendar-event-list li span { color:var(--calendar-muted); }
 
+    .mode-banner {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 10px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, rgba(14, 116, 144, 0.18), rgba(59, 130, 246, 0.10), rgba(168, 85, 247, 0.14));
+      border: 1px solid rgba(125, 211, 252, 0.28);
+      box-shadow: 0 10px 30px rgba(14, 116, 144, 0.12);
+    }
+
+    .mode-banner-label {
+      color: var(--text);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.82;
+    }
+
+    .mode-banner-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .mode-banner-chip.local {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: rgba(34, 197, 94, 0.45);
+      color: #bbf7d0;
+    }
+
+    .mode-banner-chip.bot {
+      background: rgba(168, 85, 247, 0.18);
+      border-color: rgba(168, 85, 247, 0.45);
+      color: #e9d5ff;
+    }
+
     .hub-hero {
       display: grid;
       grid-template-columns: 1.5fr 1fr;
@@ -532,6 +579,38 @@
     .card-title{font-size:16px;font-weight:600;margin-bottom:6px;color:#00d4ff}
     .card-desc{font-size:12px;color:var(--muted);line-height:1.4;flex:1;margin-bottom:8px}
     .card-badge{display:inline-block;background:rgba(0, 212, 255, 0.1);color:var(--accent);padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600}
+
+    .card-mode {
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin:8px 0 10px;
+    }
+
+    .mode-pill {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:0.04em;
+      text-transform:uppercase;
+      border:1px solid transparent;
+    }
+
+    .mode-pill.local {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.3);
+      color: #9ae6b4;
+    }
+
+    .mode-pill.bot {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: rgba(168, 85, 247, 0.3);
+      color: #d8b4fe;
+    }
 
     .card-features{
       font-size:11px;
@@ -1563,6 +1642,12 @@
       </section>
     </header>
 
+    <div class="mode-banner" aria-label="Learning modes">
+      <span class="mode-banner-label">Mode</span>
+      <span class="mode-banner-chip local">Local</span>
+      <span class="mode-banner-chip bot">Bot</span>
+    </div>
+
     <div class="hub-hero">
       <div class="hero-panel">
         <div class="hero-badge">Learning hub</div>
@@ -1598,6 +1683,9 @@
         <div class="card-title">Quiz Master</div>
         <div class="card-desc">Adaptive quizzes for Grade 7 in Math & Science. Choose your subject and science theme (Astronomy, Biology, Chemistry, Physics). Features auto-advance, shuffle, and random modes.</div>
         <span class="card-badge">6 Themes • Auto-advance • Shuffle & Random</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>Keyboard Controls:</strong>
           <div class="feature-item">1-4 or A-D: Select answer</div>
@@ -1614,6 +1702,9 @@
         <div class="card-title">Map Pointer Challenge</div>
         <div class="card-desc">Choose an Earth or Space map and tap the correct place as you answer easy, friendly location questions. Great for quick map practice without hard questions.</div>
         <span class="card-badge">Earth • Space • Easy Questions</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>Features:</strong>
           <div class="feature-item">Pick either Earth or Space map</div>
@@ -1630,6 +1721,9 @@
         <div class="card-title">Maths Teacher</div>
         <div class="card-desc">Grade 7 CBSE — Arithmetic Expressions. Learn concepts, see examples, practice MCQs.</div>
         <span class="card-badge">Lesson • 6 MCQs</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>Features:</strong>
           <div class="feature-item">Interactive lesson with key concepts</div>
@@ -1646,6 +1740,9 @@
         <div class="card-title">Space Explorer</div>
         <div class="card-desc">Explore galaxies, nebulas, stars, solar system & planets with animated background & rockets.</div>
         <span class="card-badge">Interactive • 8 Questions</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>Keyboard Navigation:</strong>
           <div class="feature-item">⬆️ ⬇️ ⬅️ ➡️: Navigate sections</div>
@@ -1662,6 +1759,9 @@
         <div class="card-title">Cosmic Puzzle</div>
         <div class="card-desc">Fun memory matching game with space-themed emojis. 3 difficulty levels - Easy, Medium & Hard!</div>
         <span class="card-badge">Game • 5 Themes • 5 Difficulties</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>5 Game Themes:</strong>
           <div class="feature-item">🌌 Cosmic Puzzle • 🦁 Animal Match</div>
@@ -1677,6 +1777,9 @@
         <div class="card-title">Planet Sprint</div>
         <div class="card-desc">A fast space quiz challenge. Answer planet and astronomy questions before the timer runs out and build your streak.</div>
         <span class="card-badge">Fast • Space • Quiz</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>Features:</strong>
           <div class="feature-item">10 quick astronomy questions</div>
@@ -1687,12 +1790,33 @@
         <span class="btn-visit">Play Mission</span>
       </a>
 
+      <!-- Nebula Navigator Card -->
+      <a href="nebula-navigator.html" class="card">
+        <div class="card-icon">🛸</div>
+        <div class="card-title">Nebula Navigator</div>
+        <div class="card-desc">Dodge the red space debris and collect glowing energy orbs as the game speeds up. A fast arcade challenge with simple controls and rising pressure.</div>
+        <span class="card-badge">Arcade • Space • Reflex</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
+        <div class="card-features">
+          <strong>How to play:</strong>
+          <div class="feature-item">Use A/D or Arrow keys to move</div>
+          <div class="feature-item">Avoid debris and survive the speed rise</div>
+          <div class="feature-item">Collect orbs to boost your score</div>
+        </div>
+        <span class="btn-visit">Play Nebula Navigator</span>
+      </a>
+
       <!-- Earth Geography Card -->
       <a href="geography.html" class="card">
         <div class="card-icon">🌍</div>
         <div class="card-title">Earth Geography</div>
         <div class="card-desc">Interactive geography learning game with 20 questions, power-ups, time tracking, and leaderboard for Grade 7.</div>
         <span class="card-badge">Adventure • Grade 7</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
         <div class="card-features">
           <strong>Features:</strong>
           <div class="feature-item">20 challenging geography questions</div>
@@ -1703,19 +1827,40 @@
         <span class="btn-visit">Start Quest</span>
       </a>
 
-      <!-- Color Game Card -->
+      <!-- Colour Match Challenge Card -->
       <div class="card" data-game-card>
         <div class="card-icon">🎨</div>
-        <div class="card-title">Color Match Challenge</div>
-        <div class="card-desc">Tap the matching color as fast as you can. Every correct pick adds points and keeps the streak going.</div>
-        <span class="card-badge">Game • Fast • Score</span>
-        <div class="card-features">
-          <strong>How to play:</strong>
-          <div class="feature-item">Read the color name shown on screen</div>
-          <div class="feature-item">Pick the swatch with the same color</div>
-          <div class="feature-item">Beat the timer and chase a high score</div>
+        <div class="card-title">Colour Match Challenge</div>
+        <div class="card-desc">Super hard mode: the timer is shorter, the colors are trickier, and every second matters.</div>
+        <span class="card-badge">Extreme • Hard • Speed</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
         </div>
-        <button class="btn-visit" type="button" onclick="document.getElementById('colorGameSection').scrollIntoView({behavior:'smooth', block:'start'});">Play Color Game</button>
+        <div class="card-features">
+          <strong>Hard mode rules:</strong>
+          <div class="feature-item">Countdown starts at just 8 seconds</div>
+          <div class="feature-item">Closest shades and similar names fool you</div>
+          <div class="feature-item">One mistake can end your streak</div>
+        </div>
+        <button class="btn-visit" type="button" onclick="document.getElementById('colorGameSection').scrollIntoView({behavior:'smooth', block:'start'});">Play Colour Match Challenge</button>
+      </div>
+
+      <!-- Colour Wars Card -->
+      <div class="card" data-game-card>
+        <div class="card-icon">⚔️</div>
+        <div class="card-title">Colour Wars</div>
+        <div class="card-desc">A fast color battle mode where you race the clock, lock in the correct shade, and keep your streak alive.</div>
+        <span class="card-badge">Battle • Speed • Streak</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
+        <div class="card-features">
+          <strong>Battle style:</strong>
+          <div class="feature-item">Quick reaction rounds</div>
+          <div class="feature-item">Score chase and streak building</div>
+          <div class="feature-item">Compete against the timer, not a bot</div>
+        </div>
+        <button class="btn-visit" type="button" onclick="document.getElementById('colourWarsSection').scrollIntoView({behavior:'smooth', block:'start'}); startWarGame();">Play Colour Wars</button>
       </div>
 
       <!-- AI Tutor Card -->
@@ -1724,6 +1869,9 @@
         <div class="card-title">AI Tutor</div>
         <div class="card-desc">Ask a question and get a simple explanation plus a mini learning game. Great for math, science, and general school topics.</div>
         <span class="card-badge">Learn • Explain • Game</span>
+        <div class="card-mode">
+          <span class="mode-pill bot">Bot</span>
+        </div>
         <div class="card-features">
           <strong>Features:</strong>
           <div class="feature-item">Simple explanations for school questions</div>
@@ -2040,24 +2188,48 @@
     <section id="colorGameSection" class="color-game-panel" aria-live="polite">
       <div class="color-game-header">
         <div>
-          <div class="daily-eyebrow">Mini Game</div>
-          <h3>🎨 Color Match Challenge</h3>
+          <div class="daily-eyebrow">Super Hard</div>
+          <h3>🎨 Colour Match Challenge</h3>
         </div>
         <div class="score-row">
           <span class="score-pill">Score: <strong id="colorScore">0</strong></span>
-          <span class="score-pill">Time: <strong id="colorTimer">12</strong>s</span>
+          <span class="score-pill">Time: <strong id="colorTimer">8</strong>s</span>
         </div>
       </div>
 
       <div class="color-target-wrap">
-        <p class="color-label">Find the color:</p>
+        <p class="color-label">Find the matching shade:</p>
         <div id="colorTarget" class="color-target">Red</div>
       </div>
 
       <div id="colorOptions" class="color-options"></div>
 
       <div class="color-game-footer">
-        <button id="colorRestartBtn" class="color-restart-btn" type="button">Restart Game</button>
+        <button id="colorRestartBtn" class="color-restart-btn" type="button">Restart Super Hard</button>
+      </div>
+    </section>
+
+    <section id="colourWarsSection" class="color-game-panel" aria-live="polite">
+      <div class="color-game-header">
+        <div>
+          <div class="daily-eyebrow">Battle Game</div>
+          <h3>⚔️ Colour Wars</h3>
+        </div>
+        <div class="score-row">
+          <span class="score-pill">Score: <strong id="warScore">0</strong></span>
+          <span class="score-pill">Time: <strong id="warTimer">12</strong>s</span>
+        </div>
+      </div>
+
+      <div class="color-target-wrap">
+        <p class="color-label">Find the winning color:</p>
+        <div id="warTarget" class="color-target">Red</div>
+      </div>
+
+      <div id="warOptions" class="color-options"></div>
+
+      <div class="color-game-footer">
+        <button id="warRestartBtn" class="color-restart-btn" type="button">Restart Colour Wars</button>
       </div>
     </section>
 
@@ -2608,19 +2780,27 @@
 
     const colors = [
       { name: 'Red', value: '#ef4444' },
+      { name: 'Crimson', value: '#dc2626' },
       { name: 'Blue', value: '#3b82f6' },
+      { name: 'Cyan', value: '#06b6d4' },
       { name: 'Green', value: '#22c55e' },
+      { name: 'Emerald', value: '#10b981' },
       { name: 'Yellow', value: '#facc15' },
+      { name: 'Gold', value: '#f59e0b' },
       { name: 'Purple', value: '#a855f7' },
+      { name: 'Violet', value: '#8b5cf6' },
       { name: 'Orange', value: '#f97316' },
+      { name: 'Amber', value: '#fbbf24' },
       { name: 'Pink', value: '#ec4899' },
-      { name: 'Teal', value: '#14b8a6' }
+      { name: 'Rose', value: '#f43f5e' },
+      { name: 'Teal', value: '#14b8a6' },
+      { name: 'Mint', value: '#2dd4bf' }
     ];
 
     const leaderboardStorageKey = 'learning-hub-leaderboard';
 
     let score = 0;
-    let timeLeft = 12;
+    let timeLeft = 8;
     let currentTarget = null;
     let timerId = null;
     let colorGameActive = true;
@@ -2652,6 +2832,24 @@
       `).join('');
     }
 
+      <!-- Quantum Quest Card -->
+      <a href="quantum-quest.html" class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Quantum Quest</div>
+        <div class="card-desc">Race a 10-second timer through science, space, technology, and trivia questions. Build streaks, earn points, and use power-ups.</div>
+        <span class="card-badge">Arcade • Quiz • Power-ups</span>
+        <div class="card-mode">
+          <span class="mode-pill local">Local</span>
+        </div>
+        <div class="card-features">
+          <strong>Features:</strong>
+          <div class="feature-item">Fast multiple-choice questions</div>
+          <div class="feature-item">Streak bonuses and score effects</div>
+          <div class="feature-item">50:50 and Freeze Time power-ups</div>
+        </div>
+        <span class="btn-visit">Play Quantum Quest</span>
+      </a>
+
     function saveScoreToLeaderboard(name, points) {
       const cleanName = (name || 'Player').trim().slice(0, 18) || 'Player';
       const saved = JSON.parse(localStorage.getItem(leaderboardStorageKey) || 'null') || getDefaultLeaderboard();
@@ -2674,10 +2872,8 @@
 
     function buildRound() {
       const target = pickRandomColor();
-      const options = [...colors].sort(() => Math.random() - 0.5).slice(0, 4);
-      if (!options.some(option => option.name === target.name)) {
-        options[0] = target;
-      }
+      const distractors = [...colors.filter(item => item.name !== target.name)].sort(() => Math.random() - 0.5);
+      const options = [target, ...distractors.slice(0, 3)].sort(() => Math.random() - 0.5);
 
       currentTarget = target;
       const targetEl = document.getElementById('colorTarget');
@@ -2703,9 +2899,12 @@
           const isCorrect = option.name === currentTarget.name;
 
           if (isCorrect) {
-            score += 10;
-            timeLeft = Math.max(2.2, timeLeft - 0.9);
+            score += 15;
+            timeLeft = Math.max(2, timeLeft - 1.1);
             document.getElementById('colorScore').textContent = score;
+            updateColorTimerText();
+          } else {
+            timeLeft = Math.max(1.5, timeLeft - 0.6);
             updateColorTimerText();
           }
 
@@ -2750,7 +2949,7 @@
 
     function startColorGame() {
       score = 0;
-      timeLeft = 12;
+      timeLeft = 8;
       colorGameActive = true;
       document.getElementById('colorScore').textContent = score;
       updateColorTimerText();
@@ -2759,10 +2958,115 @@
       clearInterval(timerId);
       timerId = setInterval(() => {
         if (!colorGameActive) return;
-        timeLeft = Math.max(0, timeLeft - 0.1);
+        timeLeft = Math.max(0, timeLeft - 0.12);
         updateColorTimerText();
         if (timeLeft <= 0) {
           finishColorGame();
+        }
+      }, 100);
+    }
+
+    let warScore = 0;
+    let warTimeLeft = 12;
+    let warCurrentTarget = null;
+    let warTimerId = null;
+    let warGameActive = true;
+
+    function updateWarTimerText() {
+      const timer = document.getElementById('warTimer');
+      if (timer) timer.textContent = Math.max(0, Number(warTimeLeft.toFixed(1))).toString();
+    }
+
+    function buildWarRound() {
+      const target = pickRandomColor();
+      const options = [...colors].sort(() => Math.random() - 0.5).slice(0, 4);
+      if (!options.some(option => option.name === target.name)) {
+        options[0] = target;
+      }
+
+      warCurrentTarget = target;
+      const targetEl = document.getElementById('warTarget');
+      if (targetEl) {
+        targetEl.textContent = target.name;
+        targetEl.style.color = target.value;
+        targetEl.style.textShadow = `0 0 18px ${target.value}55`;
+      }
+
+      const optionContainer = document.getElementById('warOptions');
+      if (!optionContainer) return;
+      optionContainer.innerHTML = '';
+
+      options.forEach((option) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'color-swatch';
+        button.textContent = option.name;
+        button.style.background = option.value;
+        button.setAttribute('aria-label', `Choose ${option.name}`);
+
+        button.addEventListener('click', () => {
+          if (!warCurrentTarget || !warGameActive) return;
+          const isCorrect = option.name === warCurrentTarget.name;
+
+          if (isCorrect) {
+            warScore += 12;
+            warTimeLeft = Math.max(2.2, warTimeLeft - 0.8);
+            document.getElementById('warScore').textContent = warScore;
+            updateWarTimerText();
+          }
+
+          const allButtons = optionContainer.querySelectorAll('.color-swatch');
+          allButtons.forEach((item) => {
+            item.disabled = true;
+            item.classList.remove('correct', 'wrong');
+            if (item.textContent === warCurrentTarget.name) {
+              item.classList.add('correct');
+            }
+            if (item === button && !isCorrect) {
+              item.classList.add('wrong');
+            }
+          });
+
+          setTimeout(() => {
+            if (warGameActive) buildWarRound();
+          }, 420);
+        });
+
+        optionContainer.appendChild(button);
+      });
+    }
+
+    function finishWarGame() {
+      warGameActive = false;
+      clearInterval(warTimerId);
+      const targetEl = document.getElementById('warTarget');
+      if (targetEl) {
+        targetEl.textContent = 'Battle Over';
+        targetEl.style.color = '#f8fbff';
+      }
+      const optionContainer = document.getElementById('warOptions');
+      if (optionContainer) {
+        optionContainer.innerHTML = `<div class="score-pill" style="grid-column:1/-1; justify-self:center; padding:14px 20px;">Final score: ${warScore}</div>`;
+      }
+      const name = document.getElementById('playerNameInput')?.value.trim() || 'Player';
+      saveScoreToLeaderboard(name, warScore);
+    }
+
+    function startWarGame() {
+      warScore = 0;
+      warTimeLeft = 12;
+      warGameActive = true;
+      document.getElementById('warScore').textContent = warScore;
+      updateWarTimerText();
+      buildWarRound();
+
+      clearInterval(warTimerId);
+      warTimerId = setInterval(() => {
+        if (!warGameActive) return;
+        warTimeLeft = Math.max(0, warTimeLeft - 0.1);
+        updateWarTimerText();
+        if (warTimeLeft <= 0) {
+          finishWarGame();
         }
       }, 100);
     }
@@ -3115,8 +3419,10 @@
     updateSelection();
     schedulePopupQuiz();
     startColorGame();
+    startWarGame();
 
     document.getElementById('colorRestartBtn')?.addEventListener('click', startColorGame);
+    document.getElementById('warRestartBtn')?.addEventListener('click', startWarGame);
 
     const copyrightYear = document.getElementById('copyrightYear');
     if (copyrightYear) {
@@ -3155,5 +3461,6 @@
     }
   </script>
   <script src="nav-controls.js"></script>
+  <script src="ambient-music.js"></script>
 </body>
 </html>

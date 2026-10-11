@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebula Navigator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #080711;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            min-height: 100dvh;
+            overflow: hidden;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100dvh;
+            overflow: hidden;
+            background: #05021a;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #100b2b 0%, #05021a 100%);
+        }
+
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(8, 7, 17, 0.85);
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s ease;
+            z-index: 3;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #00f0ff;
+            text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #b8c7e0;
+            margin: 0 0 20px;
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 18px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #080711;
+            background: linear-gradient(135deg, #00f0ff, #ff007f);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 0, 128, 0.8);
+        }
+
+        .score-board {
+            position: absolute;
+            top: max(16px, env(safe-area-inset-top));
+            left: max(18px, env(safe-area-inset-left));
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00f0ff;
+            text-shadow: 0 0 8px #00f0ff;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .fullscreen-btn {
+            position: absolute;
+            top: max(12px, env(safe-area-inset-top));
+            right: max(14px, env(safe-area-inset-right));
+            z-index: 5;
+            padding: 9px 13px;
+            color: #e8fbff;
+            background: rgba(8, 7, 25, 0.72);
+            border: 1px solid rgba(0, 240, 255, 0.48);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+
+        .skin-picker {
+            width: min(420px, 90vw);
+            margin: 0 0 22px;
+        }
+
+        .skin-heading {
+            color: #b8c7e0;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 9px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .skin-options {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .skin-option {
+            min-width: 0;
+            padding: 9px 5px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            color: #eaf7ff;
+            background: rgba(255, 255, 255, 0.06);
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .skin-option[aria-pressed="true"] {
+            border-color: var(--skin-color);
+            box-shadow: 0 0 14px color-mix(in srgb, var(--skin-color), transparent 45%);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .skin-swatch {
+            display: block;
+            width: 18px;
+            height: 18px;
+            margin: 0 auto 5px;
+            border-radius: 50%;
+            background: var(--skin-color);
+            box-shadow: 0 0 12px var(--skin-color);
+        }
+
+        @media (max-height: 620px) {
+            .ui-overlay { padding: 12px 0; }
+            h1 { font-size: clamp(1.35rem, 6vh, 2.2rem); margin-bottom: 6px; }
+            p { font-size: 0.86rem; margin-bottom: 12px; }
+            .skin-picker { margin-bottom: 12px; }
+            .skin-option { padding: 6px 4px; }
+            .btn { padding: 10px 24px; }
+        }
+
+        @media (max-width: 420px) {
+            .skin-options { gap: 5px; }
+            .skin-option { font-size: 0.67rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="480" height="640"></canvas>
+        <div class="score-board" id="scoreDisplay">SCORE: 0</div>
+        <button class="fullscreen-btn" id="fullscreenBtn" type="button" onclick="toggleFullscreen()" aria-label="Toggle fullscreen">⛶ Fullscreen</button>
+
+        <div class="ui-overlay" id="startScreen">
+            <h1>NEBULA NAVIGATOR</h1>
+            <p>Dodge Space Debris & Collect Orbs!<br>Use <b>A/D</b> or <b>Left/Right Arrows</b> to Move.</p>
+            <div class="skin-picker">
+                <div class="skin-heading">Choose your ship</div>
+                <div class="skin-options" role="group" aria-label="Choose a ship skin">
+                    <button class="skin-option" type="button" data-skin="nebula" aria-pressed="true" style="--skin-color:#00f0ff" onclick="selectShipSkin('nebula')"><span class="skin-swatch"></span>Nebula</button>
+                    <button class="skin-option" type="button" data-skin="solar" aria-pressed="false" style="--skin-color:#ff9f1c" onclick="selectShipSkin('solar')"><span class="skin-swatch"></span>Solar</button>
+                    <button class="skin-option" type="button" data-skin="phantom" aria-pressed="false" style="--skin-color:#c084fc" onclick="selectShipSkin('phantom')"><span class="skin-swatch"></span>Phantom</button>
+                    <button class="skin-option" type="button" data-skin="emerald" aria-pressed="false" style="--skin-color:#34d399" onclick="selectShipSkin('emerald')"><span class="skin-swatch"></span>Emerald</button>
+                </div>
+            </div>
+            <button class="btn" onclick="startGame()">START GAME</button>
+        </div>
+
+        <div class="ui-overlay hidden" id="gameOverScreen">
+            <h1 style="color: #ff007f; text-shadow: 0 0 10px #ff007f;">GAME OVER</h1>
+            <p id="finalScoreText">Your Score: 0</p>
+            <button class="btn" onclick="startGame()">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const gameContainer = document.getElementById('game-container');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const startScreen = document.getElementById('startScreen');
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        const finalScoreText = document.getElementById('finalScoreText');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        let gameWidth = 480;
+        let gameHeight = 640;
+        let scaleFactor = 1;
+
+        let animationId;
+        let score = 0;
+        let gameRunning = false;
+        let speedMultiplier = 1;
+
+        const keys = { left: false, right: false };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = true;
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = true;
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') keys.left = false;
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') keys.right = false;
+        });
+
+        const shipSkins = {
+            nebula: { name: 'Nebula', color: '#00f0ff', glow: '#00f0ff', accent: '#ffffff', shape: 'classic' },
+            solar: { name: 'Solar', color: '#ff9f1c', glow: '#ff5e00', accent: '#fff0a6', shape: 'solar' },
+            phantom: { name: 'Phantom', color: '#c084fc', glow: '#a855f7', accent: '#f3e8ff', shape: 'phantom' },
+            emerald: { name: 'Emerald', color: '#34d399', glow: '#10b981', accent: '#d1fae5', shape: 'emerald' }
+        };
+
+        let selectedSkinId = 'nebula';
+        try {
+            const savedSkin = localStorage.getItem('nebula-navigator-skin');
+            if (savedSkin && shipSkins[savedSkin]) selectedSkinId = savedSkin;
+        } catch (error) {
+            // Keep the default skin if browser storage is unavailable.
+        }
+
+        const player = {
+            x: 0,
+            y: 0,
+            width: 30,
+            height: 40,
+            speed: 7,
+            skin: shipSkins[selectedSkinId]
+        };
+
+        let stars = [];
+        let obstacles = [];
+        let collectibles = [];
+        let particles = [];
+
+        function resizeCanvas() {
+            const oldWidth = gameWidth;
+            const oldHeight = gameHeight;
+            const oldScale = scaleFactor;
+            const newWidth = window.innerWidth;
+            const newHeight = window.innerHeight;
+            const nextScale = Math.min(newWidth / 480, newHeight / 640);
+            const ratioX = newWidth / oldWidth;
+            const ratioY = newHeight / oldHeight;
+            const ratioScale = nextScale / oldScale;
+
+            gameWidth = newWidth;
+            gameHeight = newHeight;
+            scaleFactor = nextScale;
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.round(gameWidth * pixelRatio);
+            canvas.height = Math.round(gameHeight * pixelRatio);
+            ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+            player.x *= ratioX;
+            player.y = gameHeight - (oldHeight - player.y) * ratioY;
+            player.width = 30 * scaleFactor;
+            player.height = 40 * scaleFactor;
+            player.speed = 7 * scaleFactor;
+            player.x = Math.max(0, Math.min(gameWidth - player.width, player.x));
+
+            stars.forEach(star => {
+                star.x *= ratioX;
+                star.y *= ratioY;
+                star.size *= ratioScale;
+                star.speed *= ratioScale;
+            });
+            obstacles.forEach(obstacle => {
+                obstacle.x *= ratioX;
+                obstacle.y *= ratioY;
+                obstacle.width *= ratioX;
+                obstacle.height *= ratioY;
+                obstacle.speed *= ratioY;
+            });
+            collectibles.forEach(item => {
+                item.x *= ratioX;
+                item.y *= ratioY;
+                item.radius *= ratioScale;
+                item.speed *= ratioY;
+            });
+            particles.forEach(particle => {
+                particle.x *= ratioX;
+                particle.y *= ratioY;
+                particle.vx *= ratioX;
+                particle.vy *= ratioY;
+                particle.size *= ratioScale;
+            });
+
+            draw();
+        }
+
+        function selectShipSkin(skinId) {
+            if (!shipSkins[skinId]) return;
+            selectedSkinId = skinId;
+            player.skin = shipSkins[skinId];
+            document.querySelectorAll('.skin-option').forEach(button => {
+                button.setAttribute('aria-pressed', String(button.dataset.skin === skinId));
+            });
+            try {
+                localStorage.setItem('nebula-navigator-skin', skinId);
+            } catch (error) {
+                // Skin remains selected for this session if storage is unavailable.
+            }
+            if (!gameRunning) draw();
+        }
+
+        async function toggleFullscreen() {
+            try {
+                if (document.fullscreenElement) {
+                    await document.exitFullscreen();
+                } else if (gameContainer.requestFullscreen) {
+                    await gameContainer.requestFullscreen();
+                }
+            } catch (error) {
+                fullscreenBtn.textContent = 'Fullscreen unavailable';
+            }
+        }
+
+        function updateFullscreenButton() {
+            fullscreenBtn.textContent = document.fullscreenElement ? '⛶ Exit fullscreen' : '⛶ Fullscreen';
+        }
+
+        function movePlayerTo(clientX) {
+            const bounds = canvas.getBoundingClientRect();
+            player.x = Math.max(0, Math.min(gameWidth - player.width, clientX - bounds.left - player.width / 2));
+        }
+
+        canvas.addEventListener('pointerdown', event => {
+            if (!gameRunning) return;
+            canvas.setPointerCapture(event.pointerId);
+            movePlayerTo(event.clientX);
+        });
+        canvas.addEventListener('pointermove', event => {
+            if (gameRunning && event.buttons) movePlayerTo(event.clientX);
+        });
+        window.addEventListener('resize', resizeCanvas);
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+
+        function createStars() {
+            stars = [];
+            for (let i = 0; i < 80; i++) {
+                stars.push({
+                    x: Math.random() * gameWidth,
+                    y: Math.random() * gameHeight,
+                    size: (Math.random() * 2 + 1) * scaleFactor,
+                    speed: (Math.random() * 2 + 0.5) * scaleFactor
+                });
+            }
+        }
+
+        function createParticle(x, y, color) {
+            for (let i = 0; i < 8; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 4 * scaleFactor,
+                    vy: (Math.random() - 0.5) * 4 * scaleFactor,
+                    size: (Math.random() * 3 + 1) * scaleFactor,
+                    color: color,
+                    alpha: 1
+                });
+            }
+        }
+
+        function spawnObstacle() {
+            const width = (Math.random() * 40 + 20) * scaleFactor;
+            obstacles.push({
+                x: Math.random() * (gameWidth - width),
+                y: -30 * scaleFactor,
+                width: width,
+                height: 25 * scaleFactor,
+                speed: (Math.random() * 2 + 3) * scaleFactor * speedMultiplier
+            });
+        }
+
+        function spawnCollectible() {
+            collectibles.push({
+                x: Math.random() * (gameWidth - 20 * scaleFactor) + 10 * scaleFactor,
+                y: -20 * scaleFactor,
+                radius: 8 * scaleFactor,
+                speed: 2.5 * scaleFactor * speedMultiplier
+            });
+        }
+
+        function startGame() {
+            score = 0;
+            speedMultiplier = 1;
+            obstacles = [];
+            collectibles = [];
+            particles = [];
+            player.x = gameWidth / 2 - player.width / 2;
+            player.y = gameHeight - player.height - 30 * scaleFactor;
+            frameCount = 0;
+            gameRunning = true;
+            updateMusicStage();
+
+            startScreen.classList.add('hidden');
+            gameOverScreen.classList.add('hidden');
+            scoreDisplay.textContent = `SCORE: ${score}`;
+
+            createStars();
+            cancelAnimationFrame(animationId);
+            gameLoop();
+        }
+
+        function gameOver() {
+            gameRunning = false;
+            updateMusicStage();
+            finalScoreText.textContent = `Your Score: ${score}`;
+            gameOverScreen.classList.remove('hidden');
+        }
+
+        let frameCount = 0;
+        let musicStage = 0;
+
+        function updateMusicStage() {
+            const nextStage = gameRunning ? Math.min(5, Math.floor(score / 100) + 1) : 0;
+            if (nextStage === musicStage) return;
+            musicStage = nextStage;
+            window.learningHubMusic?.setGameStage(musicStage);
+        }
+
+        function update() {
+            frameCount++;
+            speedMultiplier = 1 + score / 200;
+
+            if (keys.left && player.x > 0) player.x = Math.max(0, player.x - player.speed);
+            if (keys.right && player.x < gameWidth - player.width) player.x = Math.min(gameWidth - player.width, player.x + player.speed);
+
+            stars.forEach(star => {
+                star.y += star.speed * speedMultiplier;
+                if (star.y > gameHeight) {
+                    star.y = 0;
+                    star.x = Math.random() * gameWidth;
+                }
+            });
+
+            if (frameCount % Math.max(20, Math.floor(60 / speedMultiplier)) === 0) {
+                spawnObstacle();
+            }
+            if (frameCount % 90 === 0) {
+                spawnCollectible();
+            }
+
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.y += obs.speed;
+
+                if (
+                    player.x < obs.x + obs.width &&
+                    player.x + player.width > obs.x &&
+                    player.y < obs.y + obs.height &&
+                    player.y + player.height > obs.y
+                ) {
+                    createParticle(player.x + player.width / 2, player.y + player.height / 2, '#ff0055');
+                    gameOver();
+                    return;
+                }
+
+                if (obs.y > gameHeight) {
+                    obstacles.splice(i, 1);
+                    score += 5;
+                    scoreDisplay.textContent = `SCORE: ${score}`;
+                }
+            }
+
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                const item = collectibles[i];
+                item.y += item.speed;
+
+                const dist = Math.hypot(
+                    (player.x + player.width / 2) - item.x,
+                    (player.y + player.height / 2) - item.y
+                );
+
+                if (dist < player.width / 2 + item.radius) {
+                    createParticle(item.x, item.y, '#ffe600');
+                    score += 25;
+                    scoreDisplay.textContent = `SCORE: ${score}`;
+                    collectibles.splice(i, 1);
+                } else if (item.y > gameHeight) {
+                    collectibles.splice(i, 1);
+                    updateMusicStage();
+                }
+            }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= 0.03;
+                if (p.alpha <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    updateMusicStage();
+            ctx.fillStyle = '#ffffff';
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            const skin = player.skin;
+            const centerX = player.x + player.width / 2;
+            const flameLength = (8 + Math.sin(frameCount * 0.45) * 3) * scaleFactor;
+            ctx.shadowBlur = 18 * scaleFactor;
+            ctx.shadowColor = skin.glow;
+
+            ctx.fillStyle = skin.accent;
+            ctx.beginPath();
+            ctx.moveTo(centerX - player.width * 0.13, player.y + player.height * 0.72);
+            ctx.lineTo(centerX, player.y + player.height + flameLength);
+            ctx.lineTo(centerX + player.width * 0.13, player.y + player.height * 0.72);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = skin.color;
+            ctx.beginPath();
+            if (skin.shape === 'solar') {
+                ctx.moveTo(centerX, player.y);
+                ctx.lineTo(player.x + player.width, player.y + player.height * 0.78);
+                ctx.lineTo(player.x + player.width * 0.68, player.y + player.height * 0.72);
+                ctx.lineTo(centerX, player.y + player.height);
+                ctx.lineTo(player.x + player.width * 0.32, player.y + player.height * 0.72);
+                ctx.lineTo(player.x, player.y + player.height * 0.78);
+            } else if (skin.shape === 'phantom') {
+                ctx.moveTo(centerX, player.y);
+                ctx.lineTo(player.x + player.width, player.y + player.height * 0.62);
+                ctx.lineTo(centerX + player.width * 0.27, player.y + player.height * 0.72);
+                ctx.lineTo(centerX, player.y + player.height);
+                ctx.lineTo(centerX - player.width * 0.27, player.y + player.height * 0.72);
+                ctx.lineTo(player.x, player.y + player.height * 0.62);
+            } else if (skin.shape === 'emerald') {
+                ctx.moveTo(centerX, player.y);
+                ctx.lineTo(player.x + player.width * 0.9, player.y + player.height * 0.82);
+                ctx.lineTo(centerX, player.y + player.height * 0.68);
+                ctx.lineTo(player.x + player.width * 0.1, player.y + player.height * 0.82);
+            } else {
+                ctx.moveTo(centerX, player.y);
+                ctx.lineTo(player.x + player.width, player.y + player.height);
+                ctx.lineTo(centerX, player.y + player.height - 8 * scaleFactor);
+                ctx.lineTo(player.x, player.y + player.height);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = skin.accent;
+            ctx.beginPath();
+            ctx.ellipse(centerX, player.y + player.height * 0.46, player.width * 0.13, player.height * 0.19, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#ff0055';
+            ctx.shadowColor = '#ff0055';
+            obstacles.forEach(obs => {
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            });
+
+            ctx.fillStyle = '#ffe600';
+            ctx.shadowColor = '#ffe600';
+            collectibles.forEach(item => {
+                ctx.beginPath();
+                ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            particles.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            ctx.shadowBlur = 0;
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+            update();
+            draw();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        resizeCanvas();
+        player.x = gameWidth / 2 - player.width / 2;
+        player.y = gameHeight - player.height - 30 * scaleFactor;
+        createStars();
+        selectShipSkin(selectedSkinId);
+    </script>
+    <script src="ambient-music.js"></script>
+</body>
+</html>
